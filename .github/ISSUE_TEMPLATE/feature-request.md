@@ -2,8 +2,9 @@
 name: Feature Request
 about: Template for feature requests PR
 title: "[FEATURE]"
-labels: ""
-assignees: ""
+labels: ''
+assignees: ''
+
 ---
 
 ---

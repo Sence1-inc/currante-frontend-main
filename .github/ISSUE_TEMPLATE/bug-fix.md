@@ -2,8 +2,9 @@
 name: Bug Fix
 about: Template for bug fixes PR
 title: "[FIX]"
-labels: ""
-assignees: ""
+labels: ''
+assignees: ''
+
 ---
 
 ---
