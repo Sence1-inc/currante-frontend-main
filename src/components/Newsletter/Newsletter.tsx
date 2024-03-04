@@ -66,6 +66,7 @@ const Newsletter = () => {
   return (
     <Box
       sx={{
+        backgroundColor: "#F5F6FA",
         width: { md: "60%", sm: "100%" },
         margin: { md: "auto", xs: "50px 0" },
         padding: { xs: "80px 20px 80px 20px" },
