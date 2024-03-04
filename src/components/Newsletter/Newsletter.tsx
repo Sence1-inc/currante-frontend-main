@@ -28,7 +28,6 @@ const Newsletter = () => {
         subscriber_type: type,
       };
 
-      // console.log(data);
       const response = await axiosInstance.post("/api/v1/subscribers", data);
 
       if (response.data) {
