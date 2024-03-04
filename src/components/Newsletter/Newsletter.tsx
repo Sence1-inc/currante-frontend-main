@@ -155,13 +155,16 @@ const Newsletter = () => {
       </Box>
 
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isSnackbarOpen}
         onClose={() => setIsSnackbarOpen(false)}
-        autoHideDuration={5000}
+        autoHideDuration={3000}
         message={successMessage ? successMessage : errorMessage}
         key="topcenter"
-        sx={errorMessage ? { color: "red" } : { color: "green" }}
+        sx={{
+          color: errorMessage ? "red" : "green",
+          marginBottom: "16px",
+        }}
       >
         <Alert
           elevation={6}
