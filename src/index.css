@@ -43,6 +43,12 @@ h1 {
   line-height: 1.1;
 }
 
+h3 {
+  font-family: Poppins;
+  font-weight: 700;
+  font-size: 48px;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -60,6 +66,21 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* General Styles
+================================= */
+#root {
+  width: 100%;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.container {
+  width: 1200px;
+  padding: 0 !important;
 }
 
 @media (prefers-color-scheme: light) {

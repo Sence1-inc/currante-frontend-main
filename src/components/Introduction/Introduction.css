@@ -1,0 +1,33 @@
+
+#introduction {
+    width: 100%;
+    padding: 62px 97px;
+    background-color: #D8E5FF;
+}
+
+#introduction h2 {
+    font-family: Poppins;
+    font-weight: 700;
+    font-size: 48px;
+    color: #0E2F71;
+    margin-bottom: 75px;
+}
+
+.introduction-items__wrapper {
+    width: 100%;
+    display: flex;
+    padding: 0 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 40px;
+}
+
+#introduction .intro-card {
+    width: calc((100% - 80px) / 3);
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 4px rgba(245, 138, 71, 0.22);
+    background-color: #BCD2FF;
+}
