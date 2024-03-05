@@ -7,33 +7,33 @@ import { createTheme, Theme, ThemeProvider } from "@mui/material";
 
 const theme: Theme = createTheme({
   breakpoints: {
-    keys: ['xs', 'sm', 'md', 'lg', 'xl'],
+    keys: ["xs", "sm", "md", "lg", "xl"],
     values: {
       xs: 0,
       sm: 390,
       md: 768,
       lg: 1200,
       xl: 1400,
-    }
+    },
   },
   palette: {
     common: {
-      black: '#000000',
-      white: '#ffffff',
-    }, 
+      black: "#000000",
+      white: "#ffffff",
+    },
     primary: {
-      light: '#a1b5de',
-      main: '#0e2f71',
-      dark: '#2f2e41'
-    }, 
+      light: "#a1b5de",
+      main: "#0e2f71",
+      dark: "#2f2e41",
+    },
     secondary: {
-      main: '#f58a47',
-      dark: '#d2580b'
+      main: "#f58a47",
+      dark: "#d2580b",
     },
     background: {
-      paper: '#6b7fa6',
-      default: '#ffffff',
-    }
+      paper: "#6b7fa6",
+      default: "#ffffff",
+    },
   },
   typography: {
     htmlFontSize: 16,
@@ -45,84 +45,84 @@ const theme: Theme = createTheme({
     fontWeightBold: 700,
     h1: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '4.8rem',
+      fontSize: "4.8rem",
       fontWeight: 700,
       lineHeight: 1.167,
     },
     h2: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '3.6rem',
+      fontSize: "3.6rem",
       fontWeight: 700,
       lineHeight: 1.3,
-      '@media (max-width:768px)': {
-        fontSize: '2.2rem',
+      "@media (max-width:768px)": {
+        fontSize: "2.2rem",
       },
     },
     h3: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '2.4rem',
+      fontSize: "2.4rem",
       fontWeight: 700,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '2.0rem',
+      "@media (max-width:768px)": {
+        fontSize: "2.0rem",
       },
     },
     h4: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '2.0rem',
+      fontSize: "2.0rem",
       fontWeight: 700,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '1.8rem',
+      "@media (max-width:768px)": {
+        fontSize: "1.8rem",
       },
     },
     h5: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '1.8rem',
+      fontSize: "1.8rem",
       fontWeight: 700,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '1.6rem',
+      "@media (max-width:768px)": {
+        fontSize: "1.6rem",
       },
-    },    
+    },
     h6: {
       fontFamily: "'Poppins', 'sans-serif'",
-      fontSize: '1.4rem',
+      fontSize: "1.4rem",
       fontWeight: 700,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '1.2rem',
+      "@media (max-width:768px)": {
+        fontSize: "1.2rem",
       },
     },
     body1: {
       fontFamily: "'Open Sans', 'serif'",
-      fontSize: '1rem',
+      fontSize: "1rem",
       fontWeight: 400,
       lineHeight: 1.3,
-      '@media (max-width:768px)': {
-        fontSize: '0.875rem',
+      "@media (max-width:768px)": {
+        fontSize: "0.875rem",
       },
     },
     body2: {
       fontFamily: "'Open Sans', 'serif'",
-      fontSize: '1rem',
+      fontSize: "1rem",
       fontWeight: 700,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '0.875rem',
+      "@media (max-width:768px)": {
+        fontSize: "0.875rem",
       },
     },
     subtitle1: {
       fontFamily: "'Open Sans', 'serif'",
-      fontSize: '0.875rem',
+      fontSize: "0.875rem",
       fontWeight: 300,
       lineHeight: 1.5,
-      '@media (max-width:768px)': {
-        fontSize: '0.750rem',
+      "@media (max-width:768px)": {
+        fontSize: "0.750rem",
       },
-    }
-  }, 
-})
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
