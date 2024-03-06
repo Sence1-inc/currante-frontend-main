@@ -4,16 +4,16 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Box, Container } from '@mui/material';
-import './FAQPage.css'
+import { Box, Container, Typography } from '@mui/material';
+import './FAQ.css'
 
-const AccordionFAQ: React.FC = () => {
+const FAQ: React.FC = () => {
     const [expanded, setExpanded] = useState<string | false>(false);
   
     const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
-  
+    
     // Array of data for Accordion items
     const accordionGeneral = [
       { id: 'panel1', title: 'What services does your company offer?', 
@@ -40,15 +40,26 @@ const AccordionFAQ: React.FC = () => {
   
     return (
         <Box className='faq__wrapper'>
-            <Container>
-                <h2>Currante's FAQ</h2>
-                {accordionGeneral.map((item) => (
-                <Accordion className='Accordion'
-                    key={item.id}
-                    expanded={expanded === item.id}
-                    onChange={handleChange(item.id)}
-                >
-                    <AccordionSummary
+          <Container>
+              <h2>Currante's FAQ</h2>
+              {accordionGeneral.map((item) => (
+              <Accordion sx={{ background: '#D8E5FF',
+                  borderRadius: '8px',
+                  marginBottom: '20px'
+                  }}
+
+                  key={item.id}
+                  expanded={expanded === item.id}
+                  onChange={handleChange(item.id)}
+              >
+
+                  <AccordionSummary                    
+                    sx={{ fontFamily: 'Poppins',
+                      fontSize: '24px', fontWeight: 'bold',
+                      color: '#0E2F71'
+
+                    }}
+
                     expandIcon={
                         expanded === item.id ? (
                         <RemoveIcon sx={{ color: "#EDA175" }} />
@@ -58,21 +69,34 @@ const AccordionFAQ: React.FC = () => {
                     }
                     aria-controls={`${item.id}-content`}
                     id={`${item.id}-header`}
-                    
-                    className='AccordionSummary'
-                    >
-                    <div>{item.title}</div>
-                    </AccordionSummary>
-                    <AccordionDetails className='AccordionDetails'>
-                    <div>
-                        {item.content}
-                    </div>
-                    </AccordionDetails>
-                </Accordion>
-                ))}
-            </Container>
+
+                  >
+
+                  <Typography>{item.title}</Typography>
+
+                  </AccordionSummary>
+
+                  <AccordionDetails
+                    sx={{ fontFamily: 'Open Sans', fontSize: '20px',
+                      fontWeight: '400',
+                      color: '#000', background: '#fff',
+                      padding: '25px 15px'
+                    }}
+                  >
+
+                  <Typography>
+                      {item.content}
+                  </Typography>
+
+                  </AccordionDetails>
+
+              </Accordion>
+
+              ))}
+          </Container>
       </Box>
     );
+
   };
   
-  export default AccordionFAQ;
+  export default FAQ;
