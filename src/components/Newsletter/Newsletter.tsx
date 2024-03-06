@@ -157,7 +157,7 @@ const Newsletter = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isSnackbarOpen}
         onClose={() => setIsSnackbarOpen(false)}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         message={successMessage ? successMessage : errorMessage}
         key="topcenter"
         sx={{
