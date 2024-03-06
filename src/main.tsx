@@ -9,9 +9,9 @@ const theme: Theme = createTheme({
   breakpoints: {
     keys: ['xs', 'sm', 'md', 'lg', 'xl'],
     values: {
-      xs: 390,
-      sm: 768,
-      md: 1024,
+      xs: 0,
+      sm: 390,
+      md: 768,
       lg: 1200,
       xl: 1400,
     }
@@ -23,7 +23,8 @@ const theme: Theme = createTheme({
     }, 
     primary: {
       light: '#a1b5de',
-      main: '#0e2f71'
+      main: '#0e2f71',
+      dark: '#2f2e41'
     }, 
     secondary: {
       main: '#f58a47',
@@ -46,55 +47,79 @@ const theme: Theme = createTheme({
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '4.8rem',
       fontWeight: 700,
-      lineHeight: 1.167
+      lineHeight: 1.167,
     },
     h2: {
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '3.6rem',
       fontWeight: 700,
-      lineHeight: 1.3
+      lineHeight: 1.3,
+      '@media (max-width:768px)': {
+        fontSize: '2.2rem',
+      },
     },
     h3: {
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '2.4rem',
       fontWeight: 700,
-      lineHeight: 1.3
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '2.0rem',
+      },
     },
     h4: {
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '2.0rem',
       fontWeight: 700,
-      lineHeight: 1.3
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '1.8rem',
+      },
     },
     h5: {
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '1.8rem',
       fontWeight: 700,
-      lineHeight: 1.3
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '1.6rem',
+      },
     },    
     h6: {
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: '1.4rem',
       fontWeight: 700,
-      lineHeight: 1.3
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '1.2rem',
+      },
     },
     body1: {
       fontFamily: "'Open Sans', 'serif'",
       fontSize: '1rem',
       fontWeight: 400,
-      lineHeight: 1.167
+      lineHeight: 1.3,
+      '@media (max-width:768px)': {
+        fontSize: '0.875rem',
+      },
     },
     body2: {
       fontFamily: "'Open Sans', 'serif'",
       fontSize: '1rem',
       fontWeight: 700,
-      lineHeight: 1.167
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '0.875rem',
+      },
     },
     subtitle1: {
       fontFamily: "'Open Sans', 'serif'",
       fontSize: '0.875rem',
       fontWeight: 300,
-      lineHeight: 1.167
+      lineHeight: 1.5,
+      '@media (max-width:768px)': {
+        fontSize: '0.750rem',
+      },
     }
   }, 
 })
