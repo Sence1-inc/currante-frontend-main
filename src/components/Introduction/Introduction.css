@@ -13,6 +13,14 @@
     margin-bottom: 75px;
 }
 
+#introduction h3 {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 24px;
+    color: #D2580B;
+    line-height: 1.25;
+}
+
 .introduction-items__wrapper {
     width: 100%;
     display: flex;
@@ -23,11 +31,19 @@
 }
 
 #introduction .intro-card {
-    width: calc((100% - 80px) / 3);
+    max-width: calc((100% - 80px) / 3);
+    min-width: 340px;
     padding: 20px;
+    min-height: 460px;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 4px rgba(245, 138, 71, 0.22);
     background-color: #BCD2FF;
+    flex-wrap: wrap;
+}
+
+#introduction .intro-card__desc {
+    font-family: 'Open Sans';
+    font-size: 16px;
 }
