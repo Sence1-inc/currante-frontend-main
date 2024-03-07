@@ -11,7 +11,7 @@ const theme = useTheme();
       sx={{
         padding: { xs: "62px 0", md: "62px 97px" },
         width: "100%",
-        backgroundColor: "#d8e5ff",
+        backgroundColor: "#FFFFFF",
         textAlign: { xs: "center", md: "left" },
       }}
     >
@@ -40,8 +40,10 @@ const theme = useTheme();
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "40px",
-            marginBottom: "75px",
+            padding: "0 140px",
+            rowGap: "40px",
+            columnGap: "40px",
+            marginBottom: "75px"
           }}
         >
          {whyCurrante.map((whyCurranteItem: WhyCurranteItem, index: number) => {

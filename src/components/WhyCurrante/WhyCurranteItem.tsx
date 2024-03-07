@@ -1,55 +1,67 @@
-import { Card, CardMedia, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 
 
 const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
   return (
-    <Card
+    <Box
       sx={{
-        margin: "auto",
-        maxWidth: "calc((100% - 80px) / 3)",
-        minWidth: "340px",
+        maxWidth: { 
+          xs: "100%",
+          lg: "calc((100% - 40px) / 2)"
+        },
         padding: "20px",
-        minHeight: "460px",
-        borderRadius: "16px",
+        minHeight: "157px",
         display: "flex",
-        flexDirection: "row",
-        boxShadow: "2px 4px rgba(245, 138, 71, 0.22)",
-        backgroundColor: "#bcd2ff",
-        flexWrap: "wrap",
+        flexDirection: {
+          xs: "column",
+          lg: "row",
+        },
+        flexWrap: "nowrap",
+        alignItems: {
+          xs: "center",
+          lg: "unset"
+        }
       }}
     >
-      <CardMedia
+      <Box
         component="img"
         alt=""
-        height="240"
-        image={image}
-        sx={{ mb: 1 }}
-      />
-      <Typography
-        variant="h3"
-        align="center"
-        sx={{
-          margin: "0 auto 15px",
-          fontFamily: "Poppins",
-          fontWeight: 600,
-          fontSize: "24px",
-          color: "#d2580b",
-          lineHeight: 1.25,
+        src={image}
+        sx={{ mb: 1,
+          height: "104px",
+          width: "120px"
         }}
       >
-        {title}
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          fontFamily: "Open Sans",
-          fontSize: "16px",
-        }}
-      >
-        {desc}
-      </Typography>
-    </Card>
+      </Box>
+      <Box>
+        <Typography
+          variant="h3"
+          align="center"
+          sx={{
+            margin: "0 auto 15px",
+            fontFamily: "Poppins",
+            fontWeight: 600,
+            fontSize: "24px",
+            color: "#F58A47",
+            lineHeight: 1.25,
+          }}
+        >
+          {title}
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            fontFamily: "Open Sans",
+            fontSize: "16px",
+            color: "#000000",
+            textAlign: "center"
+          }}
+        >
+          {desc}
+        </Typography>
+      </Box>      
+    </Box>
   );
 };
 
