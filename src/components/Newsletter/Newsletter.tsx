@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -20,8 +21,10 @@ const Newsletter = () => {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubscribe = async () => {
+    setIsLoading(true);
     try {
       const data = {
         email: email,
@@ -33,9 +36,11 @@ const Newsletter = () => {
       if (response.data) {
         setErrorMessage("");
         setSuccessMessage(response.data.message);
+        setIsLoading(false);
         setIsSnackbarOpen(true);
       }
     } catch (error) {
+      setIsLoading(false);
       setIsSnackbarOpen(true);
       setSuccessMessage("");
       if (axios.isAxiosError(error)) {
@@ -143,8 +148,13 @@ const Newsletter = () => {
             }}
             variant="contained"
             onClick={handleSubscribe}
+            disabled={isLoading}
           >
-            Subscribe
+            {isLoading ? (
+              <CircularProgress size={24} sx={{ color: "white" }} />
+            ) : (
+              "Subscribe"
+            )}
           </Button>
           <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
             By subscribing to the newsletter, I have read this form and
