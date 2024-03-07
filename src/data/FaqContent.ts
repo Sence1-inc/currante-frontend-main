@@ -1,4 +1,4 @@
-export const TEASER_GENERAL_FAQ = [
+export const TEASER_GENERAL_FAQ: FaqItem[] = [
   {
     id: "panel1",
     title: "What services does your company offer?",

@@ -5,7 +5,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import React, { useState } from "react";
-import { TEASER_GENERAL_FAQ } from "../../data/faq";
+import { TEASER_GENERAL_FAQ } from "../../data/FaqContent";
 import "./FAQ.css";
 
 const FAQ: React.FC = () => {
