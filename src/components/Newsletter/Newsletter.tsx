@@ -92,7 +92,12 @@ const Newsletter = () => {
           Newsletter
         </Typography>
         <Typography
-          sx={{ fontSize: "16px", fontWeight: 600, textAlign: "center" }}
+          sx={{
+            fontSize: "16px",
+            fontWeight: 600,
+            textAlign: "center",
+            color: "#0E2F71",
+          }}
         >
           Stay informed and engaged with exclusive content and benefits by
           subscribing to our newsletter at Currante.
@@ -112,11 +117,17 @@ const Newsletter = () => {
               onChange={handleTypeChange}
             >
               <FormControlLabel
+                sx={{
+                  color: "#0E2F71",
+                }}
                 value="worker"
                 control={<Radio />}
                 label="I am a worker"
               />
               <FormControlLabel
+                sx={{
+                  color: "#0E2F71",
+                }}
                 value="employer"
                 control={<Radio />}
                 label="I am an employer"
@@ -149,7 +160,12 @@ const Newsletter = () => {
             Subscribe
           </Button>
           <Typography
-            sx={{ fontSize: "13px", fontWeight: 400, textAlign: "center" }}
+            sx={{
+              fontSize: "13px",
+              fontWeight: 400,
+              textAlign: "center",
+              color: "#000000",
+            }}
           >
             By subscribing to the newsletter, I have read this form and
             understand its content and voluntarily give my consent for the
