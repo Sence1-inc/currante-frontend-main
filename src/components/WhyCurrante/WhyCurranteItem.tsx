@@ -1,14 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
-
 const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
   return (
     <Box
       sx={{
-        maxWidth: { 
+        maxWidth: {
           xs: "100%",
-          lg: "calc((100% - 40px) / 2)"
+          md: "468px",
         },
         padding: "20px",
         minHeight: "157px",
@@ -20,20 +19,16 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
         flexWrap: "nowrap",
         alignItems: {
           xs: "center",
-          lg: "unset"
-        }
+          lg: "unset",
+        },
       }}
     >
       <Box
         component="img"
         alt=""
         src={image}
-        sx={{ mb: 1,
-          height: "104px",
-          width: "120px"
-        }}
-      >
-      </Box>
+        sx={{ mb: 1, height: "104px", width: "120px" }}
+      ></Box>
       <Box>
         <Typography
           variant="h3"
@@ -55,12 +50,12 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
             fontFamily: "Open Sans",
             fontSize: "16px",
             color: "#000000",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           {desc}
         </Typography>
-      </Box>      
+      </Box>
     </Box>
   );
 };

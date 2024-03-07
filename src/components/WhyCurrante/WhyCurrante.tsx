@@ -6,7 +6,6 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
     <Box
       sx={{
         padding: { xs: "62px 0", lg: "62px 97px" },
-        width: "100%",
         backgroundColor: "#FFFFFF",
         textAlign: { xs: "center", lg: "left" },
       }}
@@ -50,18 +49,15 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
         <Box
           sx={{
             display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             flexWrap: "wrap",
-            padding: {
-              xs: "0",
-              sm: "0 113px",
-              lg: "0 140px",
-            },
-            rowGap: {
+            width: "100%",
+            gap: {
               xs: "20px",
               lg: "40px",
             },
-            columnGap: "40px",
-            marginBottom: "75px",
+            margin: { xs: "0 0 75px 0", md: "0 auto 75px auto" },
           }}
         >
           {whyCurrante.map(
