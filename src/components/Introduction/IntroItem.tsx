@@ -29,7 +29,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
         variant="h3"
         align="center"
         sx={{
-          mb: 2,
+          margin: "0 auto 15px",
           fontFamily: "Poppins",
           fontWeight: 600,
           fontSize: "24px",
