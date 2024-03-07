@@ -66,12 +66,11 @@ const Newsletter = () => {
     <Box
       sx={{
         backgroundColor: "#F5F6FA",
-        width: "100%",
       }}
     >
       <Box
         sx={{
-          width: { md: "60%", sm: "100%" },
+          width: { md: "60%" },
           margin: { md: "auto" },
           padding: { xs: "80px 20px 80px 20px" },
           display: "flex",
@@ -81,23 +80,11 @@ const Newsletter = () => {
           gap: "50px",
         }}
       >
+        <Typography variant="h3">Newsletter</Typography>
         <Typography
-          sx={{
-            fontSize: "54px",
-            lineHeight: "54px",
-            fontWeight: 700,
-            color: "#0E2F71",
-          }}
-        >
-          Newsletter
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "16px",
-            fontWeight: 600,
-            textAlign: "center",
-            color: "#0E2F71",
-          }}
+          color="primary.main"
+          variant="body2"
+          sx={{ textAlign: "center" }}
         >
           Stay informed and engaged with exclusive content and benefits by
           subscribing to our newsletter at Currante.
@@ -159,14 +146,7 @@ const Newsletter = () => {
           >
             Subscribe
           </Button>
-          <Typography
-            sx={{
-              fontSize: "13px",
-              fontWeight: 400,
-              textAlign: "center",
-              color: "#000000",
-            }}
-          >
+          <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
             By subscribing to the newsletter, I have read this form and
             understand its content and voluntarily give my consent for the
             collection, use, processing, storage and retention of my personal
