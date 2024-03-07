@@ -1,23 +1,33 @@
 export const INTRODUCTION: IntroItem[] = [
   /* to be edited */
   {
-    title: "Seamless Scholarship Management",
-    desc: "Effortlessly upload and manage scholarship details with our user-friendly interface. Whether you prefer hands-on manual editing or the efficiency of bulk uploads through CSV files, Scholaris ensures a seamless experience, saving you time and effort.",
-    image: "/images/provider-f-1.png",
+    title: "Welcome to Currante",
+    desc: "From cleaners to plumbers to carpenters, our platform ensures a seamless connection between homeowners and reliable short-term workers.",
+    image: "/images/img_intro_1.png",
   },
   {
-    title: "Enhanced Visibility",
-    desc: "Boost the visibility of your scholarship programs through Scholaris' extensive network. Reach a wider audience of qualified candidates who may otherwise have difficulty discovering your opportunities.",
-    image: "/images/provider-f-2.png",
+    title: "Unlock the power of Currante",
+    desc: "Homeowners can connect seamlessly with a dynamic pool of skilled workers. Say goodbye to stress and hello to efficient, short-term service solutions.",
+    image: "/images/img_intro_2.png",
   },
   {
-    title: "Amplify Online Presence",
-    desc: "Forge meaningful connections with prospective scholars by showcasing your organization's unique identity. Your comprehensive profile, including mission statements, past contributions, and success stories, will be featured prominently to students. This personalized touch helps students understand your values, fostering a stronger bond between organizations and applicants.",
-    image: "/images/provider-f-3.png",
+    title: "Step into the future of home services",
+    desc: "The app empowers homeowners to find and hire skilled workers effortlessly.",
+    image: "/images/img_intro_3.png",
   },
   {
-    title: "Intuitive Scholarship Search",
-    desc: "Enhance the exposure of your scholarships through our robust search feature. Students can easily find your scholarship offerings using filters such as application date, location, benefits, course, and school on Scholaris. With these tailored options, your opportunities will be easily discoverable by eligible candidates.",
-    image: "/images/provider-f-1.png",
+    title: "Revolutionizing the way you hire short-term workers",
+    desc: "Join our community of homeowners and skilled professionals, where quality service meets convenience.",
+    image: "/images/img_intro_4.png",
+  },
+  {
+    title: "Get all your home maintenance done with Currante",
+    desc: "Currrante opens you to a plethora of skilled tradespeople that make your life easier.",
+    image: "/images/img_intro_5.png",
+  },
+  {
+    title: "Currante is here to help",
+    desc: "Bogged down by overwhelming maintenance work? Currante is your friend.",
+    image: "/images/img_intro_5.png",
   },
 ];
