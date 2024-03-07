@@ -17,3 +17,16 @@ interface WhyCurranteItem {
   desc: string;
   image: string;
 }
+
+interface FaqItem {
+  id: string;
+  title: string;
+  content: string;
+}
+
+interface ServiceItem {
+  order: number;
+  service: string;
+  description: string;
+  image: string;
+}
