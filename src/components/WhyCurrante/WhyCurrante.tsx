@@ -30,18 +30,34 @@ const theme = useTheme();
             fontWeight: 700,
             fontSize: "48px",
             color: "#0e2f71",
-            marginBottom: "75px",
+            marginBottom: {
+              xs: "40px",
+              lg: "75px"
+            },
             alignSelf: { md: "start" },
           }}
         >
-          Why Choose Currante?
+          Why Choose 
+          <Box component="span" sx={{
+            display: {
+              xs: "block",
+              sm: "inline"
+            }
+          }}> Currante?
+          </Box>
         </Typography>
         <Box
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            padding: "0 140px",
-            rowGap: "40px",
+            padding: {
+              xs: "0 113px",
+              lg: "0 140px"
+            },
+            rowGap: {
+              xs: "20px",
+              lg: "40px"
+            },
             columnGap: "40px",
             marginBottom: "75px"
           }}
