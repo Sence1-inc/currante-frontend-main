@@ -44,12 +44,14 @@ const theme: Theme = createTheme({
     fontWeightMedium: 600,
     fontWeightBold: 700,
     h1: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "4.8rem",
       fontWeight: 700,
       lineHeight: 1.167,
     },
     h2: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "3.6rem",
       fontWeight: 700,
@@ -59,6 +61,7 @@ const theme: Theme = createTheme({
       },
     },
     h3: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "2.4rem",
       fontWeight: 700,
@@ -68,6 +71,7 @@ const theme: Theme = createTheme({
       },
     },
     h4: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "2.0rem",
       fontWeight: 700,
@@ -77,6 +81,7 @@ const theme: Theme = createTheme({
       },
     },
     h5: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "1.8rem",
       fontWeight: 700,
@@ -86,6 +91,7 @@ const theme: Theme = createTheme({
       },
     },
     h6: {
+      color: "#0e2f71",
       fontFamily: "'Poppins', 'sans-serif'",
       fontSize: "1.4rem",
       fontWeight: 700,
