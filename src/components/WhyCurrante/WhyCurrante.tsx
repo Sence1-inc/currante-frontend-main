@@ -1,18 +1,14 @@
-
 import { Box, Container, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import WhyCurranteItem from "./WhyCurranteItem";
 
 const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
-const theme = useTheme();
-
   return (
     <Box
       sx={{
-        padding: { xs: "62px 0", md: "62px 97px" },
+        padding: { xs: "62px 0", lg: "62px 97px" },
         width: "100%",
         backgroundColor: "#FFFFFF",
-        textAlign: { xs: "center", md: "left" },
+        textAlign: { xs: "center", lg: "left" },
       }}
     >
       <Container
@@ -32,18 +28,23 @@ const theme = useTheme();
             color: "#0e2f71",
             marginBottom: {
               xs: "40px",
-              lg: "75px"
+              lg: "75px",
             },
             alignSelf: { md: "start" },
           }}
         >
-          Why Choose 
-          <Box component="span" sx={{
-            display: {
-              xs: "block",
-              sm: "inline"
-            }
-          }}> Currante?
+          Why Choose
+          <Box
+            component="span"
+            sx={{
+              display: {
+                xs: "block",
+                sm: "inline",
+              },
+            }}
+          >
+            {" "}
+            Currante?
           </Box>
         </Typography>
         <Box
@@ -53,17 +54,18 @@ const theme = useTheme();
             padding: {
               xs: "0",
               sm: "0 113px",
-              lg: "0 140px"
+              lg: "0 140px",
             },
             rowGap: {
               xs: "20px",
-              lg: "40px"
+              lg: "40px",
             },
             columnGap: "40px",
-            marginBottom: "75px"
+            marginBottom: "75px",
           }}
         >
-         {whyCurrante.map((whyCurranteItem: WhyCurranteItem, index: number) => {
+          {whyCurrante.map(
+            (whyCurranteItem: WhyCurranteItem, index: number) => {
               return (
                 <WhyCurranteItem
                   key={index}
@@ -72,7 +74,8 @@ const theme = useTheme();
                   image={whyCurranteItem.image}
                 />
               );
-          })}
+            }
+          )}
         </Box>
       </Container>
     </Box>

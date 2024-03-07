@@ -10,7 +10,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
   const [areAllIntrosShown, setAreAllIntrosShown] = useState<boolean>(false);
 
   useEffect(() => {
-    if (window.innerWidth > theme.breakpoints.values.md) {
+    if (window.innerWidth > theme.breakpoints.values.lg) {
       setAreAllIntrosShown(true);
     }
   }, [window, theme]);
@@ -21,10 +21,10 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
   return (
     <Box
       sx={{
-        padding: { xs: "62px 0", md: "62px 97px" },
+        padding: { xs: "62px 0", lg: "62px 97px" },
         width: "100%",
         backgroundColor: "#d8e5ff",
-        textAlign: { xs: "center", md: "left" },
+        textAlign: { xs: "center", lg: "left" },
       }}
     >
       <Container
@@ -97,7 +97,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
           </Collapse>
         </Box>
         {introduction.length > 4 &&
-          window.innerWidth <= theme.breakpoints.values.md && (
+          window.innerWidth <= theme.breakpoints.values.lg && (
             <Box
               onClick={toggleCollapse}
               sx={{
