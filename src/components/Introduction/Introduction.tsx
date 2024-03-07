@@ -22,7 +22,6 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
     <Box
       sx={{
         padding: { xs: "62px 0", lg: "62px 97px" },
-        width: "100%",
         backgroundColor: "#d8e5ff",
         textAlign: { xs: "center", lg: "left" },
       }}
@@ -36,12 +35,8 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
         }}
       >
         <Typography
-          variant="h2"
+          variant="h3"
           sx={{
-            fontFamily: "Poppins",
-            fontWeight: 700,
-            fontSize: "48px",
-            color: "#0e2f71",
             marginBottom: "75px",
             alignSelf: { md: "start" },
           }}
@@ -71,7 +66,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
           })}
 
           <Collapse
-            sx={{ margin: "auto", width: "100%" }}
+            sx={{ width: "100%" }}
             in={areAllIntrosShown}
             timeout="auto"
             unmountOnExit
@@ -108,7 +103,6 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
                 alignItems: "center",
                 rowGap: "18px",
               }}
-              margin="0 auto"
             >
               {areAllIntrosShown ? (
                 <KeyboardDoubleArrowUpIcon
