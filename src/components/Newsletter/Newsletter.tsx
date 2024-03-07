@@ -66,114 +66,121 @@ const Newsletter = () => {
     <Box
       sx={{
         backgroundColor: "#F5F6FA",
-        width: { md: "60%", sm: "100%" },
-        margin: { md: "auto", xs: "50px 0" },
-        padding: { xs: "80px 20px 80px 20px" },
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "50px",
+        width: "100%",
       }}
     >
-      <Typography
+      <Box
         sx={{
-          fontSize: "54px",
-          lineHeight: "54px",
-          fontWeight: 700,
-          color: "#0E2F71",
+          width: { md: "60%", sm: "100%" },
+          margin: { md: "auto" },
+          padding: { xs: "80px 20px 80px 20px" },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "50px",
         }}
       >
-        Newsletter
-      </Typography>
-      <Typography
-        sx={{ fontSize: "16px", fontWeight: 600, textAlign: "center" }}
-      >
-        Stay informed and engaged with exclusive content and benefits by
-        subscribing to our newsletter at Currante.
-      </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <FormControl style={{ width: "100%" }}>
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="employer"
-            name="radio-buttons-group-user-type"
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onChange={handleTypeChange}
-          >
-            <FormControlLabel
-              value="worker"
-              control={<Radio />}
-              label="I am a worker"
-            />
-            <FormControlLabel
-              value="employer"
-              control={<Radio />}
-              label="I am an employer"
-            />
-          </RadioGroup>
-        </FormControl>
-        <TextField
-          sx={{
-            "& fieldset": { border: "none" },
-            borderRadius: "16px",
-            border: "1px solid #0E2F71",
-          }}
-          id="outlined-basic"
-          variant="outlined"
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <Button
-          sx={{
-            bgcolor: "#F58A47",
-            borderRadius: "16px",
-            padding: "15px 20px 15px 20px",
-            "&:hover": {
-              backgroundColor: "#0E2F71",
-            },
-          }}
-          variant="contained"
-          onClick={handleSubscribe}
-        >
-          Subscribe
-        </Button>
         <Typography
-          sx={{ fontSize: "13px", fontWeight: 400, textAlign: "center" }}
+          sx={{
+            fontSize: "54px",
+            lineHeight: "54px",
+            fontWeight: 700,
+            color: "#0E2F71",
+          }}
         >
-          By subscribing to the newsletter, I have read this form and understand
-          its content and voluntarily give my consent for the collection, use,
-          processing, storage and retention of my personal data or information
-          to Sence1 for the purpose(s) described in the Privacy Policy
+          Newsletter
         </Typography>
-      </Box>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={isSnackbarOpen}
-        onClose={() => setIsSnackbarOpen(false)}
-        autoHideDuration={4000}
-        message={successMessage ? successMessage : errorMessage}
-        key="topcenter"
-        sx={{
-          color: errorMessage ? "red" : "green",
-          marginBottom: "16px",
-        }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setIsSnackbarOpen(false)}
-          severity={successMessage ? "success" : "error"}
+        <Typography
+          sx={{ fontSize: "16px", fontWeight: 600, textAlign: "center" }}
         >
-          {successMessage ? successMessage : errorMessage}
-        </Alert>
-      </Snackbar>
+          Stay informed and engaged with exclusive content and benefits by
+          subscribing to our newsletter at Currante.
+        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <FormControl style={{ width: "100%" }}>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="employer"
+              name="radio-buttons-group-user-type"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onChange={handleTypeChange}
+            >
+              <FormControlLabel
+                value="worker"
+                control={<Radio />}
+                label="I am a worker"
+              />
+              <FormControlLabel
+                value="employer"
+                control={<Radio />}
+                label="I am an employer"
+              />
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            sx={{
+              "& fieldset": { border: "none" },
+              borderRadius: "16px",
+              border: "1px solid #0E2F71",
+            }}
+            id="outlined-basic"
+            variant="outlined"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <Button
+            sx={{
+              bgcolor: "#F58A47",
+              borderRadius: "16px",
+              padding: "15px 20px 15px 20px",
+              "&:hover": {
+                backgroundColor: "#0E2F71",
+              },
+            }}
+            variant="contained"
+            onClick={handleSubscribe}
+          >
+            Subscribe
+          </Button>
+          <Typography
+            sx={{ fontSize: "13px", fontWeight: 400, textAlign: "center" }}
+          >
+            By subscribing to the newsletter, I have read this form and
+            understand its content and voluntarily give my consent for the
+            collection, use, processing, storage and retention of my personal
+            data or information to Sence1 for the purpose(s) described in the
+            Privacy Policy
+          </Typography>
+        </Box>
+
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={isSnackbarOpen}
+          onClose={() => setIsSnackbarOpen(false)}
+          autoHideDuration={4000}
+          message={successMessage ? successMessage : errorMessage}
+          key="topcenter"
+          sx={{
+            color: errorMessage ? "red" : "green",
+            marginBottom: "16px",
+          }}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={() => setIsSnackbarOpen(false)}
+            severity={successMessage ? "success" : "error"}
+          >
+            {successMessage ? successMessage : errorMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
     </Box>
   );
 };
