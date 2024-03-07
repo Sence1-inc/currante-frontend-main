@@ -1,11 +1,19 @@
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import { Box, Collapse, Container, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
 import IntroItem from "./IntroItem";
 
 const Introduction: React.FC<IntroProps> = ({ introduction }) => {
+  const theme = useTheme();
   const [areAllIntrosShown, setAreAllIntrosShown] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.innerWidth > theme.breakpoints.values.md) {
+      setAreAllIntrosShown(true);
+    }
+  }, [window, theme]);
 
   const toggleCollapse = () => {
     setAreAllIntrosShown(!areAllIntrosShown);
@@ -88,55 +96,56 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
             </Box>
           </Collapse>
         </Box>
-        {introduction.length > 4 && (
-          <Box
-            onClick={toggleCollapse}
-            sx={{
-              cursor: "pointer",
-              width: "160px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              rowGap: "18px",
-            }}
-            margin="0 auto"
-          >
-            {areAllIntrosShown ? (
-              <KeyboardDoubleArrowUpIcon
-                sx={{
-                  color: "#D2580B",
-                  height: "40px",
-                  width: "40px",
-                }}
-              />
-            ) : (
-              <KeyboardDoubleArrowDownIcon
-                sx={{
-                  color: "#D2580B",
-                  height: "40px",
-                  width: "40px",
-                }}
-              />
-            )}
-            <Typography
-              variant="body2"
+        {introduction.length > 4 &&
+          window.innerWidth <= theme.breakpoints.values.md && (
+            <Box
+              onClick={toggleCollapse}
               sx={{
+                cursor: "pointer",
+                width: "160px",
                 display: "flex",
-                align: "center",
-                fontFamily: "Open Sans",
-                fontWeight: "300",
-                fontSize: "14px",
-                color: "#000000",
-                textAlign: "center",
-                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                rowGap: "18px",
               }}
+              margin="0 auto"
             >
-              {areAllIntrosShown
-                ? "Show Less"
-                : "Know more about our app's services"}
-            </Typography>
-          </Box>
-        )}
+              {areAllIntrosShown ? (
+                <KeyboardDoubleArrowUpIcon
+                  sx={{
+                    color: "#D2580B",
+                    height: "40px",
+                    width: "40px",
+                  }}
+                />
+              ) : (
+                <KeyboardDoubleArrowDownIcon
+                  sx={{
+                    color: "#D2580B",
+                    height: "40px",
+                    width: "40px",
+                  }}
+                />
+              )}
+              <Typography
+                variant="body2"
+                sx={{
+                  display: "flex",
+                  align: "center",
+                  fontFamily: "Open Sans",
+                  fontWeight: "300",
+                  fontSize: "14px",
+                  color: "#000000",
+                  textAlign: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {areAllIntrosShown
+                  ? "Show Less"
+                  : "Know more about our app's services"}
+              </Typography>
+            </Box>
+          )}
       </Container>
     </Box>
   );
