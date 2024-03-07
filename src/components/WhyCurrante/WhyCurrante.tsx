@@ -51,7 +51,8 @@ const theme = useTheme();
             display: "flex",
             flexWrap: "wrap",
             padding: {
-              xs: "0 113px",
+              xs: "0",
+              sm: "0 113px",
               lg: "0 140px"
             },
             rowGap: {
