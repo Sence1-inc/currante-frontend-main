@@ -31,7 +31,7 @@ const ExploreOurServices = () => {
           boxShadow: "none",
           border: "none",
           borderRadius: 0,
-          width: { md: "560px" },
+          width: { lg: "600px" },
           display: "flex",
           flexDirection: "column",
           gap: "24px",
@@ -47,20 +47,25 @@ const ExploreOurServices = () => {
             margin: { lg: "auto 0 0 0" },
           }}
         >
-          <Typography variant="h3">Explore our Services</Typography>
+          <Typography
+            variant="h2"
+            sx={{ textAlign: { xs: "center", lg: "left" } }}
+          >
+            Explore our Services
+          </Typography>
           <Typography
             variant="body2"
             color="primary.main"
-            sx={{ textAlign: "center" }}
+            sx={{ textAlign: { xs: "center", lg: "left" } }}
           >
             Explore our services today and experience the joy of a sparkling,
             well-maintained space. 
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ padding: 0 }}>
           <Button
             sx={{
-              margin: "auto",
+              margin: { xs: "auto", lg: "0" },
               color: "common.white",
               bgcolor: "secondary.main",
               borderRadius: "16px",
@@ -80,8 +85,8 @@ const ExploreOurServices = () => {
           <Card
             sx={{
               order: { xs: index + 1, lg: service.order },
-              height: { xs: "250px", md: "370px" },
-              width: { md: "560px" },
+              height: { xs: "250px", md: "374px" },
+              width: { md: "600px" },
             }}
           >
             <CardMedia

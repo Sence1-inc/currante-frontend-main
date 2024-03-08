@@ -85,7 +85,7 @@ const Newsletter = () => {
           gap: "50px",
         }}
       >
-        <Typography variant="h3">Newsletter</Typography>
+        <Typography variant="h2">Newsletter</Typography>
         <Typography
           color="primary.main"
           variant="body2"

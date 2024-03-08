@@ -31,7 +31,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
       ></Box>
       <Box>
         <Typography
-          variant="h3"
+          variant="h2"
           align="center"
           sx={{
             margin: "0 auto 15px",

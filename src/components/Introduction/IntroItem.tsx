@@ -25,7 +25,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
         sx={{ mb: 1 }}
       />
       <Typography
-        variant="h3"
+        variant="h2"
         align="center"
         sx={{
           margin: "0 auto 15px",

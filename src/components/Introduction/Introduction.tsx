@@ -35,7 +35,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
         }}
       >
         <Typography
-          variant="h3"
+          variant="h2"
           sx={{
             marginBottom: "75px",
             alignSelf: { md: "start" },
