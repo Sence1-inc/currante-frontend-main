@@ -6,8 +6,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
     <Card
       sx={{
         margin: "auto",
-        maxWidth: "calc((100% - 80px) / 3)",
-        minWidth: "340px",
+        width: "300px",
         padding: "20px",
         minHeight: "460px",
         borderRadius: "16px",
@@ -26,7 +25,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
         sx={{ mb: 1 }}
       />
       <Typography
-        variant="h3"
+        variant="h2"
         align="center"
         sx={{
           margin: "0 auto 15px",

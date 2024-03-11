@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -20,8 +21,10 @@ const Newsletter = () => {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubscribe = async () => {
+    setIsLoading(true);
     try {
       const data = {
         email: email,
@@ -33,9 +36,11 @@ const Newsletter = () => {
       if (response.data) {
         setErrorMessage("");
         setSuccessMessage(response.data.message);
+        setIsLoading(false);
         setIsSnackbarOpen(true);
       }
     } catch (error) {
+      setIsLoading(false);
       setIsSnackbarOpen(true);
       setSuccessMessage("");
       if (axios.isAxiosError(error)) {
@@ -66,12 +71,11 @@ const Newsletter = () => {
     <Box
       sx={{
         backgroundColor: "#F5F6FA",
-        width: "100%",
       }}
     >
       <Box
         sx={{
-          width: { md: "60%", sm: "100%" },
+          width: { md: "60%" },
           margin: { md: "auto" },
           padding: { xs: "80px 20px 80px 20px" },
           display: "flex",
@@ -81,23 +85,11 @@ const Newsletter = () => {
           gap: "50px",
         }}
       >
+        <Typography variant="h2">Newsletter</Typography>
         <Typography
-          sx={{
-            fontSize: "54px",
-            lineHeight: "54px",
-            fontWeight: 700,
-            color: "#0E2F71",
-          }}
-        >
-          Newsletter
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "16px",
-            fontWeight: 600,
-            textAlign: "center",
-            color: "#0E2F71",
-          }}
+          color="primary.main"
+          variant="body2"
+          sx={{ textAlign: "center" }}
         >
           Stay informed and engaged with exclusive content and benefits by
           subscribing to our newsletter at Currante.
@@ -156,17 +148,15 @@ const Newsletter = () => {
             }}
             variant="contained"
             onClick={handleSubscribe}
+            disabled={isLoading}
           >
-            Subscribe
+            {isLoading ? (
+              <CircularProgress size={24} sx={{ color: "white" }} />
+            ) : (
+              "Subscribe"
+            )}
           </Button>
-          <Typography
-            sx={{
-              fontSize: "13px",
-              fontWeight: 400,
-              textAlign: "center",
-              color: "#000000",
-            }}
-          >
+          <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
             By subscribing to the newsletter, I have read this form and
             understand its content and voluntarily give my consent for the
             collection, use, processing, storage and retention of my personal
