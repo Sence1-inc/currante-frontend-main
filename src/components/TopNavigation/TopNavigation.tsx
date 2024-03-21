@@ -4,14 +4,13 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '@mui/material/Menu';  
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const settings = ['Manage Profile', 'Logout'];
 
@@ -44,13 +43,17 @@ function ResponsiveAppBar() {
     padding: "12px",
     boxSizing: "border-box",
     height: "64px"}}>
-      <Container maxWidth="xl" sx={{}}>
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" sx={{
+      }}>
+        <Toolbar disableGutters sx={{
+          display: "flex",
+          alignItems: "flex-start"
+        }}>
           <Box sx={{
             display: "flex",
             justifyContent: "center",
             width: "100%",
-            alignItems: "center",
+            alignItems: "flex-start",
             minHeight: "unset"
           }}>
             <Link href="/" underline="none" sx={{minHeight: "unset"}}>
@@ -59,7 +62,7 @@ function ResponsiveAppBar() {
                 height: "100%",
                 display: "flex", 
                 alignItems: "flex-start",
-                transform: "translate(18px, 0)",
+                transform: "translate(10px, 0)",
                 minHeight: "unset"
               }}/>
             </Link>        
@@ -67,12 +70,33 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0,
+                display: "flex",
+                alignItems: "center",
+                height: "40px"
+                }}>
+                <AccountCircleIcon sx={{
+                  fill: "#FFFFFF",
+                  width: {
+                    sm: "24px",
+                    md: "40px"
+                  },
+                  height:  {
+                    sm: "24px",
+                    md: "40px"
+                  }
+                }}/>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px",
+                ".css-134qb6a-MuiPaper-root-MuiPopover-paper-MuiMenu-paper" : {
+                  right: "0 !important",
+                  width: "150px",
+                  left: "unset !important",
+                  backgroundColor: "#A1B5DE"
+                }
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -89,7 +113,12 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" sx={{
+                    fontFamily: "Poppins",
+                    fontWeight: "600",
+                    letterSpacing: "0.5px",
+                    color: "#0E2F71"
+                  }}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>

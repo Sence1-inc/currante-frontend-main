@@ -20,7 +20,24 @@ export default function SimpleBottomNavigation() {
           backgroundColor: "#A1B5DE",
           display: "flex",
           height: "100%",
-          alignItems: "flex-start"
+          ".Mui-selected .MuiSvgIcon-root": {
+            backgroundColor: "#495D92", // Color when item is active
+            transition: "none !important"
+          },
+          ".Mui-selected" : {
+            transition: "none !important",
+          },
+          ".css-lo76r6-MuiBottomNavigationAction-label.Mui-selected" : {
+            fontSize: "12px !important",
+            transition: "none !important"
+          },
+          ".css-fwz4r0-MuiBottomNavigation-root .Mui-selected .MuiSvgIcon-root" : {
+            fontSize: "12px !important",
+            transition: "none !important"
+          },
+          ".MuiToolbar-root.MuiToolbar-regular.css-1sc8z0h-MuiToolbar-root  " : {
+            minHeight: "0px !important"
+          }
         }}
       >
         <BottomNavigationAction label="Job List" icon={<MapsHomeWorkRounded/>} 
@@ -31,12 +48,6 @@ export default function SimpleBottomNavigation() {
             transition: "none !important",
             webkitTransition: "none !important",
             height: "80px",
-            "& .MuiBottomNavigationAction-root, .Mui-selected, svg": {
-              color: "#FFFFFF",
-              transition: "none !important",
-              webkitTransition: "none !important",
-              fontSize: "24px"
-            },
             ".css-lo76r6-MuiBottomNavigationAction-label" :{
               fontFamily: "Poppins",
               fontSize: "12px",
@@ -48,11 +59,7 @@ export default function SimpleBottomNavigation() {
               width: "64px",
               borderRadius: "16px",
               padding: "3px",
-              transition: "none"
-            },
-            ".Mui-selected .MuiSvgIcon-root" : {
-              backgroundColor: "#495D92",
-              transition: "none"
+              color: "#FFFFFF"
             }
           }}/>
         <BottomNavigationAction label="Messages" icon={<ChatBubbleIcon/>} 
@@ -63,12 +70,6 @@ export default function SimpleBottomNavigation() {
             transition: "none !important",
             webkitTransition: "none !important",
             height: "80px",
-            "& .MuiBottomNavigationAction-root, .Mui-selected, svg": {
-              color: "#FFFFFF",
-              transition: "none !important",
-              webkitTransition: "none !important",
-              fontSize: "24px"
-            },
             ".css-lo76r6-MuiBottomNavigationAction-label" :{
               fontFamily: "Poppins",
               fontSize: "12px",
@@ -80,12 +81,8 @@ export default function SimpleBottomNavigation() {
               width: "64px",
               borderRadius: "16px",
               padding: "3px",
-              transition: "none"
+              color: "#FFFFFF"
             },
-            ".Mui-selected .MuiSvgIcon-root" : {
-              backgroundColor: "#495D92",
-              transition: "none"
-            }
           }}/>
       </ BottomNavigation>
     </Box>
