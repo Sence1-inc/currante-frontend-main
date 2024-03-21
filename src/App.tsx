@@ -7,12 +7,13 @@ import BottomNavigation from "./components/BottomNavigation/BottomNavigation";
 const App = () => {
   return (
     <>
-      <TopNavigation />
+      { /* Only shows the navbar in worker/employer pages */
+        location.pathname != "/" ? <TopNavigation /> : null } 
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/job-list" element={<WorkerHomePage />} />
         </Routes>
-      <BottomNavigation />
+      { location.pathname != "/" ? <BottomNavigation /> : null }
     </>
   );
 };
