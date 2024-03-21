@@ -39,8 +39,8 @@ const HomePage: React.FC = () => {
       <FloatingElement anchorEl={anchorEl} handleClose={handleClose}>
         <Newsletter />
       </FloatingElement>
-      <Introduction introduction={INTRODUCTION} />
       <WhyCurrante whyCurrante={WHYCURRANTE} />
+      <Introduction introduction={INTRODUCTION} />
       <ExploreOurServices />
       <FAQ />
       <Footer />
