@@ -2,10 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { MapsHomeWorkRounded } from '@mui/icons-material';
-import ChatBubble from '@mui/icons-material/ChatBubble';
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
@@ -19,26 +17,75 @@ export default function SimpleBottomNavigation() {
           setValue(newValue);
         }}
         sx={{
-          backgroundColor: "#A1B5DE"
+          backgroundColor: "#A1B5DE",
+          display: "flex",
+          height: "100%",
+          alignItems: "flex-start"
         }}
       >
         <BottomNavigationAction label="Job List" icon={<MapsHomeWorkRounded/>} 
           sx={{
-            color: "#FFFFFF !important",
-            fontFamily: "Poppins",
+            fontFamily: "Poppins !important",
             fontWeight: "600",
             fontSize: "12px",
-            letterSpacing: "0.5px",
-            transition: "unset"
+            transition: "none !important",
+            webkitTransition: "none !important",
+            height: "80px",
+            "& .MuiBottomNavigationAction-root, .Mui-selected, svg": {
+              color: "#FFFFFF",
+              transition: "none !important",
+              webkitTransition: "none !important",
+              fontSize: "24px"
+            },
+            ".css-lo76r6-MuiBottomNavigationAction-label" :{
+              fontFamily: "Poppins",
+              fontSize: "12px",
+              color: "#FFFFFF",
+              letterSpacing: "0.5px",
+              marginTop: "5px"
+            },
+            ".MuiSvgIcon-root" : {
+              width: "64px",
+              borderRadius: "16px",
+              padding: "3px",
+              transition: "none"
+            },
+            ".Mui-selected .MuiSvgIcon-root" : {
+              backgroundColor: "#495D92",
+              transition: "none"
+            }
           }}/>
         <BottomNavigationAction label="Messages" icon={<ChatBubbleIcon/>} 
           sx={{
-            color: "#FFFFFF !important",
-            fontFamily: "Poppins",
+            fontFamily: "Poppins !important",
             fontWeight: "600",
             fontSize: "12px",
-            letterSpacing: "0.5px",
-            transition: "unset"
+            transition: "none !important",
+            webkitTransition: "none !important",
+            height: "80px",
+            "& .MuiBottomNavigationAction-root, .Mui-selected, svg": {
+              color: "#FFFFFF",
+              transition: "none !important",
+              webkitTransition: "none !important",
+              fontSize: "24px"
+            },
+            ".css-lo76r6-MuiBottomNavigationAction-label" :{
+              fontFamily: "Poppins",
+              fontSize: "12px",
+              color: "#FFFFFF",
+              letterSpacing: "0.5px",
+              marginTop: "5px"
+            },
+            ".MuiSvgIcon-root" : {
+              width: "64px",
+              borderRadius: "16px",
+              padding: "3px",
+              transition: "none"
+            },
+            ".Mui-selected .MuiSvgIcon-root" : {
+              backgroundColor: "#495D92",
+              transition: "none"
+            }
           }}/>
       </ BottomNavigation>
     </Box>

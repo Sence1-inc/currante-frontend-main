@@ -35,20 +35,32 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar sx={{ width: "100%", position: "fixed", top: 0, left: 0, right: 0}}>
-      <Container maxWidth="xl" sx={{backgroundColor: "#A1B5DE"}}>
+    <AppBar sx={{ width: "100%", 
+    position: "fixed", 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    backgroundColor: "#A1B5DE", 
+    padding: "12px",
+    boxSizing: "border-box",
+    height: "64px"}}>
+      <Container maxWidth="xl" sx={{}}>
         <Toolbar disableGutters>
           <Box sx={{
             display: "flex",
             justifyContent: "center",
-            width: "100%"
+            width: "100%",
+            alignItems: "center",
+            minHeight: "unset"
           }}>
-            <Link href="/" underline="none">
+            <Link href="/" underline="none" sx={{minHeight: "unset"}}>
               <Box component="img" src="/src/assets/logo.png" sx={{
                 width: "151px", 
-                height: "40px",
+                height: "100%",
                 display: "flex", 
-                transform: "translate(18px, 0)"
+                alignItems: "flex-start",
+                transform: "translate(18px, 0)",
+                minHeight: "unset"
               }}/>
             </Link>        
           </Box>    
