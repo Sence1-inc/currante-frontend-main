@@ -2,9 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import { MapsHomeWorkRounded } from '@mui/icons-material';
+import ChatBubble from '@mui/icons-material/ChatBubble';
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
@@ -17,11 +18,29 @@ export default function SimpleBottomNavigation() {
         onChange={(_event, newValue) => {
           setValue(newValue);
         }}
+        sx={{
+          backgroundColor: "#A1B5DE"
+        }}
       >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
-      </BottomNavigation>
+        <BottomNavigationAction label="Job List" icon={<MapsHomeWorkRounded/>} 
+          sx={{
+            color: "#FFFFFF !important",
+            fontFamily: "Poppins",
+            fontWeight: "600",
+            fontSize: "12px",
+            letterSpacing: "0.5px",
+            transition: "unset"
+          }}/>
+        <BottomNavigationAction label="Messages" icon={<ChatBubbleIcon/>} 
+          sx={{
+            color: "#FFFFFF !important",
+            fontFamily: "Poppins",
+            fontWeight: "600",
+            fontSize: "12px",
+            letterSpacing: "0.5px",
+            transition: "unset"
+          }}/>
+      </ BottomNavigation>
     </Box>
   );
 }
