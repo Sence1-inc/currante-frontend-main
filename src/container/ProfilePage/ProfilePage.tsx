@@ -1,29 +1,26 @@
-import React from "react";
-import Footer from "../../components/Footer/Footer";
-import Header from "../../components/Header/Header";
-import { Box, Container, Typography } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import StarIcon from "@mui/icons-material/Star";
-import { TextField, Button } from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
-import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
+import PersonIcon from "@mui/icons-material/Person";
+import StarIcon from "@mui/icons-material/Star";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import React from "react";
 
 const ProfilePage: React.FC = () => {
   return (
     <Box>
-      <Header />
-      <Container
+      <Box
         component={"section"}
         sx={{
           textAlign: "center",
+          padding: "0",
         }}
       >
         <Box
           display={"flex"}
           justifyContent={"space-between"}
-          padding={"10px 0"}
+          padding={"10px 15px"}
         >
           <ArrowBackOutlinedIcon />
           <Button
@@ -50,62 +47,71 @@ const ProfilePage: React.FC = () => {
             }}
           />
         </Box>
-      </Container>
-      <Container component={"section"}>
-        <Box p={"20px 0"} textAlign={"center"}>
-          <PersonIcon
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "90px",
-              width: "90px",
-              height: "90px",
-              padding: "10px",
-              color: "#A1B5DE",
-            }}
-          />
-
-          <Typography
-            sx={{
-              fontFamily: "Poppins",
-              fontWeight: "600",
-              fontSize: "22px",
-              color: "#F58A47",
-            }}
-          >
-            Jane Smith
-          </Typography>
-
-          <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-            <StarIcon
+      </Box>
+      <Box component={"section"} sx={{ padding: "0" }}>
+        {/* <Box textAlign={"center"}> */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            padding: "20px 10px",
+          }}
+        >
+          <Box sx={{ textAlign: "center" }}>
+            <PersonIcon
               sx={{
-                color: "#F58A47",
-                width: "10px",
-              }}
-            />
-
-            <StarIcon
-              sx={{
+                border: "1px solid #F58A47",
+                borderRadius: "90px",
+                width: "90px",
+                height: "90px",
+                padding: "10px",
                 color: "#A1B5DE",
-                width: "10px",
               }}
             />
 
-            <Typography>(4 stars)</Typography>
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: "600",
+                fontSize: "22px",
+                color: "#F58A47",
+              }}
+            >
+              Jane Smith
+            </Typography>
+
+            <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
+              <StarIcon
+                sx={{
+                  color: "#F58A47",
+                  width: "10px",
+                }}
+              />
+
+              <StarIcon
+                sx={{
+                  color: "#A1B5DE",
+                  width: "10px",
+                }}
+              />
+
+              <Typography>(4 stars)</Typography>
+            </Box>
+
+            <Typography
+              sx={{
+                fontFamily: "Open Sans",
+                fontWeight: "400",
+                fontSize: "12px",
+                lineHeight: "1.6",
+                margin: "10px 0 20px",
+              }}
+            >
+              Job description here. Lorem ipsum dolor sit amet, consectetur
+              adipiscing elit. Sed eget consequat nibh, vitae posuere leo.
+            </Typography>
           </Box>
-
-          <Typography
-            sx={{
-              fontFamily: "Open Sans",
-              fontWeight: "400",
-              fontSize: "12px",
-              lineHeight: "1.6",
-              margin: "10px 0 20px",
-            }}
-          >
-            Job description here. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Sed eget consequat nibh, vitae posuere leo.
-          </Typography>
-
           <Box
             sx={{
               border: "1px solid #F58A47",
@@ -411,9 +417,9 @@ const ProfilePage: React.FC = () => {
             </Box>
           </Box>
         </Box>
-      </Container>
-      <Footer />
+      </Box>
     </Box>
+    // </Box>
   );
 };
 
