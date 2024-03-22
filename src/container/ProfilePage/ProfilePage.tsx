@@ -449,6 +449,7 @@ const ProfilePage: React.FC = () => {
         </Alert>
       </Snackbar>
     </Box>
+    // </Box>
   );
 };
 
