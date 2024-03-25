@@ -1,13 +1,45 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
-import PersonIcon from "@mui/icons-material/Person";
 import StarIcon from "@mui/icons-material/Star";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import React from "react";
+import { Dayjs } from "dayjs";
+import React, { useMemo, useState } from "react";
+import { JOB_SUB_TYPES, JOB_TYPES } from "../../data/WorkerDetails";
+import { useAppSelector } from "../../redux/store";
+import { User } from "../../redux/type";
 
 const ProfilePage: React.FC = () => {
+  const userSelector = useMemo(() => (state: any) => state.user, []);
+  const user: User = useAppSelector(userSelector);
+  const [name, setName] = useState<string>("");
+  const [birthday, setBirthday] = useState<Date | Dayjs | null>(null);
+  const [gender, setGender] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [jobType, setJobType] = useState<string>("");
+  const [jobSubtype, setJobSubtype] = useState<
+    { jobSubtype: string; rate: string }[] | []
+  >([{ jobSubtype: "", rate: "" }]);
+  const [businessHours, setBusinessHours] = useState<string>("");
+  const [servicingAreas, setServicingAreas] = useState<string[]>([""]);
+
+  console.log("USER", user);
+  console.log(
+    "WAW",
+    jobSubtype.filter((type) => type.jobSubtype === "general cleaning")
+  );
   return (
     <Box>
       <Box
@@ -49,7 +81,6 @@ const ProfilePage: React.FC = () => {
         </Box>
       </Box>
       <Box component={"section"} sx={{ padding: "0" }}>
-        {/* <Box textAlign={"center"}> */}
         <Box
           sx={{
             display: "flex",
@@ -58,17 +89,28 @@ const ProfilePage: React.FC = () => {
             padding: "20px 10px",
           }}
         >
-          <Box sx={{ textAlign: "center" }}>
-            <PersonIcon
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "20px",
+            }}
+          >
+            <Avatar
               sx={{
                 border: "1px solid #F58A47",
                 borderRadius: "90px",
                 width: "90px",
                 height: "90px",
                 padding: "10px",
-                color: "#A1B5DE",
+                backgroundColor: "background.default",
+                color: "primary.main",
               }}
-            />
+            >
+              {user.first_name.charAt(0)}
+            </Avatar>
 
             <Typography
               sx={{
@@ -78,7 +120,7 @@ const ProfilePage: React.FC = () => {
                 color: "#F58A47",
               }}
             >
-              Jane Smith
+              {user.first_name} {user.middle_name} {user.last_name}
             </Typography>
 
             <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
@@ -108,8 +150,7 @@ const ProfilePage: React.FC = () => {
                 margin: "10px 0 20px",
               }}
             >
-              Job description here. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit. Sed eget consequat nibh, vitae posuere leo.
+              {user.role.role_details}
             </Typography>
           </Box>
           <Box
@@ -153,7 +194,7 @@ const ProfilePage: React.FC = () => {
                   ),
                 }}
                 variant="standard"
-                value={"Jane Smith"}
+                value={name}
               />
 
               <TextField
@@ -177,7 +218,10 @@ const ProfilePage: React.FC = () => {
                   ),
                 }}
                 variant="standard"
-                value={"Female"}
+                value={gender}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setGender(e.target.value)
+                }
               />
             </Box>
           </Box>
@@ -223,7 +267,10 @@ const ProfilePage: React.FC = () => {
                   ),
                 }}
                 variant="standard"
-                value={"jane.smith@email.com"}
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
               />
 
               <TextField
@@ -235,7 +282,10 @@ const ProfilePage: React.FC = () => {
                   ),
                 }}
                 variant="standard"
-                value={"09123456789"}
+                value={phoneNumber}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPhoneNumber(e.target.value)
+                }
               />
             </Box>
           </Box>
@@ -272,29 +322,55 @@ const ProfilePage: React.FC = () => {
             </Typography>
 
             <Box>
-              <Typography
-                sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: "600",
-                  fontSize: "11px",
-                }}
-              >
-                General Cleaning
-              </Typography>
-
-              <TextField
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      House cleaning
-                    </InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={"₱25/sqm"}
-              />
+              <FormControl variant="standard" fullWidth>
+                <Select
+                  fullWidth
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={jobType}
+                  label="Age"
+                  onChange={(e: SelectChangeEvent) =>
+                    setJobType(e.target.value)
+                  }
+                >
+                  {JOB_TYPES.map((type) => {
+                    return <MenuItem value={type}>{type}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+              {jobType &&
+                JOB_SUB_TYPES.filter(
+                  (item) => item.job_type === jobType
+                )[0].job_subtypes.map((item) => {
+                  return (
+                    <TextField
+                      key={item.name} // Adding a unique key prop
+                      id="standard-start-adornment"
+                      sx={{ m: 1, width: "100%" }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            {item.name} ({item.unit})
+                          </InputAdornment>
+                        ),
+                      }}
+                      variant="standard"
+                      placeholder="e.g. 50"
+                      value={
+                        jobSubtype.find((type) => type.jobSubtype === item.name)
+                          ?.rate || ""
+                      }
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const updatedJobSubtype = jobSubtype.map((type) =>
+                          type.jobSubtype === item.name
+                            ? { ...type, rate: e.target.value }
+                            : type
+                        );
+                        setJobSubtype(updatedJobSubtype);
+                      }}
+                    />
+                  );
+                })}
             </Box>
           </Box>
 
@@ -329,41 +405,18 @@ const ProfilePage: React.FC = () => {
               Some info may be visible to other people
             </Typography>
 
-            <Box>
-              <Typography
-                sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: "600",
-                  fontSize: "11px",
-                }}
-              >
-                Business Hours
-              </Typography>
-
+            <Box sx={{ paddingRight: "20px" }}>
               <TextField
+                fullWidth
                 id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      Regular Days
-                    </InputAdornment>
-                  ),
-                }}
+                sx={{ m: 1 }}
                 variant="standard"
-                value={"Weekdays 5:00-24:00"}
-              />
-
-              <TextField
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Holidays</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={"Year-end December 31st"}
+                value={businessHours}
+                multiline
+                minRows={1}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setBusinessHours(e.target.value)
+                }
               />
             </Box>
           </Box>
@@ -389,31 +442,33 @@ const ProfilePage: React.FC = () => {
                 Servicing Area
               </Typography>
               <ControlPointOutlinedIcon
+                onClick={() =>
+                  setServicingAreas((prevState) => [...prevState, ""])
+                }
                 sx={{
                   color: "#F58A47",
                 }}
               />
             </Box>
 
-            <Box>
-              <TextField
-                sx={{
-                  width: "100%",
-                  padding: "0 15px",
-                }}
-                id="standard-basic"
-                variant="standard"
-                value={"Quezon City"}
-              />
-              <TextField
-                sx={{
-                  width: "100%",
-                  padding: "0 15px",
-                }}
-                id="standard-basic"
-                variant="standard"
-                value={"Pasig City"}
-              />
+            <Box sx={{ paddingRight: "20px" }}>
+              {servicingAreas.map((area, index) => (
+                <TextField
+                  key={index}
+                  sx={{
+                    width: "100%",
+                    padding: "0 15px",
+                  }}
+                  id={`standard-basic-${index}`}
+                  variant="standard"
+                  value={area}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const newAreas = [...servicingAreas];
+                    newAreas[index] = e.target.value;
+                    setServicingAreas(newAreas);
+                  }}
+                />
+              ))}
             </Box>
           </Box>
         </Box>
