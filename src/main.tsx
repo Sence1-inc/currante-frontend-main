@@ -127,7 +127,50 @@ const theme: Theme = createTheme({
         fontSize: "0.750rem",
       },
     },
+    smallest: {
+      color: "#0e2f71",
+      fontFamily: "'Poppins', 'sans-serif'",
+      fontSize: ".5rem",
+      fontWeight: 500
+    },
+    titleMed: {
+      color: "#0e2f71",
+      fontFamily: "'Poppins', 'sans-serif'",
+      fontSize: "1rem",
+      fontWeight: 600
+    },
+    labelLight: {
+      color: "#7C7C7C",
+      fontFamily: "'Poppins', 'sans-serif'",
+      fontSize: ".8rem",
+      fontWeight: 400
+    },
+    labelSmall: {
+      color: "#0e2f71",
+      fontFamily: "'Poppins', 'sans-serif'",
+      fontSize: ".75rem",
+      fontWeight: 600
+    },
+    bodySmall: {
+      color: "#868686",
+      fontFamily: "'Open Sans', 'serif'",
+      fontSize: ".75rem",
+      fontWeight: 500
+    },
   },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          smallest: 'span',
+          titleMed: 'span',
+          bodySmall: 'p',
+          labelSmall: 'span',
+          labelLight: 'span'
+        },
+      }
+    }
+  }
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

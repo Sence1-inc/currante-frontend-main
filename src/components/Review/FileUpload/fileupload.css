@@ -1,0 +1,44 @@
+.fileUploadContainer {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+form.fileUpload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    max-height: 300px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px dashed #9e9e9e;
+}
+.fileUploadDefault {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px   ;
+}
+.fileUploadDefault img {
+    padding: 16px 36px;
+    background-color: rgba(19, 109, 199, .10);
+    border-radius: 50px;
+}
+.fileUploaded {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: auto;
+    max-height: 300px;
+}
+.fileUploaded img {
+    width: 80%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+}
