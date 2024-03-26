@@ -7,6 +7,7 @@ import ChatPage from "./container/ChatPage/ChatPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
+import ReviewPage from "./container/ReviewPage/ReviewPage";
 import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
 import { LOGGED_IN_USER } from "./data/WorkerDetails";
 import { initializeUser } from "./redux/reducers/UserReducer";
@@ -50,6 +51,7 @@ const App = () => {
         path="/chat/:conversation_id"
         element={<PrivateRoute component={ChatRoom} />}
       />
+      <Route path="/review" element={<PrivateRoute component={ReviewPage} />} />
     </Routes>
   );
 };
