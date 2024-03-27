@@ -13,6 +13,7 @@ export interface JobSubType {
   job_type: JobType;
   job_name: string;
   unit: string;
+  job_unit_price: number;
 }
 
 export interface WorkerJobSubtype {
@@ -53,12 +54,19 @@ export interface UserPhoto {
   id_photo: string;
 }
 
+export interface Area {
+  area_name: string;
+}
+
 export interface User {
   email: string;
   role: {
     role_name: string;
     role_details: string;
   };
+  areas: Area[];
+  job_subtypes: JobSubType[];
+  business_hours: string;
   first_name: string;
   middle_name: string;
   last_name: string;
