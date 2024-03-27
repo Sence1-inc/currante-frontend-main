@@ -35,7 +35,7 @@ const ReviewPage = () => {
           <FileUpload />
         </Box>
       </Container>
-      <Button variant="contained" fullWidth="true" sx={{
+      <Button variant="contained" fullWidth sx={{
         padding:"10px 0px",
         borderRadius: "0px",
         "&:hover": {
