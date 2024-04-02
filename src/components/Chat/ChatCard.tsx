@@ -1,6 +1,13 @@
 import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import React from "react";
+import { FirebaseUser } from "../../container/ChatPage/ChatPage";
 
-const ChatCard = () => {
+interface ChatCardProps {
+  handleCardClick: () => void;
+  user: FirebaseUser;
+}
+
+const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
   return (
     <Card
       sx={{
@@ -11,6 +18,7 @@ const ChatCard = () => {
         border: "1px #C5C6D0 solid",
         boxShadow: "none",
       }}
+      onClick={handleCardClick}
     >
       <Avatar
         sx={{ width: "40px", height: "40px", alignSelf: "center" }}
@@ -36,7 +44,9 @@ const ChatCard = () => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">Jane Smith</Typography>
+          <Typography variant="body2">
+            {user.first_name} {user.middle_name} {user.last_name}
+          </Typography>
           <Typography variant="body2">&#x2022;</Typography>
           <Typography variant="body2">Pasig City</Typography>
         </Box>
