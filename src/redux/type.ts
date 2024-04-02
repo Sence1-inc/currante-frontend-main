@@ -59,6 +59,7 @@ export interface Area {
 }
 
 export interface User {
+  id: number | null;
   email: string;
   uuid: string;
   role: {
@@ -79,4 +80,5 @@ export interface User {
   user_photos: UserPhoto[];
   addresses: Address[];
   reviews: Review[];
+  uuid: string;
 }
