@@ -55,6 +55,7 @@ export interface UserPhoto {
 }
 
 export interface Area {
+  id: number | null;
   area_name: string;
 }
 
@@ -64,9 +65,10 @@ export interface User {
     role_name: string;
     role_details: string;
   };
+  description: string;
   areas: Area[];
   job_subtypes: JobSubType[];
-  business_hours: string;
+  schedule: string;
   first_name: string;
   middle_name: string;
   last_name: string;
