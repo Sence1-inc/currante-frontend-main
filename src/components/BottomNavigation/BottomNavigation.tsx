@@ -1,15 +1,19 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import { MapsHomeWorkRounded } from '@mui/icons-material';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import { MapsHomeWorkRounded } from "@mui/icons-material";
+import { useNavigate } from "react-router";
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();
 
   return (
-    <Box sx={{ width: "100%", position: "fixed", bottom: 0, left: 0, right: 0}} >
+    <Box
+      sx={{ width: "100%", position: "fixed", bottom: 0, left: 0, right: 0 }}
+    >
       <BottomNavigation
         showLabels
         value={value}
@@ -22,25 +26,29 @@ export default function SimpleBottomNavigation() {
           height: "100%",
           ".Mui-selected .MuiSvgIcon-root": {
             backgroundColor: "#495D92", // Color when item is active
-            transition: "none !important"
-          },
-          ".Mui-selected" : {
             transition: "none !important",
           },
-          ".css-lo76r6-MuiBottomNavigationAction-label.Mui-selected" : {
-            fontSize: "12px !important",
-            transition: "none !important"
+          ".Mui-selected": {
+            transition: "none !important",
           },
-          ".css-fwz4r0-MuiBottomNavigation-root .Mui-selected .MuiSvgIcon-root" : {
+          ".css-lo76r6-MuiBottomNavigationAction-label.Mui-selected": {
             fontSize: "12px !important",
-            transition: "none !important"
+            transition: "none !important",
           },
-          ".MuiToolbar-root.MuiToolbar-regular.css-1sc8z0h-MuiToolbar-root  " : {
-            minHeight: "0px !important"
-          }
+          ".css-fwz4r0-MuiBottomNavigation-root .Mui-selected .MuiSvgIcon-root":
+            {
+              fontSize: "12px !important",
+              transition: "none !important",
+            },
+          ".MuiToolbar-root.MuiToolbar-regular.css-1sc8z0h-MuiToolbar-root  ": {
+            minHeight: "0px !important",
+          },
         }}
       >
-        <BottomNavigationAction label="Job List" icon={<MapsHomeWorkRounded/>} 
+        <BottomNavigationAction
+          label="Job List"
+          icon={<MapsHomeWorkRounded />}
+          onClick={() => navigate("/profile")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",
@@ -48,21 +56,25 @@ export default function SimpleBottomNavigation() {
             transition: "none !important",
             webkitTransition: "none !important",
             height: "80px",
-            ".css-lo76r6-MuiBottomNavigationAction-label" :{
+            ".css-lo76r6-MuiBottomNavigationAction-label": {
               fontFamily: "Poppins",
               fontSize: "12px",
               color: "#FFFFFF",
               letterSpacing: "0.5px",
-              marginTop: "5px"
+              marginTop: "5px",
             },
-            ".MuiSvgIcon-root" : {
+            ".MuiSvgIcon-root": {
               width: "64px",
               borderRadius: "16px",
               padding: "3px",
-              color: "#FFFFFF"
-            }
-          }}/>
-        <BottomNavigationAction label="Messages" icon={<ChatBubbleIcon/>} 
+              color: "#FFFFFF",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Messages"
+          icon={<ChatBubbleIcon />}
+          onClick={() => navigate("/chat")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",
@@ -70,21 +82,22 @@ export default function SimpleBottomNavigation() {
             transition: "none !important",
             webkitTransition: "none !important",
             height: "80px",
-            ".css-lo76r6-MuiBottomNavigationAction-label" :{
+            ".css-lo76r6-MuiBottomNavigationAction-label": {
               fontFamily: "Poppins",
               fontSize: "12px",
               color: "#FFFFFF",
               letterSpacing: "0.5px",
-              marginTop: "5px"
+              marginTop: "5px",
             },
-            ".MuiSvgIcon-root" : {
+            ".MuiSvgIcon-root": {
               width: "64px",
               borderRadius: "16px",
               padding: "3px",
-              color: "#FFFFFF"
+              color: "#FFFFFF",
             },
-          }}/>
-      </ BottomNavigation>
+          }}
+        />
+      </BottomNavigation>
     </Box>
   );
 }
