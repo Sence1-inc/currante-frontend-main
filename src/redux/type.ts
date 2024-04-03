@@ -5,15 +5,14 @@ export interface Address {
   street: string;
 }
 
-export interface JobType {
-  job_type_name: string;
-}
-
 export interface JobSubType {
-  job_type: JobType;
+  job_subtype_id: number | null;
+  job_type: string;
+  job_type_id: number | null;
   job_name: string;
   unit: string;
   job_unit_price: number;
+  active_flg: boolean | number;
 }
 
 export interface WorkerJobSubtype {

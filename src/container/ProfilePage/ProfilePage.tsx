@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import StarIcon from "@mui/icons-material/Star";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,9 +30,9 @@ import { JOB_SUB_TYPES, JOB_TYPES } from "../../data/WorkerDetails";
 import { useAppSelector } from "../../redux/store";
 import { Area, JobSubType, User } from "../../redux/type";
 
-interface JobDetails {
+interface JobSubtypeDefault {
   job_type: string;
-  job_subtypes: Omit<JobSubType, "job_type">[];
+  job_subtypes: { name: string; unit: string; id: number }[];
 }
 
 interface Photo {
@@ -53,10 +55,9 @@ const ProfilePage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [jobType, setJobType] = useState<string>("");
-  const [jobSubtypes, setJobSubtypes] = useState<
-    | { jobSubtype: string; jobUnitPrice: number | null; unit: string | null }[]
-    | []
-  >([{ jobSubtype: "", jobUnitPrice: null, unit: "" }]);
+  const [jobTypeId, setJobTypeId] = useState<number | null>(null);
+  const [selectedJobType, setSelectedJobType] = useState<string>("");
+  const [jobSubtypes, setJobSubtypes] = useState<JobSubType[]>([]);
   const [schedule, setSchedule] = useState<string>("");
   const [servicingAreas, setServicingAreas] = useState<Area[]>([
     { id: null, area_name: "" },
@@ -69,6 +70,18 @@ const ProfilePage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [infoMessage, setInfoMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [jobTypes, setJobtypes] = useState<
+    { id: number; job_type_name: string }[] | []
+  >([]);
+  const [jobSubtypesDefault, setJobSubtypesDefault] =
+    useState<JobSubtypeDefault>({
+      job_type: "",
+      job_subtypes: [{ name: "", unit: "", id: 0 }],
+    });
 
   const handleavatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -83,32 +96,21 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const jobDetails: { job: JobDetails } = user?.job_subtypes?.reduce(
-    (acc: any, current: any) => {
-      const jobType = current.job_type;
+  const uniqueJobType: string = Array.from(
+    new Set(
+      user?.job_subtypes
+        .filter((job) => job.active_flg === 1)
+        .map((job) => job.job_type)
+    )
+  )[0];
 
-      if (!acc["job"]) {
-        acc["job"] = {
-          job_type: jobType,
-          job_subtypes: [
-            {
-              job_name: current.job_name,
-              job_unit_price: current.job_unit_price,
-              unit: current.unit,
-            },
-          ],
-        };
-      } else {
-        acc["job"].job_subtypes.push({
-          job_name: current.job_name,
-          job_unit_price: current.job_unit_price,
-          unit: current.unit,
-        });
-      }
-      return acc;
-    },
-    {}
-  );
+  const uniqueJobTypeId = Array.from(
+    new Set(
+      user?.job_subtypes
+        .filter((job) => job.active_flg === 1)
+        .map((job) => job.job_type_id)
+    )
+  )[0];
 
   const userPhotos = (photos: Photo[]): UserPhotos => {
     const rearrangedPhotos: UserPhotos = { photos: [] };
@@ -134,6 +136,42 @@ const ProfilePage: React.FC = () => {
   }, [edittingSection]);
 
   useEffect(() => {
+    if (
+      jobSubtypes.length > 0 &&
+      jobSubtypes.find((type) => type.job_name === "")
+    ) {
+      const filteredSubtype = jobSubtypes.filter(
+        (type) => type.job_name.trim() !== ""
+      );
+
+      setJobSubtypes(filteredSubtype);
+    }
+  }, [jobSubtypes]);
+
+  useEffect(() => {
+    if (jobType) {
+      const prevJobSubtypes = jobSubtypes?.filter(
+        (type) => type.job_type !== jobType
+      );
+      const selectedJobSubtypes = jobSubtypes?.filter(
+        (type) => type.job_type === jobType
+      );
+
+      const inactiveJobSubtypes = prevJobSubtypes.map((subtype) => ({
+        ...subtype,
+        active_flg: 0,
+      }));
+
+      const activeJobSubtypes = selectedJobSubtypes.map((subtype) => ({
+        ...subtype,
+        active_flg: 1,
+      }));
+
+      setJobSubtypes([...inactiveJobSubtypes, ...activeJobSubtypes]);
+    }
+  }, [jobType]);
+
+  useEffect(() => {
     if (user) {
       setFirstName(user.first_name);
       setMiddleName(user.middle_name);
@@ -142,19 +180,9 @@ const ProfilePage: React.FC = () => {
       setEmail(user.email);
       setGender(user.gender);
       setPhoneNumber(user.phone_number);
-      setJobType(jobDetails?.job?.job_type);
-
-      const updatedJobSubtype: {
-        jobSubtype: string;
-        jobUnitPrice: number;
-        unit: string;
-      }[] = jobDetails?.job?.job_subtypes?.map((subtype) => ({
-        jobSubtype: subtype.job_name,
-        jobUnitPrice: subtype.job_unit_price,
-        unit: subtype.unit,
-      }));
-
-      setJobSubtypes(updatedJobSubtype);
+      setJobType(uniqueJobType);
+      setJobTypeId(uniqueJobTypeId);
+      setJobSubtypes(user.job_subtypes);
       setSchedule(user.schedule);
       setServicingAreas(user.areas);
       setDescription(user.description);
@@ -179,8 +207,36 @@ const ProfilePage: React.FC = () => {
       }
     };
 
+    const getJobtypes = async () => {
+      try {
+        const { data } = await axiosInstance.get(`/api/v1/jobtypes`);
+        setJobtypes(data);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
     getAreas();
+    getJobtypes();
   }, []);
+
+  useEffect(() => {
+    const getJobSubtypes = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/api/v1/jobtypes/${jobTypeId}`
+        );
+
+        setJobSubtypesDefault({ ...data });
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
+    if (jobType) {
+      getJobSubtypes();
+    }
+  }, [jobType]);
 
   const handleSave = async () => {
     const data = {
@@ -790,23 +846,26 @@ const ProfilePage: React.FC = () => {
                   id="demo-simple-select-standard"
                   value={jobType}
                   label="Job Type"
-                  onChange={(e: SelectChangeEvent) =>
-                    setJobType(e.target.value)
-                  }
+                  onChange={(e: SelectChangeEvent) => {
+                    setIsSnackbarOpen(true);
+                    setInfoMessage(
+                      `Are you sure you want to set your job type to ${e.target.value}?`
+                    );
+                    setSelectedJobType(e.target.value);
+                  }}
                 >
-                  {JOB_TYPES.map((type) => {
+                  {jobTypes.map((type) => {
                     return (
-                      <MenuItem key={type} value={type}>
-                        {type}
+                      <MenuItem key={type.id} value={type.job_type_name}>
+                        {type.job_type_name}
                       </MenuItem>
                     );
                   })}
                 </Select>
               </FormControl>
               {jobType &&
-                JOB_SUB_TYPES.filter(
-                  (item) => item.job_type === jobType
-                )[0]?.job_subtypes?.map((item) => {
+                jobSubtypesDefault?.job_type === jobType &&
+                jobSubtypesDefault?.job_subtypes?.map((item) => {
                   return (
                     <TextField
                       disabled={edittingSection !== "rates"}
@@ -823,21 +882,50 @@ const ProfilePage: React.FC = () => {
                       variant="standard"
                       placeholder="e.g. 50"
                       value={
-                        jobSubtypes.find(
-                          (type) => type.jobSubtype === item.name
-                        )?.jobUnitPrice || null
+                        (Array.isArray(jobSubtypes) &&
+                          jobSubtypes.find((type) => {
+                            return (
+                              type.job_name === item.name &&
+                              type.job_type === jobType
+                            );
+                          })?.job_unit_price) ??
+                        null
                       }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const updatedJobSubtype = jobSubtypes?.map((type) =>
-                          type.jobSubtype === item.name
-                            ? {
-                                ...type,
-                                jobUnitPrice: Number(e.target.value),
-                                unit: item.unit,
-                              }
-                            : type
-                        );
-                        setJobSubtypes(updatedJobSubtype);
+                        const subtype =
+                          Array.isArray(jobSubtypes) &&
+                          jobSubtypes.find(
+                            (type) =>
+                              type.job_type === jobType &&
+                              type.job_name === item.name &&
+                              type.active_flg
+                          );
+                        if (subtype) {
+                          const subtypeData = {
+                            job_unit_price: Number(e.target.value),
+                            unit: item.unit,
+                          };
+                          setJobSubtypes([
+                            ...jobSubtypes.filter(
+                              (type) => type.job_name !== item.name
+                            ),
+                            { ...subtype, ...subtypeData },
+                          ]);
+                        } else {
+                          const newJobSubtype = [
+                            {
+                              job_subtype_id: item.id,
+                              job_type: jobType,
+                              job_type_id: jobTypeId,
+                              job_name: item.name,
+                              job_unit_price: Number(e.target.value),
+                              unit: item.unit,
+                              active_flg: true,
+                            },
+                          ];
+
+                          setJobSubtypes([...jobSubtypes, ...newJobSubtype]);
+                        }
                       }}
                     />
                   );
@@ -1100,6 +1188,62 @@ const ProfilePage: React.FC = () => {
           </Box>
         </Box>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={isSnackbarOpen}
+        onClose={() => setIsSnackbarOpen(false)}
+        autoHideDuration={infoMessage ? 10000 : 4000}
+        message={
+          successMessage
+            ? successMessage
+            : errorMessage
+            ? errorMessage
+            : infoMessage
+        }
+        key="topcenter"
+        sx={{
+          color: errorMessage ? "red" : "green",
+          marginBottom: "16px",
+          width: "80%",
+        }}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          onClose={() => setIsSnackbarOpen(false)}
+          severity={
+            successMessage ? "success" : errorMessage ? "error" : "info"
+          }
+        >
+          {successMessage
+            ? successMessage
+            : errorMessage
+            ? errorMessage
+            : infoMessage}
+
+          {infoMessage && (
+            <Box>
+              <Button color="primary" onClick={() => setIsSnackbarOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  const selectedJobTypeId =
+                    jobTypes.find(
+                      (type) => type.job_type_name === selectedJobType
+                    )?.id || null;
+                  setJobType(selectedJobType);
+                  setJobTypeId(selectedJobTypeId);
+                  setIsSnackbarOpen(false);
+                }}
+              >
+                Proceed
+              </Button>
+            </Box>
+          )}
+        </Alert>
+      </Snackbar>
     </Box>
     // </Box>
   );
