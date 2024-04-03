@@ -7,6 +7,7 @@ const initialState: User = {
     role_name: "",
     role_details: "",
   },
+  description: "",
   schedule: "",
   uuid: "",
   job_subtypes: [
@@ -48,6 +49,7 @@ const initialState: User = {
         worker_job_subtype: {
           worker_id: null,
           job_subtype: {
+            job_type_id: null,
             job_subtype_id: 0,
             job_type: "",
             job_name: "",

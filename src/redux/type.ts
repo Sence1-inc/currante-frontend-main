@@ -60,6 +60,7 @@ export interface Area {
 
 export interface User {
   email: string;
+  uuid: string;
   role: {
     role_name: string;
     role_details: string;
