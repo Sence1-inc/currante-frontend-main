@@ -1,36 +1,20 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import StarIcon from "@mui/icons-material/Star";
-import {
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  ButtonGroup,
-  FormControl,
-  IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Alert, Box, Button, Snackbar } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
-import { JOB_SUB_TYPES, JOB_TYPES } from "../../data/WorkerDetails";
+import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
+import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
+import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
+import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
+import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
+import ProfileServicingAreasCard from "../../components/Profile/ProfileServicingAreasCard";
+import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { useAppSelector } from "../../redux/store";
 import { Area, JobSubType, User } from "../../redux/type";
 
-interface JobSubtypeDefault {
+export interface JobSubtypeDefault {
   job_type: string;
   job_subtypes: { name: string; unit: string; id: number }[];
 }
@@ -83,7 +67,7 @@ const ProfilePage: React.FC = () => {
       job_subtypes: [{ name: "", unit: "", id: 0 }],
     });
 
-  const handleavatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -147,29 +131,6 @@ const ProfilePage: React.FC = () => {
       setJobSubtypes(filteredSubtype);
     }
   }, [jobSubtypes]);
-
-  useEffect(() => {
-    if (jobType) {
-      const prevJobSubtypes = jobSubtypes?.filter(
-        (type) => type.job_type !== jobType
-      );
-      const selectedJobSubtypes = jobSubtypes?.filter(
-        (type) => type.job_type === jobType
-      );
-
-      const inactiveJobSubtypes = prevJobSubtypes.map((subtype) => ({
-        ...subtype,
-        active_flg: 0,
-      }));
-
-      const activeJobSubtypes = selectedJobSubtypes.map((subtype) => ({
-        ...subtype,
-        active_flg: 1,
-      }));
-
-      setJobSubtypes([...inactiveJobSubtypes, ...activeJobSubtypes]);
-    }
-  }, [jobType]);
 
   useEffect(() => {
     if (user) {
@@ -240,7 +201,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     const data = {
-      user_id: 1, // update this during implementation of authentication
+      user_id: LOGGED_IN_USER, // update this during implementation of authentication
       first_name: firstName,
       middle_name: middleName,
       last_name: lastName,
@@ -258,9 +219,13 @@ const ProfilePage: React.FC = () => {
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
-      console.log("response", response);
-    } catch (error) {
-      console.log("Error: ", error);
+      if (response.data) {
+        setSuccessMessage("Profile details successfully saved!");
+        setErrorMessage("");
+      }
+    } catch (error: any) {
+      setSuccessMessage("Profile details successfully saved!");
+      setErrorMessage(error.message as string);
     }
   };
 
@@ -333,859 +298,93 @@ const ProfilePage: React.FC = () => {
             padding: "20px 10px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "20px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "0",
-                }}
-                onClick={() => setEdittingSection("description_photos")}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-            {edittingSection === "description_photos" ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "10px",
-                }}
-              >
-                <input
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="avatar-upload-button"
-                  type="file"
-                  onChange={handleavatarImageChange}
-                />
-                <label htmlFor="avatar-upload-button">
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                    <PhotoCamera />
-                  </IconButton>
-                </label>
-                {avatarImage && (
-                  <Avatar
-                    src={avatarImage}
-                    sx={{
-                      border: "1px solid #F58A47",
-                      borderRadius: "90px",
-                      width: "90px",
-                      height: "90px",
-                      padding: "10px",
-                      backgroundColor: "background.default",
-                      color: "primary.main",
-                    }}
-                  />
-                )}
-                {avatarImage && <button onClick={handeUpload}>Upload</button>}
-              </div>
-            ) : avatarImage ? (
-              <Avatar
-                sx={{
-                  border: "1px solid #F58A47",
-                  borderRadius: "90px",
-                  width: "90px",
-                  height: "90px",
-                  padding: "10px",
-                  backgroundColor: "background.default",
-                  color: "primary.main",
-                }}
-              />
-            ) : (
-              <Avatar
-                sx={{
-                  border: "1px solid #F58A47",
-                  borderRadius: "90px",
-                  width: "90px",
-                  height: "90px",
-                  padding: "10px",
-                  backgroundColor: "background.default",
-                  color: "primary.main",
-                }}
-              >
-                {user.first_name.charAt(0)}
-              </Avatar>
-            )}
+          <ProfilePhotoCard
+            edittingSection={edittingSection}
+            avatarImage={avatarImage}
+            description={description}
+            user={user}
+            sectionName="description_photos"
+            handleSetEdittingSection={() =>
+              setEdittingSection("description_photos")
+            }
+            handleCancelEdittingSection={() => setEdittingSection("")}
+            handleAvatarImageChange={handleAvatarImageChange}
+            handleUpload={handeUpload}
+            handleSetDescription={(desc) => setDescription(desc)}
+            handleSave={handleSave}
+          />
 
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontSize: "22px",
-                color: "#F58A47",
-              }}
-            >
-              {user.first_name} {user.middle_name} {user.last_name}
-            </Typography>
+          <ProfileBasicInfoCard
+            edittingSection={edittingSection}
+            firstName={firstName}
+            middleName={middleName}
+            lastName={lastName}
+            gender={gender}
+            sectionName={"basic_info"}
+            birthday={birthday}
+            handleSetEdittingSection={() => setEdittingSection("basic_info")}
+            handleSetFirstName={(name) => setFirstName(name)}
+            handleSetMiddleName={(name) => setMiddleName(name)}
+            handleSetLastName={(name) => setLastName(name)}
+            handleSetGender={(gender) => setGender(gender)}
+            handleSetBirthday={(date) =>
+              setFirstName(date?.toString() as string)
+            }
+            handleSave={handleSave}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+          />
 
-            <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-              <StarIcon
-                sx={{
-                  color: "#F58A47",
-                  width: "10px",
-                }}
-              />
+          <ProfileContactInfoCard
+            edittingSection={edittingSection}
+            phoneNumber={phoneNumber}
+            sectionName={"contact_info"}
+            email={email}
+            handleSetEdittingSection={() => setEdittingSection("contact_info")}
+            handleSetEmail={(email) => setEmail(email)}
+            handleSetPhoneNumber={(number) => setPhoneNumber(number)}
+            handleSave={handleSave}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+          />
 
-              <StarIcon
-                sx={{
-                  color: "#A1B5DE",
-                  width: "10px",
-                }}
-              />
+          <ProfileRatesCard
+            edittingSection={edittingSection}
+            jobType={jobType}
+            jobTypes={jobTypes}
+            jobSubtypesDefault={jobSubtypesDefault}
+            jobSubtypes={jobSubtypes}
+            jobTypeId={jobTypeId}
+            sectionName="rates"
+            handleSetEdittingSection={() => setEdittingSection("rates")}
+            handleSave={handleSave}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+            handleSetJobSubtypes={(types) => setJobSubtypes([...types])}
+            handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
+            handleSetInfoMessage={(message) => setInfoMessage(message)}
+            handleSetSelectedJobType={(jobtype) => setSelectedJobType(jobtype)}
+          />
 
-              <Typography>(4 stars)</Typography>
-            </Box>
+          <ProfileScheduleCard
+            edittingSection={edittingSection}
+            schedule={schedule}
+            sectionName="schedule"
+            handleSetEdittingSection={() => setEdittingSection("schedule")}
+            handleSave={handleSave}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+            handleSetSchedule={(sched) => setSchedule(sched)}
+          />
 
-            {edittingSection !== "description_photos" ? (
-              <Typography
-                sx={{
-                  fontFamily: "Open Sans",
-                  fontWeight: "400",
-                  fontSize: "12px",
-                  lineHeight: "1.6",
-                  margin: "10px 0 20px",
-                }}
-              >
-                {description}
-              </Typography>
-            ) : (
-              <TextField
-                multiline
-                minRows={1}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                variant="standard"
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setDescription(e.target.value)
-                }
-              />
-            )}
-
-            {edittingSection === "description_photos" && (
-              <ButtonGroup>
-                <Button
-                  onClick={() => setEdittingSection("")}
-                  size="small"
-                  variant="contained"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="secondary"
-                  sx={{ color: "common.white" }}
-                  size="small"
-                  variant="contained"
-                  onClick={handleSave}
-                >
-                  Save
-                </Button>
-              </ButtonGroup>
-            )}
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "4px",
-              padding: "20px",
-              textAlign: "left",
-              margin: "0 0 20px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "0",
-                  padding: "0",
-                }}
-                onClick={() => setEdittingSection("basic_info")}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "1.7",
-              }}
-            >
-              Basic Info
-            </Typography>
-
-            <Typography
-              sx={{
-                fontFamily: "Open Sans",
-                fontWeight: "400",
-                fontSize: "12px",
-                margin: "0 0 15px",
-              }}
-            >
-              Some info may be visible to other people
-            </Typography>
-
-            <Box sx={{ textAlign: "center" }}>
-              <TextField
-                disabled={edittingSection !== "basic_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">First Name</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={firstName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFirstName(e.target.value)
-                }
-              />
-              <TextField
-                disabled={edittingSection !== "basic_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      Middle Name
-                    </InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={middleName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setMiddleName(e.target.value)
-                }
-              />
-              <TextField
-                disabled={edittingSection !== "basic_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Last Name</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={lastName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setLastName(e.target.value)
-                }
-              />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {birthday !== null ? (
-                  <DatePicker
-                    disabled={edittingSection !== "basic_info"}
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                        InputProps: {
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              Birthday
-                            </InputAdornment>
-                          ),
-                        },
-                      },
-                    }}
-                    sx={{ m: 1, width: "100%" }}
-                    value={dayjs(birthday)}
-                    onChange={(date) => setBirthday(date)}
-                  />
-                ) : (
-                  <DatePicker
-                    disabled={edittingSection !== "basic_info"}
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                        InputProps: {
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              Birthday
-                            </InputAdornment>
-                          ),
-                        },
-                      },
-                    }}
-                    sx={{ m: 1, width: "100%" }}
-                    onChange={(date) => setBirthday(date)}
-                  />
-                )}
-              </LocalizationProvider>
-
-              <TextField
-                disabled={edittingSection !== "basic_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Gender</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={gender}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setGender(e.target.value)
-                }
-              />
-
-              {edittingSection === "basic_info" && (
-                <ButtonGroup>
-                  <Button
-                    onClick={() => setEdittingSection("")}
-                    sx={{ marginTop: "20px" }}
-                    size="small"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    sx={{ marginTop: "20px", color: "common.white" }}
-                    size="small"
-                    variant="contained"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "4px",
-              padding: "20px",
-              textAlign: "left",
-              margin: "0 0 20px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "0",
-                  padding: "0",
-                }}
-                onClick={() => setEdittingSection("contact_info")}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "1.7",
-              }}
-            >
-              Contact Info
-            </Typography>
-
-            <Typography
-              sx={{
-                fontFamily: "Open Sans",
-                fontWeight: "400",
-                fontSize: "12px",
-                margin: "0 0 15px",
-              }}
-            >
-              Some info may be visible to other people
-            </Typography>
-
-            <Box sx={{ textAlign: "center" }}>
-              <TextField
-                disabled={edittingSection !== "contact_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Email</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
-              />
-
-              <TextField
-                disabled={edittingSection !== "contact_info"}
-                id="standard-start-adornment"
-                sx={{ m: 1, width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Phone</InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                value={phoneNumber}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPhoneNumber(e.target.value)
-                }
-              />
-
-              {edittingSection === "contact_info" && (
-                <ButtonGroup>
-                  <Button
-                    onClick={() => setEdittingSection("")}
-                    sx={{ marginTop: "20px" }}
-                    size="small"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    sx={{ marginTop: "20px", color: "common.white" }}
-                    size="small"
-                    variant="contained"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "4px",
-              padding: "20px",
-              textAlign: "left",
-              margin: "0 0 20px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "0",
-                  padding: "0",
-                }}
-                onClick={() => setEdittingSection("rates")}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "1.7",
-              }}
-            >
-              Rates
-            </Typography>
-
-            <Typography
-              sx={{
-                fontFamily: "Open Sans",
-                fontWeight: "400",
-                fontSize: "12px",
-                margin: "0 0 15px",
-              }}
-            >
-              Some info may be visible to other people
-            </Typography>
-
-            <Box sx={{ padding: "20px", textAlign: "center" }}>
-              <FormControl variant="standard" fullWidth>
-                <Select
-                  sx={{ textAlign: "left" }}
-                  disabled={edittingSection !== "rates"}
-                  fullWidth
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={jobType}
-                  label="Job Type"
-                  onChange={(e: SelectChangeEvent) => {
-                    setIsSnackbarOpen(true);
-                    setInfoMessage(
-                      `Are you sure you want to set your job type to ${e.target.value}?`
-                    );
-                    setSelectedJobType(e.target.value);
-                  }}
-                >
-                  {jobTypes.map((type) => {
-                    return (
-                      <MenuItem key={type.id} value={type.job_type_name}>
-                        {type.job_type_name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              {jobType &&
-                jobSubtypesDefault?.job_type === jobType &&
-                jobSubtypesDefault?.job_subtypes?.map((item) => {
-                  return (
-                    <TextField
-                      disabled={edittingSection !== "rates"}
-                      key={item.name}
-                      id="standard-start-adornment"
-                      sx={{ m: 1, width: "100%" }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            {item.name} ({item.unit})
-                          </InputAdornment>
-                        ),
-                      }}
-                      variant="standard"
-                      placeholder="e.g. 50"
-                      value={
-                        (Array.isArray(jobSubtypes) &&
-                          jobSubtypes.find((type) => {
-                            return (
-                              type.job_name === item.name &&
-                              type.job_type === jobType
-                            );
-                          })?.job_unit_price) ??
-                        null
-                      }
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const subtype =
-                          Array.isArray(jobSubtypes) &&
-                          jobSubtypes.find(
-                            (type) =>
-                              type.job_type === jobType &&
-                              type.job_name === item.name &&
-                              type.active_flg
-                          );
-                        if (subtype) {
-                          const subtypeData = {
-                            job_unit_price: Number(e.target.value),
-                            unit: item.unit,
-                          };
-                          setJobSubtypes([
-                            ...jobSubtypes.filter(
-                              (type) => type.job_name !== item.name
-                            ),
-                            { ...subtype, ...subtypeData },
-                          ]);
-                        } else {
-                          const newJobSubtype = [
-                            {
-                              job_subtype_id: item.id,
-                              job_type: jobType,
-                              job_type_id: jobTypeId,
-                              job_name: item.name,
-                              job_unit_price: Number(e.target.value),
-                              unit: item.unit,
-                              active_flg: true,
-                            },
-                          ];
-
-                          setJobSubtypes([...jobSubtypes, ...newJobSubtype]);
-                        }
-                      }}
-                    />
-                  );
-                })}
-
-              {edittingSection === "rates" && (
-                <ButtonGroup>
-                  <Button
-                    onClick={() => setEdittingSection("")}
-                    sx={{ marginTop: "20px" }}
-                    size="small"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    sx={{ marginTop: "20px", color: "common.white" }}
-                    size="small"
-                    variant="contained"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "4px",
-              padding: "20px",
-              textAlign: "left",
-              margin: "0 0 20px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "0",
-                  padding: "0",
-                }}
-                onClick={() => setEdittingSection("schedule")}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "1.7",
-              }}
-            >
-              Business Hours
-            </Typography>
-
-            <Typography
-              sx={{
-                fontFamily: "Open Sans",
-                fontWeight: "400",
-                fontSize: "12px",
-                margin: "0 0 15px",
-              }}
-            >
-              Some info may be visible to other people
-            </Typography>
-
-            <Box
-              sx={{
-                paddingRight: "20px",
-                textAlign: "center",
-              }}
-            >
-              <TextField
-                disabled={edittingSection !== "schedule"}
-                fullWidth
-                id="standard-start-adornment"
-                sx={{ m: 1 }}
-                variant="standard"
-                value={schedule}
-                multiline
-                minRows={1}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setSchedule(e.target.value)
-                }
-              />
-              {edittingSection === "schedule" && (
-                <ButtonGroup>
-                  <Button
-                    onClick={() => setEdittingSection("")}
-                    sx={{ marginTop: "20px" }}
-                    size="small"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    sx={{ marginTop: "20px", color: "common.white" }}
-                    size="small"
-                    variant="contained"
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #F58A47",
-              borderRadius: "4px",
-              padding: "20px",
-              textAlign: "left",
-              margin: "0 0 20px",
-            }}
-          >
-            <Box display={"flex"} justifyContent={"space-between"}>
-              <Typography
-                sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: "600",
-                  fontSize: "16px",
-                  lineHeight: "1.7",
-                }}
-              >
-                Servicing Area
-              </Typography>
-
-              {edittingSection === "servicing_area" ? (
-                <ControlPointOutlinedIcon
-                  onClick={() =>
-                    setServicingAreas((prevState) => [
-                      ...prevState,
-                      { id: null, area_name: "" },
-                    ])
-                  }
-                  sx={{
-                    color: "#F58A47",
-                  }}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    position: "relative",
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      position: "absolute",
-                      top: "0",
-                      right: "0",
-                      padding: "0",
-                    }}
-                    onClick={() => setEdittingSection("servicing_area")}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              )}
-            </Box>
-
-            <Box sx={{ paddingRight: "20px", textAlign: "center" }}>
-              {servicingAreas?.map((area, index) => (
-                <FormControl variant="standard" fullWidth>
-                  <Box sx={{ width: "100%", margin: "0 8px" }}>
-                    <Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      disabled={
-                        edittingSection !== "servicing_area" ||
-                        servicingAreas.length >= 16
-                      }
-                      key={index}
-                      sx={{
-                        textAlign: "left",
-                        width:
-                          edittingSection === "servicing_area" ? "86%" : "100%",
-                      }}
-                      value={area.area_name as string}
-                      onChange={(e: SelectChangeEvent) => {
-                        const newAreas = [...servicingAreas];
-                        newAreas[index] = {
-                          ...newAreas[index],
-                          area_name: e.target.value as string,
-                        };
-                        setServicingAreas(newAreas);
-                      }}
-                    >
-                      {areas.map((area) => (
-                        <MenuItem key={area.id} value={area.area_name}>
-                          {area.area_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {edittingSection === "servicing_area" && (
-                      <IconButton
-                        onClick={() => {
-                          const newServicingAreas = servicingAreas.filter(
-                            (servicingArea) =>
-                              servicingArea.area_name !== area.area_name
-                          );
-                          setServicingAreas(newServicingAreas);
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </Box>
-                </FormControl>
-              ))}
-
-              {edittingSection === "servicing_area" && (
-                <ButtonGroup>
-                  <Button
-                    onClick={() => {
-                      const filteredServicingAreas = servicingAreas.filter(
-                        (area) => area.area_name.trim() !== ""
-                      );
-
-                      setServicingAreas(filteredServicingAreas);
-                      setEdittingSection("");
-                    }}
-                    sx={{ marginTop: "20px" }}
-                    size="small"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    sx={{ marginTop: "20px", color: "common.white" }}
-                    size="small"
-                    variant="contained"
-                    onClick={() => {
-                      const filteredServicingAreas = servicingAreas.filter(
-                        (area) => area.area_name.trim() !== ""
-                      );
-
-                      setServicingAreas(filteredServicingAreas);
-                      handleSave;
-                    }}
-                  >
-                    Save
-                  </Button>
-                </ButtonGroup>
-              )}
-            </Box>
-          </Box>
+          <ProfileServicingAreasCard
+            edittingSection={edittingSection}
+            servicingAreas={servicingAreas}
+            areas={areas}
+            sectionName="servicing_area"
+            handleSetEdittingSection={() =>
+              setEdittingSection("servicing_area")
+            }
+            handleSave={handleSave}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+            handleSetServicingAreas={(areas) => setServicingAreas([...areas])}
+          />
         </Box>
       </Box>
       <Snackbar
@@ -1245,7 +444,6 @@ const ProfilePage: React.FC = () => {
         </Alert>
       </Snackbar>
     </Box>
-    // </Box>
   );
 };
 

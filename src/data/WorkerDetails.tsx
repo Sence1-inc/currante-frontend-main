@@ -23,3 +23,5 @@ export const JOB_SUB_TYPES = [
 ];
 
 export const JOB_TYPES = ["Cleaning", "Plumbing", "Carpentry"];
+
+export const LOGGED_IN_USER = 4;
