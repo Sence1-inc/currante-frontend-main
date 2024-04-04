@@ -1,3 +1,5 @@
+import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
@@ -8,12 +10,9 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
-import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
 import { Area } from "../../redux/type";
 
 interface ProfileServicingAreasCardProps {
