@@ -69,9 +69,7 @@ export const TabsItem = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, }}>{children}</Box>
       )}
     </div>
   );
