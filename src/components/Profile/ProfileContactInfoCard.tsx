@@ -9,12 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { isEmptyObject } from "./ProfileBasicInfoCard";
 
 interface ProfileContactInfoCardProps {
   edittingSection: string;
   email: string;
   phoneNumber: string;
   sectionName: string;
+  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleSetEmail: (email: string) => void;
   handleSetPhoneNumber: (number: string) => void;
@@ -27,6 +29,7 @@ const ProfileContactInfoCard: React.FC<ProfileContactInfoCardProps> = ({
   phoneNumber,
   sectionName,
   email,
+  errorMessages,
   handleSetEdittingSection,
   handleSetEmail,
   handleSetPhoneNumber,
@@ -85,6 +88,8 @@ const ProfileContactInfoCard: React.FC<ProfileContactInfoCardProps> = ({
 
       <Box sx={{ textAlign: "center" }}>
         <TextField
+          helperText={errorMessages.email}
+          error={isEmptyObject(errorMessages, "email")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -101,6 +106,8 @@ const ProfileContactInfoCard: React.FC<ProfileContactInfoCardProps> = ({
         />
 
         <TextField
+          helperText={errorMessages.phone_number}
+          error={isEmptyObject(errorMessages, "phone_number")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}

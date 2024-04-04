@@ -20,6 +20,7 @@ interface ProfileServicingAreasCardProps {
   sectionName: string;
   servicingAreas: Area[];
   areas: { id: number; area_name: string }[];
+  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
@@ -31,6 +32,7 @@ const ProfileServicingAreasCard: React.FC<ProfileServicingAreasCardProps> = ({
   servicingAreas,
   areas,
   sectionName,
+  errorMessages,
   handleSetEdittingSection,
   handleSave,
   handleCancelEdittingSection,
@@ -93,7 +95,7 @@ const ProfileServicingAreasCard: React.FC<ProfileServicingAreasCardProps> = ({
 
       <Box sx={{ paddingRight: "20px", textAlign: "center" }}>
         {servicingAreas?.map((area, index) => (
-          <FormControl variant="standard" fullWidth>
+          <FormControl key={index} variant="standard" fullWidth>
             <Box sx={{ width: "100%", margin: "0 8px" }}>
               <Select
                 labelId="demo-simple-select-standard-label"

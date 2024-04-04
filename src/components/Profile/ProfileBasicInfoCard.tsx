@@ -21,6 +21,7 @@ interface ProfileBasicInfoCardProps {
   gender: string;
   sectionName: string;
   birthday: Date | Dayjs | null | string;
+  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleSetFirstName: (name: string) => void;
   handleSetMiddleName: (name: string) => void;
@@ -31,6 +32,16 @@ interface ProfileBasicInfoCardProps {
   handleCancelEdittingSection: () => void;
 }
 
+export const isEmptyObject = (
+  errorMessages: Record<string, string>,
+  key: string
+): boolean => {
+  const keys = Object.keys(errorMessages).filter((messageKey: string) => {
+    return errorMessages[messageKey] !== "";
+  });
+  return keys.includes(key);
+};
+
 const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
   edittingSection,
   firstName,
@@ -38,6 +49,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
   lastName,
   gender,
   sectionName,
+  errorMessages,
   birthday,
   handleSetEdittingSection,
   handleSetFirstName,
@@ -100,6 +112,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
 
       <Box sx={{ textAlign: "center" }}>
         <TextField
+          error={isEmptyObject(errorMessages, "first_name")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -113,8 +126,10 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetFirstName(e.target.value)
           }
+          helperText={errorMessages.first_name}
         />
         <TextField
+          error={isEmptyObject(errorMessages, "middle_name")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -128,8 +143,10 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetMiddleName(e.target.value)
           }
+          helperText={errorMessages.middle_name}
         />
         <TextField
+          error={isEmptyObject(errorMessages, "last_name")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -143,6 +160,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetLastName(e.target.value)
           }
+          helperText={errorMessages.last_name}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           {birthday !== null ? (
@@ -150,6 +168,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
+                  helperText: errorMessages.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -167,6 +186,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
+                  helperText: errorMessages.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -182,6 +202,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
         </LocalizationProvider>
 
         <TextField
+          error={isEmptyObject(errorMessages, "gender")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -195,6 +216,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetGender(e.target.value)
           }
+          helperText={errorMessages.gender}
         />
 
         {edittingSection === sectionName && (

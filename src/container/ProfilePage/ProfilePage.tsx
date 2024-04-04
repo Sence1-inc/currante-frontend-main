@@ -56,6 +56,7 @@ const ProfilePage: React.FC = () => {
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessages, setErrorMessages] = useState<any>({});
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [jobTypes, setJobtypes] = useState<
@@ -219,13 +220,15 @@ const ProfilePage: React.FC = () => {
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
+      console.log("THIS", response);
       if (response.data) {
         setSuccessMessage("Profile details successfully saved!");
         setErrorMessage("");
+        setErrorMessages({});
       }
     } catch (error: any) {
-      setSuccessMessage("Profile details successfully saved!");
-      setErrorMessage(error.message as string);
+      setErrorMessages(error.response.data.errors);
+      setSuccessMessage("");
     }
   };
 
@@ -299,6 +302,7 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
+            errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}
             description={description}
@@ -315,6 +319,7 @@ const ProfilePage: React.FC = () => {
           />
 
           <ProfileBasicInfoCard
+            errorMessages={errorMessages}
             edittingSection={edittingSection}
             firstName={firstName}
             middleName={middleName}
@@ -327,14 +332,13 @@ const ProfilePage: React.FC = () => {
             handleSetMiddleName={(name) => setMiddleName(name)}
             handleSetLastName={(name) => setLastName(name)}
             handleSetGender={(gender) => setGender(gender)}
-            handleSetBirthday={(date) =>
-              setFirstName(date?.toString() as string)
-            }
+            handleSetBirthday={(date) => setBirthday(date)}
             handleSave={handleSave}
             handleCancelEdittingSection={() => setEdittingSection("")}
           />
 
           <ProfileContactInfoCard
+            errorMessages={errorMessages}
             edittingSection={edittingSection}
             phoneNumber={phoneNumber}
             sectionName={"contact_info"}
@@ -364,6 +368,7 @@ const ProfilePage: React.FC = () => {
           />
 
           <ProfileScheduleCard
+            errorMessages={errorMessages}
             edittingSection={edittingSection}
             schedule={schedule}
             sectionName="schedule"
@@ -374,6 +379,7 @@ const ProfilePage: React.FC = () => {
           />
 
           <ProfileServicingAreasCard
+            errorMessages={errorMessages}
             edittingSection={edittingSection}
             servicingAreas={servicingAreas}
             areas={areas}

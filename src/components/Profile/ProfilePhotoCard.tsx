@@ -1,3 +1,6 @@
+import EditIcon from "@mui/icons-material/Edit";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import StarIcon from "@mui/icons-material/Star";
 import {
   Avatar,
   Box,
@@ -8,10 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import StarIcon from "@mui/icons-material/Star";
 import { User } from "../../redux/type";
+import { isEmptyObject } from "./ProfileBasicInfoCard";
 
 interface ProfilePhotoCardProps {
   edittingSection: string;
@@ -19,6 +20,7 @@ interface ProfilePhotoCardProps {
   description: string;
   sectionName: string;
   user: User;
+  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleAvatarImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleUpload: () => void;
@@ -33,6 +35,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   description,
   sectionName,
   user,
+  errorMessages,
   handleSetEdittingSection,
   handleAvatarImageChange,
   handleUpload,
@@ -167,19 +170,25 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       </Box>
 
       {edittingSection !== sectionName ? (
-        <Typography
-          sx={{
-            fontFamily: "Open Sans",
-            fontWeight: "400",
-            fontSize: "12px",
-            lineHeight: "1.6",
-            margin: "10px 0 20px",
-          }}
-        >
-          {description}
-        </Typography>
+        <>
+          <Typography
+            sx={{
+              fontFamily: "Open Sans",
+              fontWeight: "400",
+              fontSize: "12px",
+              lineHeight: "1.6",
+              margin: "10px 0 20px",
+            }}
+          >
+            {description}
+          </Typography>
+          {errorMessages.description && (
+            <Typography color="error">{errorMessages.description}</Typography>
+          )}
+        </>
       ) : (
         <TextField
+          error={isEmptyObject(errorMessages, "description")}
           multiline
           minRows={1}
           id="standard-start-adornment"
@@ -189,6 +198,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetDescription(e.target.value)
           }
+          helperText={errorMessages.description}
         />
       )}
 

@@ -8,11 +8,13 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { isEmptyObject } from "./ProfileBasicInfoCard";
 
 interface ProfileScheduleCardProps {
   edittingSection: string;
   schedule: string;
   sectionName: string;
+  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
@@ -23,6 +25,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
   edittingSection,
   schedule,
   sectionName,
+  errorMessages,
   handleSetEdittingSection,
   handleSave,
   handleCancelEdittingSection,
@@ -85,6 +88,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
         }}
       >
         <TextField
+          error={isEmptyObject(errorMessages, "schedule")}
           disabled={edittingSection !== sectionName}
           fullWidth
           id="standard-start-adornment"
@@ -96,6 +100,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetSchedule(e.target.value)
           }
+          helperText={errorMessages.first_name}
         />
         {edittingSection === sectionName && (
           <ButtonGroup>
