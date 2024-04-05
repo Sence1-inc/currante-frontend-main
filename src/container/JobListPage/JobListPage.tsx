@@ -22,22 +22,16 @@ const JobListPage: React.FC = () => {
       return (
         <TabsItem value={value} index={value}>
           { jobListSampleData.map((jobitem) => {
+            const tabCard =  <TabCard key={jobitem.id} item={jobitem} />;
+
             if(value === 0) {
-              return (
-                <TabCard key={jobitem.id} item={jobitem} />
-              )
+              return tabCard;
             } else if (value === 1 && jobitem.status === 'incoming') {
-              return (
-                <TabCard key={jobitem.id} item={jobitem} />
-              )
+              return tabCard;
             } else if (value === 2 && jobitem.status === 'current') {
-              return (
-                <TabCard key={jobitem.id} item={jobitem} />
-              )
+              return tabCard;
             } else if (value === 3 && jobitem.status === 'completed') {
-              return (
-                <TabCard key={jobitem.id} item={jobitem} />
-              )
+              return tabCard;
             }
           })}
         </TabsItem>
