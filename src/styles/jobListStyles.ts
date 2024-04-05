@@ -6,6 +6,9 @@ const jobListStyles = {
       fontSize: 12,
       fontweight: 'normal',
       fontFamily: 'Poppins',
+      "@media (max-width:768px)": { 
+        fontSize: 8
+      }, 
       "&:hover": { 
         backgroundColor: '#0A204C',
       },
@@ -20,6 +23,9 @@ const jobListStyles = {
       fontSize: 12,
       fontweight: 'normal',
       fontFamily: 'Poppins',
+      "@media (max-width:768px)": { 
+        fontSize: 8
+      }, 
       "&:hover": { 
         backgroundColor: '#cccccc',
       },
@@ -55,6 +61,9 @@ const jobListStyles = {
       paddingBottom: 2,
       maxWidth: '360px',
       margin: '0 auto',
+      "@media (max-width:768px)": { 
+        maxWidth: '300px',
+      }, 
     },
     buttonsContainer: {
       display: 'flex',
