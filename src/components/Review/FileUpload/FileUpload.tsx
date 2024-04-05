@@ -10,7 +10,7 @@ export default function FileUpload() {
     <Box sx={{textAlign: "left"}}>
       <Typography variant='labelLight'>Upload photos or videos</Typography>
       <Box className="fileUploadContainer">
-        <form className="fileUpload" onClick={()=> document.querySelector(".input-field").click()}>
+        <Box className="fileUpload" onClick={()=> document.querySelector(".input-field").click()}>
           <input type="file" accept="image/*, video/*" className="input-field" multiple hidden onChange={({target: {files}})=> {
             files[0] && setFileName(files[0].name)
             if(files) {
@@ -26,7 +26,7 @@ export default function FileUpload() {
             <Typography>Click here to upload</Typography>
           </Box>
           }
-        </form>
+        </Box>
       </Box>
     </Box>
   );

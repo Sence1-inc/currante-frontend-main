@@ -12,17 +12,15 @@ export default function ReviewDescription() {
                 <Typography variant='labelLight'>Review comment</Typography>
                 <Typography variant='smallest' color='secondary.main' sx={{marginLeft: "10px"}}>Required to receive payment</Typography>
             </Box>
-            <form noValidate autoComplete="off">
-                <TextField 
-                    placeholder="Enter comment here..." 
-                    size="large"
-                    rows={3}
-                    inputProps={{ maxLength: 500 }}
-                    multiline 
-                    fullWidth 
-                    required
-                />
-            </form>
+            <TextField 
+                placeholder="Enter comment here..." 
+                size="large"
+                rows={3}
+                inputProps={{ maxLength: 500 }}
+                multiline 
+                fullWidth 
+                required
+            />
         </Box>
     )
 }

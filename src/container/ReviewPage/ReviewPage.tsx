@@ -1,9 +1,10 @@
 import { Box, Button, Container} from "@mui/material";
 import BackNavigation from "../../components/TopNavigation/BackNavigation";
 import Reviewee from "../../components/Review/Reviewee";
-import Rating from "../../components/Review/Rating/Rating";
+import StarRate from "../../components/Review/Rating/StarRate";
 import ReviewDescription from "../../components/Review/ReviewDescription";
 import FileUpload from "../../components/Review/FileUpload/FileUpload";
+import './reviewPage.css';
 
 
 
@@ -28,20 +29,22 @@ const ReviewPage = () => {
       <Container sx={{padding:"0px !important"}}>
         <Reviewee />
       </Container>
-      <Container>
-        <Box sx={{padding: "15px 0px", display: "flex", gap:"10px", flexDirection:"column"}}>
-          <Rating />
-          <ReviewDescription />
-          <FileUpload />
-        </Box>
-      </Container>
-      <Button variant="contained" fullWidth sx={{
-        padding:"10px 0px",
-        borderRadius: "0px",
-        "&:hover": {
-          backgroundColor: "secondary.main",
-        },
-      }}>Submit</Button>
+      <form className="reviewPageForm">
+        <Container>
+          <Box sx={{padding: "15px 0px", display: "flex", gap:"10px", flexDirection:"column"}}>
+            <StarRate title="Rate your employer" />
+            <ReviewDescription />
+            <FileUpload />
+          </Box>
+        </Container>
+        <Button variant="contained" fullWidth sx={{
+          padding:"10px 0px",
+          borderRadius: "0px",
+          "&:hover": {
+            backgroundColor: "secondary.main",
+          },
+        }}>Submit</Button>
+      </form>
     </Box>
   );
 };
