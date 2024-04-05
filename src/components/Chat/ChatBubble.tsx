@@ -10,7 +10,6 @@ interface ChatBubbleProps {
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message, user_id }) => {
   const u: User = useAppSelector((state) => state.user);
-  console.log(u, user_id);
   return (
     <Box
       sx={{

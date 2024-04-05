@@ -1,11 +1,58 @@
-import { Box } from "@mui/material";
-import React from "react";
-import { useParams } from "react-router-dom";
+import {
+  collection,
+  doc as document,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "@firebase/firestore";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import { Box, IconButton, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { FirebaseUser } from "../../container/ChatPage/ChatPage";
+import { LOGGED_IN_USER } from "../../data/WorkerDetails";
+import { db } from "../../firebase";
 import ChatBox from "./ChatBox";
 import SendChat from "./SendChat";
 
 const ChatRoom: React.FC = () => {
   const { conversation_id } = useParams();
+  const navigate = useNavigate();
+  const [participant, setParticipant] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    const getConversations = async (conversationId: string) => {
+      const conversationsRef = query(
+        collection(db, "conversation_participants"),
+        where("conversation_id", "==", conversationId)
+      );
+
+      const conversationsSnapshot = await getDocs(conversationsRef);
+
+      return conversationsSnapshot.docs.map((doc) => doc.data());
+    };
+
+    const getParticipant = async () => {
+      const allUserConversations = await getConversations(
+        conversation_id as string
+      );
+
+      const usersPromises = allUserConversations.map(async (convo) => {
+        const userRef = document(db, "users", convo.user_id);
+        const userDoc = await getDoc(userRef);
+        return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
+      });
+
+      const user = (await Promise.all(usersPromises)).filter((user) => {
+        return user !== null && user.user_id !== LOGGED_IN_USER;
+      }) as FirebaseUser[];
+
+      setParticipant(user[0]);
+    };
+
+    getParticipant();
+  }, []);
 
   return (
     <Box
@@ -16,6 +63,35 @@ const ChatRoom: React.FC = () => {
         flexDirection: "column",
       }}
     >
+      <Box
+        sx={{
+          padding: "10px 15px",
+          display: "flex",
+          alignItems: "center",
+          position: "sticky",
+          zIndex: 10,
+          top: "64px",
+          backgroundColor: "background.default",
+        }}
+      >
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackOutlinedIcon />
+        </IconButton>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            margin: "0 auto",
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="subtitle1">You are chatting with</Typography>
+          <Typography variant="body1">
+            {participant?.first_name} {participant?.last_name}
+          </Typography>
+        </Box>
+      </Box>
+
       <ChatBox conversation_id={conversation_id} />
       <SendChat conversation_id={conversation_id} />
     </Box>

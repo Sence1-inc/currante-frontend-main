@@ -6,7 +6,8 @@ import {
   query,
   where,
 } from "@firebase/firestore";
-import { Box } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
@@ -112,7 +113,58 @@ const ChatPage = () => {
   };
 
   return (
-    <Box sx={{ margin: "64px 0", padding: "20px 10px 30px 10px" }}>
+    <Box
+      sx={{
+        margin: "64px 0",
+        padding: "20px 10px 30px 10px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+      }}
+    >
+      <Box
+        sx={{
+          padding: "10px 0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          position: "sticky",
+          zIndex: 10,
+          top: "64px",
+          backgroundColor: "background.default",
+        }}
+      >
+        <TextField
+          variant="outlined"
+          size="small"
+          placeholder="Search"
+          sx={{
+            backgroundColor: "primary.light",
+            borderRadius: "12px",
+            fontSize: "12px",
+            width: "190px",
+            "& fieldset": {
+              borderRadius: "12px",
+            },
+          }}
+          InputProps={{
+            sx: {
+              color: "secondary.dark",
+            },
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  sx={{ color: "secondary.dark" }}
+                  aria-label="toggle password visibility"
+                  edge="end"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
       {conversations.map((conversation: Conversation) => {
         const user = conversation.users.filter(
           (user) => user.user_id !== LOGGED_IN_USER // update during implementation of authentication
@@ -123,9 +175,9 @@ const ChatPage = () => {
           <ChatCard
             key={participant.user_id}
             user={participant}
-            handleCardClick={() =>
-              handleCardClick(conversation.conversation_id)
-            }
+            handleCardClick={() => {
+              handleCardClick(conversation.conversation_id);
+            }}
           />
         );
       })}

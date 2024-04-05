@@ -1,8 +1,8 @@
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
 import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
@@ -29,6 +29,7 @@ interface UserPhotos {
 }
 
 const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const userSelector = useMemo(() => (state: any) => state.user, []);
   const user: User = useAppSelector(userSelector);
   const [firstName, setFirstName] = useState<string>("");
@@ -269,16 +270,6 @@ const ProfilePage: React.FC = () => {
           padding: "0",
         }}
       >
-        <Box
-          sx={{
-            padding: "10px 15px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <ArrowBackOutlinedIcon />
-        </Box>
         <Box
           padding={"20px 0"}
           sx={{
