@@ -4,7 +4,7 @@
     border-radius: 8px;
     margin-top: 5px;
 }
-form.fileUpload {
+.fileUpload {
     display: flex;
     flex-direction: column;
     justify-content: center;
