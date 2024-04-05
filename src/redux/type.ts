@@ -80,5 +80,4 @@ export interface User {
   user_photos: UserPhoto[];
   addresses: Address[];
   reviews: Review[];
-  uuid: string;
 }
