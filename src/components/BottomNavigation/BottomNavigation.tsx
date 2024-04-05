@@ -1,14 +1,24 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
+import { MapsHomeWorkRounded } from "@mui/icons-material";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import { MapsHomeWorkRounded } from "@mui/icons-material";
-import { useNavigate } from "react-router";
+import Box from "@mui/material/Box";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location;
+
+  useEffect(() => {
+    if (pathname.includes("chat")) {
+      setValue(1);
+    } else {
+      setValue(0);
+    }
+  }, [pathname]);
 
   return (
     <Box
