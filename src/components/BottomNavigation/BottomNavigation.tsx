@@ -84,7 +84,7 @@ export default function SimpleBottomNavigation() {
         <BottomNavigationAction
           label="Messages"
           icon={<ChatBubbleIcon />}
-          onClick={() => navigate("/chat")}
+          onClick={() => navigate("/chats")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",

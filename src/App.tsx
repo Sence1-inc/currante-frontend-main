@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
+import ChatRoom from "./components/Chat/ChatRoom";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import ChatPage from "./container/ChatPage/ChatPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
@@ -42,6 +44,11 @@ const App = () => {
       <Route
         path="/search"
         element={<PrivateRoute component={SearchWorkerPage} />}
+      />
+      <Route path="/chats" element={<PrivateRoute component={ChatPage} />} />
+      <Route
+        path="/chat/:conversation_id"
+        element={<PrivateRoute component={ChatRoom} />}
       />
     </Routes>
   );
