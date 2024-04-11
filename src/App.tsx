@@ -5,6 +5,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
+import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
 import { LOGGED_IN_USER } from "./data/WorkerDetails";
 import { initializeUser } from "./redux/reducers/UserReducer";
 import { useAppDispatch } from "./redux/store";
@@ -37,6 +38,10 @@ const App = () => {
       <Route
         path="/profile"
         element={<PrivateRoute component={ProfilePage} />}
+      />
+      <Route
+        path="/search"
+        element={<PrivateRoute component={SearchWorkerPage} />}
       />
     </Routes>
   );
