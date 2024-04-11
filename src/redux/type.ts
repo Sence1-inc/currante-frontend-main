@@ -59,6 +59,7 @@ export interface Area {
 }
 
 export interface User {
+  id: number | null;
   email: string;
   uuid: string;
   role: {
