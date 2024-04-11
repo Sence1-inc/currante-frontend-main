@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
@@ -23,7 +24,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return authenticated ? (
     <React.Fragment>
       <TopNavigation />
-      <Component />
+      <Box sx={{ margin: "64px 0" }}>
+        <Component />
+      </Box>
       <BottomNavigation />
     </React.Fragment>
   ) : (
