@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,6 +10,7 @@ import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
+import FormHelperText from '@mui/material/FormHelperText';
 
 const spanStyle = {
     padding: '20px',
@@ -43,13 +44,8 @@ const spanStyle = {
 const WorkerSearchPage: React.FC = () => {
 
     return (
-        <Container
-            component='section'
-
-            sx={{
-                padding: '30px 0',
-                margin: '100px auto'
-            }}
+        <Box 
+            sx={{ margin: "64px 0", padding: "20px", display: "flex", flexDirection: "column", gap: "20px", }}
         >
             <Box 
                 sx={{
@@ -128,7 +124,6 @@ const WorkerSearchPage: React.FC = () => {
             </Box>
             <Box
                 sx={{
-                    margin: '20px 0',
                     padding: '10px 20px',
                     border: '1px solid #F58A47',
                     borderRadius: '4px'
@@ -148,17 +143,16 @@ const WorkerSearchPage: React.FC = () => {
                         <MenuItem value={20}>Twenty</MenuItem>
                         <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
-                    <Typography
+                    <FormHelperText
                         sx={{
-                            margin: '5px 0 20px',
-                            fontFamily: 'Roboto',
-                            fontSize: '10px',
-                            fontWeight: '400',
-                            color: '#00000099'
+                            fontFamily: "Roboto",
+                            fontSize: "12px",
+                            fontWeight: "400",
+                            color: "#00000099",
                         }}
                     >
                         Choose the city in which you wish to receive service
-                    </Typography>
+                    </FormHelperText>
                 </FormControl>
                 <FormControl fullWidth>
                     <InputLabel variant="outlined" htmlFor="select-cleaning-type">
@@ -173,26 +167,27 @@ const WorkerSearchPage: React.FC = () => {
                         <MenuItem value={20}>Twenty</MenuItem>
                         <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
-                    <Typography
+                    <FormHelperText
                         sx={{
-                            marginTop: '5px',
-                            fontFamily: 'Roboto',
-                            fontSize: '10px',
-                            fontWeight: '400',
-                            color: '#00000099'
+                            fontFamily: "Roboto",
+                            fontSize: "12px",
+                            fontWeight: "400",
+                            color: "#00000099",
                         }}
                     >
-                        Choose which cleaning type would you like to avail
-                    </Typography>
+                        Choose which job type would you like to avail
+                    </FormHelperText>
                 </FormControl>
             </Box>
 
             <Box
                 sx={{
-                    margin: '20px 0',
-                    padding: '10px 20px',
+                    padding: '20px',
                     border: '1px solid #F58A47',
-                    borderRadius: '4px'
+                    borderRadius: '4px',
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px"
                 }}
             
             >
@@ -295,7 +290,7 @@ const WorkerSearchPage: React.FC = () => {
             </Box>
             
             
-        </Container>
+        </Box>
 
     );
 }
