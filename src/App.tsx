@@ -1,20 +1,14 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import HomePage from "./container/HomePage/HomePage";
-import WorkerHomePage from "./container/WorkerHomePage/WorkerHomePage";
-import TopNavigation from "./components/TopNavigation/TopNavigation";
-import BottomNavigation from "./components/BottomNavigation/BottomNavigation";
+import JobListPage from "./container/JobListPage/JobListPage";
 
 const App = () => {
   return (
-    <>
-      { /* Only shows the navbar in worker/employer pages */
-        location.pathname != "/" ? <TopNavigation /> : null } 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/job-list" element={<WorkerHomePage />} />
-        </Routes>
-      { location.pathname != "/" ? <BottomNavigation /> : null }
-    </>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/jobs" element={<PrivateRoute component={JobListPage} />} />
+    </Routes>
   );
 };
 
