@@ -20,7 +20,6 @@ interface ProfileServicingAreasCardProps {
   sectionName: string;
   servicingAreas: Area[];
   areas: { id: number; area_name: string }[];
-  errorMessages: any;
   handleSetEdittingSection: () => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
@@ -32,7 +31,6 @@ const ProfileServicingAreasCard: React.FC<ProfileServicingAreasCardProps> = ({
   servicingAreas,
   areas,
   sectionName,
-  errorMessages,
   handleSetEdittingSection,
   handleSave,
   handleCancelEdittingSection,
@@ -45,7 +43,6 @@ const ProfileServicingAreasCard: React.FC<ProfileServicingAreasCardProps> = ({
         borderRadius: "4px",
         padding: "20px",
         textAlign: "left",
-        margin: "0 0 20px",
       }}
     >
       <Box display={"flex"} justifyContent={"space-between"}>

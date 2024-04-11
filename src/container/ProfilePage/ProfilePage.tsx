@@ -379,7 +379,6 @@ const ProfilePage: React.FC = () => {
           />
 
           <ProfileServicingAreasCard
-            errorMessages={errorMessages}
             edittingSection={edittingSection}
             servicingAreas={servicingAreas}
             areas={areas}

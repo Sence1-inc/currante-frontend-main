@@ -38,7 +38,6 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
         borderRadius: "4px",
         padding: "20px",
         textAlign: "left",
-        margin: "0 0 20px",
       }}
     >
       <Box
