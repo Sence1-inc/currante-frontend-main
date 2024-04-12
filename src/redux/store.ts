@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import UserReducer from "./reducers/UserReducer";
+import WorkersReducer from "./reducers/WorkersReducer";
 
 const store = configureStore({
   reducer: {
     user: UserReducer,
+    workers: WorkersReducer,
   },
 });
 

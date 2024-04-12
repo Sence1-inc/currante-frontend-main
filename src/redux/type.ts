@@ -81,3 +81,9 @@ export interface User {
   addresses: Address[];
   reviews: Review[];
 }
+
+export type Worker = {
+  id: number | null;
+  transportation_cost: number | null;
+  profile: User;
+};
