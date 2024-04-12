@@ -8,9 +8,13 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import * as React from "react";
+import React, { useEffect } from "react";
 import Carousel from "react-material-ui-carousel";
+import { useNavigate } from "react-router";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
+import useGetWorkers from "../../hooks/useGetWorkers";
+import { useAppSelector } from "../../redux/store";
+import { Worker } from "../../redux/type";
 
 const spanStyle = {
   padding: "20px",
@@ -42,6 +46,14 @@ const slideImages = [
 ];
 
 const SearchWorkerPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { getWorkers } = useGetWorkers();
+  const workers = useAppSelector((state) => state.workers);
+
+  useEffect(() => {
+    getWorkers();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -235,7 +247,16 @@ const SearchWorkerPage: React.FC = () => {
         >
           Available Cleaners
         </Typography>
-        <WorkerCard handleCardClick={() => console.log("clicked")} />
+        {workers.map((worker: Worker) => {
+          return (
+            <WorkerCard
+              name={`${worker.profile.first_name} ${worker.profile.last_name}`}
+              address=""
+              price=""
+              handleCardClick={() => navigate(`/workers/${worker.id}`)}
+            />
+          );
+        })}
       </Box>
     </Box>
   );
