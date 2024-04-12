@@ -58,7 +58,7 @@ export default function SimpleBottomNavigation() {
         <BottomNavigationAction
           label="Job List"
           icon={<MapsHomeWorkRounded />}
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/jobs")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",
