@@ -3,9 +3,17 @@ import React from "react";
 
 interface WorkerCardProps {
   handleCardClick: () => void;
+  name: string;
+  address: string;
+  price: string;
 }
 
-const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
+const WorkerCard: React.FC<WorkerCardProps> = ({
+  handleCardClick,
+  name,
+  address,
+  price,
+}) => {
   return (
     <Card
       sx={{
@@ -43,12 +51,12 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">Jane Doe Smith</Typography>
+          <Typography variant="body2">{name}</Typography>
           <Typography variant="body2">&#x2022;</Typography>
-          <Typography variant="body2">Pasig City</Typography>
+          <Typography variant="body2">{address}</Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle1">starts at P 500</Typography>
+          <Typography variant="subtitle1">{price}</Typography>
         </Box>
       </CardContent>
     </Card>
