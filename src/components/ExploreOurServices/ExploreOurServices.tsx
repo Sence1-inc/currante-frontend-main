@@ -83,6 +83,7 @@ const ExploreOurServices = () => {
       {SERVICES.map((service: ServiceItem, index: number) => {
         return (
           <Card
+            key={index}
             sx={{
               order: { xs: index + 1, lg: service.order },
               height: { xs: "250px", md: "374px" },

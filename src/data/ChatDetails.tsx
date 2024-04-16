@@ -1,0 +1,18 @@
+export const EXCLUDED_WORDS = [
+  "contact",
+  "number",
+  "no",
+  "no.",
+  "numero",
+  "cp",
+  "cellphone",
+  "selpon",
+  "selfon",
+  "cellfon",
+  "selfone",
+  "cellfone",
+  "telepono",
+  "telephone",
+  "tel",
+  "tel.",
+];
