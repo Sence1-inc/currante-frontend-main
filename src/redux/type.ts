@@ -88,3 +88,10 @@ export type Worker = {
   work_details: string;
   profile: User;
 };
+
+export type JobType = {
+  id: number | null;
+  job_type_name: string;
+  job_subtypes: { id: number; job_name: string; unit: string }[];
+  image?: any;
+};

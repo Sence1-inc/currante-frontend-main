@@ -40,7 +40,7 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="h6">Header</Typography>
+          <Typography variant="h6">{name}</Typography>
           {/* <Typography variant="subtitle1">#123456</Typography> */}
         </Box>
         <Box
@@ -51,11 +51,11 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">{name}</Typography>
+          {/* <Typography variant="body1">{name}</Typography> */}
           {types.length > 0 && (
             <>
-              <Typography variant="body2">&#x2022;</Typography>
-              <Typography variant="body2">starts at Php {price}</Typography>
+              {/* <Typography variant="body1">&#x2022;</Typography> */}
+              <Typography variant="body1">starts at P {price}</Typography>
             </>
           )}
         </Box>
