@@ -4,6 +4,7 @@ import axiosInstance from "../axiosInstance";
 import ChatRoom from "./components/Chat/ChatRoom";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ChatPage from "./container/ChatPage/ChatPage";
+import EmployerDashboard from "./container/Dashboard/EmployerDashboard";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
@@ -43,7 +44,11 @@ const App = () => {
         element={<PrivateRoute component={ProfilePage} />}
       />
       <Route
-        path="/workers"
+        path="/services"
+        element={<PrivateRoute component={EmployerDashboard} />}
+      />
+      <Route
+        path="/services/:id/workers"
         element={<PrivateRoute component={SearchWorkerPage} />}
       />
       <Route path="/chats" element={<PrivateRoute component={ChatPage} />} />
