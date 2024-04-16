@@ -4,14 +4,14 @@ import React from "react";
 interface WorkerCardProps {
   handleCardClick: () => void;
   name: string;
-  address: string;
+  types: string[];
   price: string;
 }
 
 const WorkerCard: React.FC<WorkerCardProps> = ({
   handleCardClick,
   name,
-  address,
+  types,
   price,
 }) => {
   return (
@@ -41,7 +41,7 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
           }}
         >
           <Typography variant="h6">Header</Typography>
-          <Typography variant="subtitle1">#123456</Typography>
+          {/* <Typography variant="subtitle1">#123456</Typography> */}
         </Box>
         <Box
           sx={{
@@ -52,11 +52,15 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
           }}
         >
           <Typography variant="body2">{name}</Typography>
-          <Typography variant="body2">&#x2022;</Typography>
-          <Typography variant="body2">{address}</Typography>
+          {types.length > 0 && (
+            <>
+              <Typography variant="body2">&#x2022;</Typography>
+              <Typography variant="body2">starts at Php {price}</Typography>
+            </>
+          )}
         </Box>
         <Box>
-          <Typography variant="subtitle1">{price}</Typography>
+          <Typography variant="subtitle1">{types.join(", ")}</Typography>
         </Box>
       </CardContent>
     </Card>

@@ -47,6 +47,19 @@ const ProfileViewPage: React.FC = () => {
 
     getWorker();
   }, []);
+
+  const renderPrices = () => {
+    const jobs = worker?.profile.job_subtypes.filter((type) => type.active_flg);
+
+    let formattedJobs: string[] = [];
+
+    jobs?.forEach((job) => {
+      formattedJobs.push(`${job.job_name}: ${job.job_unit_price} ${job.unit}`);
+    });
+
+    return formattedJobs.join(", ");
+  };
+
   return (
     <Box
       sx={{
@@ -85,25 +98,12 @@ const ProfileViewPage: React.FC = () => {
       />
       <DescriptionCard
         title="Work Details"
-        description="Thorough cleaning of all rooms, including dusting, vacuuming, and
-          mopping floors Cleaning and sanitizing bathrooms, including toilets,
-          sinks, showers, and tubs Wiping down kitchen surfaces, including
-          countertops, appliances, and cabinet fronts Cleaning interior windows,
-          mirrors, and glass surfaces Dusting and wiping down baseboards, light
-          fixtures, and ceiling fans Emptying trash bins and replacing liners
-          Making beds and changing linens Organizing and tidying up living
-          spaces Additional tasks upon request, such as laundry, dishwashing, or
-          pet care"
+        description={worker?.work_details as string}
       />
-      <DescriptionCard
-        title="Pricing"
-        description="
-          General Cleaning Package Php 40 per sqm.
-          Deep Cleaning Package Php 50 per sqm."
-      />
+      <DescriptionCard title="Pricing" description={renderPrices()} />
       <DescriptionCard
         title="Business Hours"
-        description="Monday to Sunday 8am - 10pm"
+        description={worker?.profile.schedule as string}
       />
       <ReviewCard />
     </Box>

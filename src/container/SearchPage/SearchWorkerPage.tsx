@@ -54,6 +54,25 @@ const SearchWorkerPage: React.FC = () => {
     getWorkers();
   }, []);
 
+  const renderTypes = (worker: Worker) => {
+    const jobs = worker?.profile.job_subtypes.filter((type) => type.active_flg);
+
+    let formattedJobs: string[] = [];
+
+    jobs?.forEach((job) => {
+      formattedJobs.push(job.job_name);
+    });
+
+    return formattedJobs;
+  };
+
+  const renderStartPrice = (worker: Worker) => {
+    const activeJobs = worker?.profile.job_subtypes.filter(
+      (type) => type.active_flg
+    );
+    return Math.min(...activeJobs.map((job) => job.job_unit_price)).toString();
+  };
+
   return (
     <Box
       sx={{
@@ -251,8 +270,8 @@ const SearchWorkerPage: React.FC = () => {
           return (
             <WorkerCard
               name={`${worker.profile.first_name} ${worker.profile.last_name}`}
-              address=""
-              price=""
+              types={renderTypes(worker)}
+              price={renderStartPrice(worker)}
               handleCardClick={() => navigate(`/workers/${worker.id}`)}
             />
           );

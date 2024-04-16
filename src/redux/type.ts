@@ -85,5 +85,6 @@ export interface User {
 export type Worker = {
   id: number | null;
   transportation_cost: number | null;
+  work_details: string;
   profile: User;
 };
