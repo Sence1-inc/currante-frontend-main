@@ -1,36 +1,39 @@
-import React, { useState } from "react";
 import { Box } from "@mui/material";
-import { TabsContainer, TabsItem, TabsMenu } from "../../components/Tabs/Tabs";
+import React, { useEffect, useState } from "react";
 import TabCard from "../../components/Tabs/TabCard";
-
-const jobListSampleData: Array<{ id: string; status: string }> = Array(
-  { id: "123456", status: "incoming", provider_name: "Jane Smith" },
-  { id: "123457", status: "current", provider_name: "Lara Croft" },
-  { id: "123458", status: "completed", provider_name: "Jane Doe" },
-  { id: "123459", status: "incoming", provider_name: "John Snow" },
-  { id: "123460", status: "incoming", provider_name: "Christopher Nolan" }
-);
+import { TabsContainer, TabsItem, TabsMenu } from "../../components/Tabs/Tabs";
+import { useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
 
 const JobListPage: React.FC = () => {
+  const user = useAppSelector((state) => state.user);
   const [value, setValue] = useState<number>(0);
+  const [orders, setOrders] = useState<Order[] | []>([]);
+
+  useEffect(() => {
+    if (user) {
+      setOrders(user.orders);
+    }
+  }, [user]);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    console.log(newValue);
     setValue(newValue);
   };
 
   const showList = () => {
     return (
       <TabsItem value={value} index={value}>
-        {jobListSampleData.map((jobitem) => {
-          const tabCard = <TabCard key={jobitem.id} item={jobitem} />;
+        {orders.map((order) => {
+          const tabCard = <TabCard key={order.job_order_code} order={order} />;
 
           if (value === 0) {
             return tabCard;
-          } else if (value === 1 && jobitem.status === "incoming") {
+          } else if (value === 1 && Number(order.status) === 1) {
             return tabCard;
-          } else if (value === 2 && jobitem.status === "current") {
+          } else if (value === 2 && Number(order.status) === 2) {
             return tabCard;
-          } else if (value === 3 && jobitem.status === "completed") {
+          } else if (value === 3 && Number(order.status) === 3) {
             return tabCard;
           }
         })}

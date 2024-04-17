@@ -30,6 +30,8 @@ export interface Order {
   total: number | null;
   status: string;
   job_order_code: string;
+  created_at: string;
+  job_order_start_date: string;
 }
 
 export interface Category {
@@ -69,6 +71,7 @@ export interface User {
     role_details: string;
   };
   description: string;
+  orders: Order[];
   areas: Area[];
   job_subtypes: JobSubType[];
   schedule: string;

@@ -8,6 +8,32 @@ const initialState: User = {
     role_name: "",
     role_details: "",
   },
+  orders: [
+    {
+      created_at: "",
+      job_order_start_date: "",
+      worker_id: null,
+      employer_id: null,
+      employer_name: "",
+      worker_job_subtype: {
+        worker_id: null,
+        job_subtype: {
+          job_type_id: null,
+          job_subtype_id: 0,
+          job_type: "",
+          job_name: "",
+          unit: "",
+          job_unit_price: 0,
+          active_flg: false,
+        },
+        job_unit_price: null,
+      },
+      quantity: null,
+      total: null,
+      status: "",
+      job_order_code: "",
+    },
+  ],
   description: "",
   schedule: "",
   uuid: "",
@@ -41,12 +67,16 @@ const initialState: User = {
   user_photos: [{ profile_photo: "", id_photo: "" }],
   reviews: [
     {
+      id: null,
       overall_rating: null,
       category_flg: null,
       feedback: "",
       order: {
+        created_at: "",
+        job_order_start_date: "",
         worker_id: null,
         employer_id: null,
+        employer_name: "",
         worker_job_subtype: {
           worker_id: null,
           job_subtype: {
