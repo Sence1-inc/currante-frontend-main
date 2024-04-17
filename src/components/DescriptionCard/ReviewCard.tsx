@@ -1,19 +1,69 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Rating,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import { Review } from "../../redux/type";
 
-const ReviewCard = () => {
+interface ReviewCardProps {
+  review: Review;
+}
+
+const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   return (
-    <Box
+    <Card
       sx={{
-        padding: "10px 20px",
-        border: "1px solid #F58A47",
-        borderRadius: "4px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
+        borderRadius: "12px",
+        height: "auto",
+        border: "1px #C5C6D0 solid",
+        boxShadow: "none",
+        backgroundColor: "common.white",
       }}
     >
-      <Typography variant="h6">Reviews</Typography>
-    </Box>
+      <CardContent>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "20px",
+            padding: "10px 0",
+          }}
+        >
+          <Avatar
+            sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+            src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Typography variant="body2">
+              {review.order.employer_name}
+            </Typography>
+            <Rating
+              size="small"
+              name="read-only"
+              value={review.overall_rating}
+              readOnly
+            />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            paddingTop: "10px",
+            alignSelf: "flex-start",
+          }}
+        >
+          <Typography variant="body1">{review.feedback}</Typography>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 

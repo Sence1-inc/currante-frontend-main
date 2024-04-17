@@ -1,8 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
+import ReviewsCard from "../../components/DescriptionCard/ReviewsCard";
 import ServiceCard from "../../components/ServiceCard/ServiceCard";
-import { JobType } from "../../redux/type";
+import { JobType, Review } from "../../redux/type";
 import carpenter from "/images/carpenter.png";
 import cleaner from "/images/cleaner.png";
 import image from "/images/img_services_carpentry_1.jpg";
@@ -10,6 +11,7 @@ import plumber from "/images/plumber.png";
 
 const EmployerDashboard = () => {
   const [jobTypes, setJobTypes] = useState<JobType[] | []>([]);
+  const [reviews, setReviews] = useState<Review[] | []>([]);
 
   useEffect(() => {
     const getJobTypes = async () => {
@@ -32,6 +34,17 @@ const EmployerDashboard = () => {
       }
     };
 
+    const getReviews = async () => {
+      try {
+        const response = await axiosInstance.get("/api/v1/reviews");
+        setReviews(response.data);
+      } catch (error) {
+        if (error) {
+        }
+      }
+    };
+
+    getReviews();
     getJobTypes();
   }, []);
 
@@ -69,14 +82,7 @@ const EmployerDashboard = () => {
             gap: "10px",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: "500",
-            }}
-          >
-            Services
-          </Typography>
+          <Typography variant="h6">Services</Typography>
           <Box sx={{ display: "flex", gap: "10px" }}>
             {jobTypes.map((service) => {
               return (
@@ -100,36 +106,10 @@ const EmployerDashboard = () => {
             gap: "10px",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: "500",
-            }}
-          >
-            Recently Viewed Services
-          </Typography>
+          <Typography variant="h6">Recently Viewed Services</Typography>
           <Box sx={{ display: "flex", gap: "10px" }}></Box>
         </Box>
-        <Box
-          sx={{
-            padding: "20px",
-            border: "1px solid #F58A47",
-            borderRadius: "4px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: "500",
-            }}
-          >
-            Recent Reviews
-          </Typography>
-          <Box sx={{ display: "flex", gap: "10px" }}></Box>
-        </Box>
+        <ReviewsCard reviews={reviews as Review[]} />
       </Box>
     </Box>
   );
