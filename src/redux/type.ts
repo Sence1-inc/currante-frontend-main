@@ -22,6 +22,7 @@ export interface WorkerJobSubtype {
 }
 
 export interface Order {
+  id: number | null;
   worker_id: number | null;
   employer_id: number | null;
   employer_name: string;
@@ -32,6 +33,8 @@ export interface Order {
   job_order_code: string;
   created_at: string;
   job_order_start_date: string;
+  worker_arrived_date: string;
+  job_order_completed_date: string;
 }
 
 export interface Category {

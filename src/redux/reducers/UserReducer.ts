@@ -10,8 +10,11 @@ const initialState: User = {
   },
   orders: [
     {
+      id: null,
       created_at: "",
       job_order_start_date: "",
+      worker_arrived_date: "",
+      job_order_completed_date: "",
       worker_id: null,
       employer_id: null,
       employer_name: "",
@@ -72,8 +75,11 @@ const initialState: User = {
       category_flg: null,
       feedback: "",
       order: {
+        id: null,
         created_at: "",
         job_order_start_date: "",
+        worker_arrived_date: "",
+        job_order_completed_date: "",
         worker_id: null,
         employer_id: null,
         employer_name: "",

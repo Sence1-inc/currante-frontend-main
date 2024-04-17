@@ -15,6 +15,7 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [createdDate, setCreatedDate] = useState<Date | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [completedDate, setCompletedDate] = useState<Date | null>(null);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -30,10 +31,12 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
 
   const renderStatus = () => {
     if (Number(order.status) === 1) {
-      return "incoming";
+      return "request";
     } else if (Number(order.status) === 2) {
-      return "current";
+      return "incoming";
     } else if (Number(order.status) === 3) {
+      return "arrived";
+    } else if (Number(order.status) === 4) {
       return "completed";
     } else {
       return "all";
@@ -48,7 +51,15 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
     if (order.created_at) {
       setCreatedDate(parseISO(order.created_at));
     }
-  }, [order.created_at, order.job_order_start_date]);
+
+    if (order.job_order_completed_date) {
+      setCompletedDate(parseISO(order.job_order_completed_date));
+    }
+  }, [
+    order.created_at,
+    order.job_order_start_date,
+    order.job_order_completed_date,
+  ]);
 
   return (
     <Card sx={jobListStyles.container.cardContainer}>
@@ -86,6 +97,12 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
                 {format(startDate as Date, "MMMM d, yyyy, h:mm aa")}
               </Typography>
             )}
+            {completedDate && (
+              <Typography sx={jobListStyles.card.cardText}>
+                Job completed date{" "}
+                {format(completedDate as Date, "MMMM d, yyyy, h:mm aa")}
+              </Typography>
+            )}
           </Box>
         </Box>
         <Box sx={jobListStyles.card.cardIdBox}>
@@ -94,9 +111,10 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
           </Typography>
         </Box>
       </Box>
-      <TabButton status={renderStatus()} handleOpenModal={handleOpenModal} />
+      <TabButton status={order.status} handleOpenModal={handleOpenModal} />
       <TabModal
-        status={renderStatus()}
+        orderId={order.id as number}
+        status={order.status}
         openModal={openModal}
         handleOpenModal={handleOpenModal}
         handleCloseModal={handleCloseModal}

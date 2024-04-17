@@ -35,6 +35,8 @@ const JobListPage: React.FC = () => {
             return tabCard;
           } else if (value === 3 && Number(order.status) === 3) {
             return tabCard;
+          } else if (value === 4 && Number(order.status) === 4) {
+            return tabCard;
           }
         })}
       </TabsItem>
@@ -50,14 +52,11 @@ const JobListPage: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <TabsContainer
-          value={value}
-          onChange={handleChange}
-          aria-label="styled tabs example"
-        >
+        <TabsContainer value={value} onChange={handleChange}>
           <TabsMenu label="All" />
+          <TabsMenu label="Requests" />
           <TabsMenu label="Incoming" />
-          <TabsMenu label="Current" />
+          <TabsMenu label="To be Completed" />
           <TabsMenu label="Completed" />
         </TabsContainer>
       </Box>

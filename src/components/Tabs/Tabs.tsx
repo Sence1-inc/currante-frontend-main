@@ -20,6 +20,9 @@ interface TabProps {
 
 export const TabsContainer = styled((props: TabsProps) => (
   <Tabs
+    variant="scrollable"
+    scrollButtons="auto"
+    aria-label="scrollable auto tabs example"
     {...props}
     TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
