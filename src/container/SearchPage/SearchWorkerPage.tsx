@@ -63,6 +63,7 @@ const SearchWorkerPage: React.FC = () => {
   const workers = useAppSelector((state) => state.workers);
   const [areas, setAreas] = useState<Area[] | []>([]);
   const [area, setArea] = useState<string | null>(areaParam ?? null);
+  const [jobType, setJobType] = useState<string>("");
   const [subtypes, setSubtypes] = useState<
     { id: number; job_name: string; unit: string }[] | []
   >([]);
@@ -75,7 +76,7 @@ const SearchWorkerPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    getWorkers();
+    getWorkers(`jobType=${id}`);
   }, []);
 
   useEffect(() => {
@@ -83,6 +84,7 @@ const SearchWorkerPage: React.FC = () => {
       try {
         const response = await axiosInstance.get("/api/v1/areas");
         setAreas(response.data);
+        setJobType(response.data.job_type_name);
       } catch (error) {
         console.log("error ", error);
       }
@@ -120,13 +122,13 @@ const SearchWorkerPage: React.FC = () => {
   }, [jobSubtypeParam]);
 
   useEffect(() => {
-    let paramString = "";
+    let paramString = `jobType=${id}`;
     if (area) {
-      paramString = `area=${areaParam}`;
+      paramString = `jobType=${id}&area=${areaParam}`;
     } else if (subtype) {
-      paramString = `jobSubtype=${jobSubtypeParam}`;
+      paramString = `jobType=${id}&jobSubtype=${jobSubtypeParam}`;
     } else if (area && subtype) {
-      paramString = `area=${areaParam}&jobSubtype=${jobSubtypeParam}`;
+      paramString = `jobType=${id}&area=${areaParam}&jobSubtype=${jobSubtypeParam}`;
     }
 
     getWorkers(paramString);
@@ -206,6 +208,7 @@ const SearchWorkerPage: React.FC = () => {
                   justifyContent: "center",
                   backgroundSize: "cover",
                   height: "200px",
+                  borderRadius: "4px",
                   backgroundImage: `url(${slideImage.url})`,
                 }}
               />
@@ -387,17 +390,23 @@ const SearchWorkerPage: React.FC = () => {
         >
           Available Workers
         </Typography>
-        {workers.map((worker: Worker) => {
-          return (
-            <WorkerCard
-              key={worker.id}
-              name={`${worker.profile.first_name} ${worker.profile.last_name}`}
-              types={renderTypes(worker)}
-              price={renderStartPrice(worker)}
-              handleCardClick={() => navigate(`/workers/${worker.id}`)}
-            />
-          );
-        })}
+        {workers.length > 0 ? (
+          workers.map((worker: Worker) => {
+            return (
+              <WorkerCard
+                key={worker.id}
+                name={`${worker.profile.first_name} ${worker.profile.last_name}`}
+                types={renderTypes(worker)}
+                price={renderStartPrice(worker)}
+                handleCardClick={() =>
+                  navigate(`/services/${id}/workers/${worker.id}`)
+                }
+              />
+            );
+          })
+        ) : (
+          <Typography>No data found</Typography>
+        )}
       </Box>
     </Box>
   );

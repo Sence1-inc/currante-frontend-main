@@ -57,7 +57,7 @@ const App = () => {
         element={<PrivateRoute component={ChatRoom} />}
       />
       <Route
-        path="/workers/:id"
+        path="/services/:service_id/workers/:id"
         element={<PrivateRoute component={ProfileViewPage} />}
       />
     </Routes>
