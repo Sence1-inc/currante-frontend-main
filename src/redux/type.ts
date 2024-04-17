@@ -24,6 +24,7 @@ export interface WorkerJobSubtype {
 export interface Order {
   worker_id: number | null;
   employer_id: number | null;
+  employer_name: string;
   worker_job_subtype: WorkerJobSubtype;
   quantity: number | null;
   total: number | null;
@@ -41,6 +42,7 @@ export interface CategoryRating {
 }
 
 export interface Review {
+  id: number | null;
   overall_rating: number | null;
   category_flg: number | null;
   feedback: string;

@@ -16,7 +16,7 @@ import { Area, JobSubType, User } from "../../redux/type";
 
 export interface JobSubtypeDefault {
   job_type: string;
-  job_subtypes: { name: string; unit: string; id: number }[];
+  job_subtypes: { job_name: string; unit: string; id: number }[];
 }
 
 interface Photo {
@@ -66,7 +66,7 @@ const ProfilePage: React.FC = () => {
   const [jobSubtypesDefault, setJobSubtypesDefault] =
     useState<JobSubtypeDefault>({
       job_type: "",
-      job_subtypes: [{ name: "", unit: "", id: 0 }],
+      job_subtypes: [{ job_name: "", unit: "", id: 0 }],
     });
 
   const handleAvatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

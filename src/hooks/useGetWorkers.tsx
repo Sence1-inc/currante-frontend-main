@@ -8,7 +8,7 @@ const useGetWorkers = () => {
   const getWorkers = async (parameters?: string) => {
     try {
       const query = parameters ? `?${parameters}` : "";
-      const response = await axiosInsance.get(`/api/v1/workers?${query}`);
+      const response = await axiosInsance.get(`/api/v1/workers${query}`);
       if (response.data) {
         dispatch(initializeWorkers(response.data));
       }
