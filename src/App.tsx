@@ -7,6 +7,7 @@ import ChatPage from "./container/ChatPage/ChatPage";
 import EmployerDashboard from "./container/Dashboard/EmployerDashboard";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
+import PaymentPage from "./container/PaymentPage/PaymentPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
 import ProfileViewPage from "./container/ProfileViewPage/ProfileViewPage";
 import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
@@ -59,6 +60,10 @@ const App = () => {
       <Route
         path="/services/:service_id/workers/:id"
         element={<PrivateRoute component={ProfileViewPage} />}
+      />
+      <Route
+        path="/workers/:id/payment"
+        element={<PrivateRoute component={PaymentPage} />}
       />
     </Routes>
   );

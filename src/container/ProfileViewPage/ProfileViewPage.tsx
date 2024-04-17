@@ -1,11 +1,21 @@
+import {
+  addDoc, collection, getDoc,
+  getDocs,
+  query,
+  where
+} from "@firebase/firestore";
+import ChatIcon from "@mui/icons-material/Chat";
 import { Box, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import DescriptionCard from "../../components/DescriptionCard/DescriptionCard";
 import ReviewsCard from "../../components/DescriptionCard/ReviewsCard";
+import FabButton from "../../components/FabButton/FabButton";
+import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
 import { Review, Worker } from "../../redux/type";
 
 const responsive = {
@@ -26,20 +36,6 @@ const responsive = {
   },
 };
 
-const spanStyle = {
-  padding: "20px",
-  background: "#efefef",
-  color: "#000000",
-};
-
-const divStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundSize: "cover",
-  height: "200px",
-  borderRadius: "28px",
-};
 const slideImages = [
   {
     url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
@@ -57,7 +53,10 @@ const slideImages = [
 
 const ProfileViewPage: React.FC = () => {
   const [worker, setWorker] = useState<Worker | null>(null);
+  const user = useAppSelector((state) => state.user);
   const { id } = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getWorker = async () => {
       const response = await axiosInstance.get(`/api/v1/workers/${id}`);
@@ -77,6 +76,65 @@ const ProfileViewPage: React.FC = () => {
     });
 
     return formattedJobs.join(", ");
+  };
+
+  const handleMessageClick = async () => {
+    console.log("clicked", worker?.id);
+    try {
+      const conversationsRef = collection(db, "conversations");
+      const conversationParticipantRef = collection(
+        db,
+        "conversation_participants"
+      );
+
+      // Add a new document with a generated ID
+      const docRef = await addDoc(conversationsRef, {
+        conversation_name: `Conversation by ${user.id} with ${worker?.id}`,
+      });
+
+      const employerRef = query(
+        collection(db, "users"),
+        where("user_id", "==", user.id)
+      );
+      const employers = await getDocs(employerRef);
+      const employerDocRef = employers.docs[0].ref;
+      const employerDoc = await getDoc(employerDocRef);
+
+      const workerRef = query(
+        collection(db, "users"),
+        where("user_id", "==", worker?.id) // update during authentication implementation
+      );
+      const workers = await getDocs(workerRef);
+      const workerDocRef = workers.docs[0].ref;
+      const workerDoc = await getDoc(workerDocRef);
+
+      if (docRef.id) {
+        const employerConversationParticipantDocRef = await addDoc(
+          conversationParticipantRef,
+          {
+            conversation_id: docRef.id,
+            user_id: employerDoc.id,
+          }
+        );
+        const workerConversationParticipantDocRef = await addDoc(
+          conversationParticipantRef,
+          {
+            conversation_id: docRef.id,
+            user_id: workerDoc.id,
+          }
+        );
+        console.log(
+          employerConversationParticipantDocRef.id,
+          workerConversationParticipantDocRef.id
+        );
+        if (
+          employerConversationParticipantDocRef.id &&
+          workerConversationParticipantDocRef.id
+        ) {
+          navigate(`/chat/${docRef.id}`);
+        }
+      }
+    } catch (error) {}
   };
 
   return (
@@ -141,6 +199,15 @@ const ProfileViewPage: React.FC = () => {
             description={worker?.profile.schedule as string}
           />
           <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
+          <FabButton
+            styles={{
+              bottom: "12%",
+              right: "30%",
+            }}
+            handleClick={handleMessageClick}
+            text="Message"
+            icon={<ChatIcon />}
+          />
         </>
       )}
     </Box>

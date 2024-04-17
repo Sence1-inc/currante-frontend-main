@@ -33,10 +33,12 @@ const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="h6">Header</Typography>
+          <Typography variant="h6">
+            {user.first_name} {user.last_name}
+          </Typography>
           <Typography variant="subtitle1">#123456</Typography>
         </Box>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             gap: "10px",
@@ -49,7 +51,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
           </Typography>
           <Typography variant="body2">&#x2022;</Typography>
           <Typography variant="body2">Pasig City</Typography>
-        </Box>
+        </Box> */}
       </CardContent>
     </Card>
   );
