@@ -1,7 +1,7 @@
 import { Box, Container, Typography } from "@mui/material";
 import TextField from '@mui/material/TextField';
 
-export default function ReviewDescription() {
+export default function ReviewDescription({name, value, handleChange}) {
     return (
         <Box>
             <Box sx={{
@@ -13,6 +13,9 @@ export default function ReviewDescription() {
                 <Typography variant='smallest' color='secondary.main' sx={{marginLeft: "10px"}}>Required to receive payment</Typography>
             </Box>
             <TextField 
+                name={name} 
+                value={value} 
+                onChange={handleChange} 
                 placeholder="Enter comment here..." 
                 size="large"
                 rows={3}
