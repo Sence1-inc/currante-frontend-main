@@ -11,7 +11,7 @@ export default function FileUpload() {
       <Typography variant='labelLight'>Upload photos or videos</Typography>
       <Box className="fileUploadContainer">
         <Box className="fileUpload" onClick={()=> document.querySelector(".input-field").click()}>
-          <input type="file" accept="image/*, video/*" className="input-field" multiple hidden onChange={({target: {files}})=> {
+          <input type="file" name="fileUpload" accept="image/*, video/*" className="input-field" multiple hidden onChange={({target: {files}})=> {
             files[0] && setFileName(files[0].name)
             if(files) {
               setfile(URL.createObjectURL(files[0]))
