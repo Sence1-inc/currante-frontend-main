@@ -10,7 +10,6 @@ import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
 import ProfileServicingAreasCard from "../../components/Profile/ProfileServicingAreasCard";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { useAppSelector } from "../../redux/store";
 import { Area, JobSubType, User } from "../../redux/type";
 
@@ -203,7 +202,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     const data = {
-      user_id: LOGGED_IN_USER, // update this during implementation of authentication
+      user_id: user.id, // update this during implementation of authentication
       first_name: firstName,
       middle_name: middleName,
       last_name: lastName,

@@ -2,6 +2,7 @@ import { Box, Card, Typography } from "@mui/material";
 import { format, parseISO } from "date-fns";
 import React, { useEffect, useState } from "react";
 import ProfileImage from "../../assets/profile.png";
+import { useAppSelector } from "../../redux/store";
 import { Order } from "../../redux/type";
 import jobListStyles from "../../styles/jobListStyles";
 import TabButton from "./TabButton";
@@ -12,6 +13,7 @@ interface TabCardProps {
 }
 
 const TabCard: React.FC<TabCardProps> = ({ order }) => {
+  const user = useAppSelector((state) => state.user);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [createdDate, setCreatedDate] = useState<Date | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -28,7 +30,7 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
   const capitalizeFirstLetter = (str: string) => {
     return str[0].toUpperCase() + str.slice(1);
   };
-
+  console.log(order);
   const renderStatus = () => {
     if (Number(order.status) === 1) {
       return "request";
@@ -74,12 +76,16 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
             <img src={ProfileImage} alt="" />
           </Box>
           <Typography sx={jobListStyles.card.cardText}>
-            {order.employer_name}
+            {user.logged_in_as === "worker"
+              ? order.employer_name
+              : order.worker_name}
           </Typography>
         </Box>
         <Box sx={jobListStyles.card.cardDetailsBox}>
           <Typography sx={jobListStyles.card.cardHeading}>
-            {order.employer_name}
+            {user.logged_in_as === "worker"
+              ? order.employer_name
+              : order.worker_name}
           </Typography>
           <Typography sx={jobListStyles.card.cardSubHeading}>
             Quezon City
@@ -111,7 +117,9 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
           </Typography>
         </Box>
       </Box>
-      <TabButton status={order.status} handleOpenModal={handleOpenModal} />
+      {user.logged_in_as === "worker" && (
+        <TabButton status={order.status} handleOpenModal={handleOpenModal} />
+      )}
       <TabModal
         orderId={order.id as number}
         status={order.status}

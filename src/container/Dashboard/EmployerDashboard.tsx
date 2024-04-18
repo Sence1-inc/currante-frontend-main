@@ -51,7 +51,8 @@ const EmployerDashboard = () => {
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",

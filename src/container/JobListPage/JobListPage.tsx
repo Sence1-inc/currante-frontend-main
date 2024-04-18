@@ -44,7 +44,12 @@ const JobListPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ marginTop: "64px" }}>
+    <Box
+      sx={{
+        marginTop: "64px",
+        marginBottom: "84px",
+      }}
+    >
       <Box
         sx={{
           backgroundColor: "#d7e3ff",

@@ -1,13 +1,55 @@
 import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
+import useGetWorker from "../../hooks/useGetWorker";
 
 interface ChatCardProps {
   handleCardClick: () => void;
-  user: FirebaseUser;
+  participant: FirebaseUser;
 }
 
-const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
+const ChatCard: React.FC<ChatCardProps> = ({
+  participant,
+  handleCardClick,
+}) => {
+  const [participantUserId, setParticipantUserId] = useState<number | null>(
+    null
+  );
+  const { getWorker } = useGetWorker();
+  const [worker, setWorker] = useState<Worker | null>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/api/v1/users/${participant.user_id}`
+        );
+        if (data) {
+          setParticipantUserId(data.id);
+        }
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
+    if (participant) {
+      getUser(); // make this a hook
+    }
+  }, [participant]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getWorker(Number(participantUserId));
+      setWorker(data); // put this in a state
+    };
+    if (participantUserId) {
+      getData();
+    }
+  }, [participantUserId]);
+
+  console.log(worker);
+
   return (
     <Card
       sx={{
@@ -34,11 +76,11 @@ const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
           }}
         >
           <Typography variant="h6">
-            {user.first_name} {user.last_name}
+            {participant.first_name} {participant.last_name}
           </Typography>
           <Typography variant="subtitle1">#123456</Typography>
         </Box>
-        {/* <Box
+        <Box
           sx={{
             display: "flex",
             gap: "10px",
@@ -46,12 +88,10 @@ const ChatCard: React.FC<ChatCardProps> = ({ user, handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">
-            {user.first_name} {user.middle_name} {user.last_name}
-          </Typography>
+          <Typography variant="body2"></Typography>
           <Typography variant="body2">&#x2022;</Typography>
           <Typography variant="body2">Pasig City</Typography>
-        </Box> */}
+        </Box>
       </CardContent>
     </Card>
   );

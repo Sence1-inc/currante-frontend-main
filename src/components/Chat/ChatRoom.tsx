@@ -12,14 +12,15 @@ import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
 import FabButton from "../FabButton/FabButton";
 import ChatBox from "./ChatBox";
 import SendChat from "./SendChat";
 
 const ChatRoom: React.FC = () => {
   const { conversation_id } = useParams();
+  const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
 
@@ -40,18 +41,14 @@ const ChatRoom: React.FC = () => {
         const allUserConversations = await getConversations(
           conversation_id as string
         );
-        console.log("allUsers", allUserConversations);
         const usersPromises = allUserConversations.map(async (convo) => {
-          console.log("conve", convo);
           const userRef = document(db, "users", convo.user_id);
-          console.log("userRef", userRef);
           const userDoc = await getDoc(userRef);
-          console.log("userDocData", userDoc.data());
           return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
         });
 
         const user = (await Promise.all(usersPromises)).filter((user) => {
-          return user !== null && user.user_id !== LOGGED_IN_USER;
+          return user !== null && user.user_id !== userState.id;
         }) as FirebaseUser[];
 
         setParticipant(user[0]);
@@ -68,7 +65,8 @@ const ChatRoom: React.FC = () => {
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         width: "100vw",
         display: "flex",
         flexDirection: "column",
