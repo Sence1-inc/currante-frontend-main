@@ -70,6 +70,7 @@ export interface Area {
 export interface User {
   logged_in_as: string;
   id: number | null;
+  worker_id?: number | null;
   email: string;
   uuid: string;
   role: {
