@@ -71,6 +71,7 @@ export interface User {
   logged_in_as: string;
   id: number | null;
   worker_id?: number | null;
+  employer_id?: number | null;
   email: string;
   uuid: string;
   role: {
@@ -98,6 +99,11 @@ export type Worker = {
   id: number | null;
   transportation_cost: number | null;
   work_details: string;
+  profile: User;
+};
+
+export type Employer = {
+  id: number | null;
   profile: User;
 };
 

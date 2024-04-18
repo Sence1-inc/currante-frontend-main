@@ -2,8 +2,10 @@ import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
+import useGetEmployer from "../../hooks/useGetEmployer";
 import useGetWorker from "../../hooks/useGetWorker";
-import { Worker } from "../../redux/type";
+import { useAppSelector } from "../../redux/store";
+import { Employer, Worker } from "../../redux/type";
 
 interface ChatCardProps {
   handleCardClick: () => void;
@@ -18,17 +20,25 @@ const ChatCard: React.FC<ChatCardProps> = ({
     null
   );
   const { getWorker } = useGetWorker();
+  const { getEmployer } = useGetEmployer();
   const [worker, setWorker] = useState<Worker | null>(null);
+  const [employer, setEmployer] = useState<Employer | null>(null);
+  const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const { data } = await axiosInstance.get(
-          `/api/v1/users/${participant.user_id}?type=worker`
-        );
+        const endpoint =
+          user.logged_in_as === "worker"
+            ? `/api/v1/users/${participant.user_id}?type=employer`
+            : `/api/v1/users/${participant.user_id}?type=worker`;
+        const { data } = await axiosInstance.get(endpoint);
 
         if (data) {
-          setParticipantUserId(data.worker_id);
+          console.log("Data", data);
+          setParticipantUserId(
+            user.logged_in_as === "worker" ? data.employer_id : data.worker_id
+          );
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -42,9 +52,16 @@ const ChatCard: React.FC<ChatCardProps> = ({
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getWorker(Number(participantUserId));
-      setWorker(data); // put this in a state
+      console.log(participantUserId);
+      const data =
+        user.logged_in_as === "worker"
+          ? await getEmployer(Number(participantUserId))
+          : await getWorker(Number(participantUserId));
+
+      console.log("huhu", data);
+      user.logged_in_as === "worker" ? setEmployer(data) : setWorker(data); // put this in a state
     };
+
     if (participantUserId) {
       getData();
     }
@@ -76,7 +93,9 @@ const ChatCard: React.FC<ChatCardProps> = ({
           }}
         >
           <Typography variant="h6">
-            {participant.first_name} {participant.last_name}
+            {user.logged_in_as === "employer"
+              ? `${worker?.profile.first_name} ${worker?.profile.last_name}`
+              : `${employer?.profile.first_name} ${employer?.profile.last_name}`}
           </Typography>
           <Typography variant="subtitle1">Pasig City</Typography>
         </Box>
@@ -89,8 +108,8 @@ const ChatCard: React.FC<ChatCardProps> = ({
         >
           {worker?.profile.job_subtypes
             .filter((type) => type.active_flg)
-            .map((type) => (
-              <Typography variant="body2">
+            .map((type, index) => (
+              <Typography key={index} variant="body2">
                 {type.job_type}: {type.job_name}
               </Typography>
             ))}
