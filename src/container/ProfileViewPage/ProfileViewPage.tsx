@@ -1,8 +1,10 @@
 import {
-  addDoc, collection, getDoc,
+  addDoc,
+  collection,
+  getDoc,
   getDocs,
   query,
-  where
+  where,
 } from "@firebase/firestore";
 import ChatIcon from "@mui/icons-material/Chat";
 import { Box, CircularProgress } from "@mui/material";
@@ -16,7 +18,7 @@ import ReviewsCard from "../../components/DescriptionCard/ReviewsCard";
 import FabButton from "../../components/FabButton/FabButton";
 import { db } from "../../firebase";
 import { useAppSelector } from "../../redux/store";
-import { Review, Worker } from "../../redux/type";
+import { Review, User, Worker } from "../../redux/type";
 
 const responsive = {
   desktop: {
@@ -53,9 +55,10 @@ const slideImages = [
 
 const ProfileViewPage: React.FC = () => {
   const [worker, setWorker] = useState<Worker | null>(null);
-  const user = useAppSelector((state) => state.user);
+  const user: User = useAppSelector((state) => state.user);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [conversationId, setConversationId] = useState<string>("");
 
   useEffect(() => {
     const getWorker = async () => {
@@ -78,69 +81,101 @@ const ProfileViewPage: React.FC = () => {
     return formattedJobs.join(", ");
   };
 
+  const isConversationCreated = async () => {
+    const conversationRef = query(
+      collection(db, "conversations"),
+      where("created_by", "==", user.id),
+      where("created_for", "==", worker?.id)
+    );
+
+    const conversations = await getDocs(conversationRef);
+    if (!conversations.empty) {
+      const conversationDocRef = conversations.docs[0].ref;
+      const conversationDoc = await getDoc(conversationDocRef);
+      return conversationDoc.exists();
+    } else {
+      return false;
+    }
+  };
+
   const handleMessageClick = async () => {
-    console.log("clicked", worker?.id);
-    try {
-      const conversationsRef = collection(db, "conversations");
-      const conversationParticipantRef = collection(
-        db,
-        "conversation_participants"
-      );
+    // console.log(await isConversationCreated());
+    if ((await isConversationCreated()) === false) {
+      try {
+        const conversationsRef = collection(db, "conversations");
+        const conversationParticipantRef = collection(
+          db,
+          "conversation_participants"
+        );
 
-      // Add a new document with a generated ID
-      const docRef = await addDoc(conversationsRef, {
-        conversation_name: `Conversation by ${user.id} with ${worker?.id}`,
-      });
+        const docRef = await addDoc(conversationsRef, {
+          conversation_name: `Conversation by ${user.id} with ${worker?.id}`,
+          created_by: user.id,
+          created_for: worker?.id,
+        });
 
-      const employerRef = query(
-        collection(db, "users"),
-        where("user_id", "==", user.id)
-      );
-      const employers = await getDocs(employerRef);
-      const employerDocRef = employers.docs[0].ref;
-      const employerDoc = await getDoc(employerDocRef);
+        const employerRef = query(
+          collection(db, "users"),
+          where("user_id", "==", user.id)
+        );
+        const employers = await getDocs(employerRef);
+        const employerDocRef = employers.docs[0].ref;
+        const employerDoc = await getDoc(employerDocRef);
 
-      const workerRef = query(
-        collection(db, "users"),
-        where("user_id", "==", worker?.id) // update during authentication implementation
-      );
-      const workers = await getDocs(workerRef);
-      const workerDocRef = workers.docs[0].ref;
-      const workerDoc = await getDoc(workerDocRef);
+        const workerRef = query(
+          collection(db, "users"),
+          where("user_id", "==", worker?.id)
+        );
+        const workers = await getDocs(workerRef);
+        const workerDocRef = workers.docs[0].ref;
+        const workerDoc = await getDoc(workerDocRef);
 
-      if (docRef.id) {
-        const employerConversationParticipantDocRef = await addDoc(
-          conversationParticipantRef,
-          {
-            conversation_id: docRef.id,
-            user_id: employerDoc.id,
+        if (docRef.id) {
+          const employerConversationParticipantDocRef = await addDoc(
+            conversationParticipantRef,
+            {
+              conversation_id: docRef.id,
+              user_id: employerDoc.id,
+            }
+          );
+          const workerConversationParticipantDocRef = await addDoc(
+            conversationParticipantRef,
+            {
+              conversation_id: docRef.id,
+              user_id: workerDoc.id,
+            }
+          );
+          console.log(
+            employerConversationParticipantDocRef.id,
+            workerConversationParticipantDocRef.id
+          );
+          if (
+            employerConversationParticipantDocRef.id &&
+            workerConversationParticipantDocRef.id
+          ) {
+            navigate(`/chat/${docRef.id}`);
           }
-        );
-        const workerConversationParticipantDocRef = await addDoc(
-          conversationParticipantRef,
-          {
-            conversation_id: docRef.id,
-            user_id: workerDoc.id,
-          }
-        );
-        console.log(
-          employerConversationParticipantDocRef.id,
-          workerConversationParticipantDocRef.id
-        );
-        if (
-          employerConversationParticipantDocRef.id &&
-          workerConversationParticipantDocRef.id
-        ) {
-          navigate(`/chat/${docRef.id}`);
         }
-      }
-    } catch (error) {}
+      } catch (error) {}
+    } else {
+      const conversationRef = query(
+        collection(db, "conversations"),
+        where("created_by", "==", user.id),
+        where("created_for", "==", worker?.id)
+      );
+
+      const conversations = await getDocs(conversationRef);
+      const conversationDocRef = conversations.docs[0].ref;
+      setConversationId(conversationDocRef.id);
+      navigate(`/chat/${conversationDocRef.id}`);
+    }
   };
 
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",

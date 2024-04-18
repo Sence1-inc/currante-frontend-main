@@ -9,15 +9,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import React, { useEffect, useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
 import useGetWorkers from "../../hooks/useGetWorkers";
 import { useAppSelector } from "../../redux/store";
 import { Area, Worker } from "../../redux/type";
-import axiosInstance from "../../../axiosInstance";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-import { useSearchParams } from "react-router-dom";
 
 const responsive = {
   desktop: {
@@ -178,7 +178,8 @@ const SearchWorkerPage: React.FC = () => {
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
