@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { formatISO } from "date-fns";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -79,6 +80,7 @@ const PaymentPage = () => {
     const workerJobSubtype = worker?.profile.job_subtypes.find(
       (type) => type.active_flg && type.job_name === jobSubtype
     );
+
     try {
       const data = {
         worker_id: Number(id),
@@ -87,7 +89,11 @@ const PaymentPage = () => {
         quantity: quantity,
         total: total,
         status: 1,
+        job_order_start_date: formatISO(
+          new Date(dayjs(firstChoiceDate).format())
+        ),
       };
+
       const response = await axiosInstance.post("/api/v1/orders", data);
       if (response.data) {
         dispatch(
@@ -98,7 +104,9 @@ const PaymentPage = () => {
         );
         navigate("/jobs");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

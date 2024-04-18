@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
 import useGetWorker from "../../hooks/useGetWorker";
+import { Worker } from "../../redux/type";
 
 interface ChatCardProps {
   handleCardClick: () => void;
@@ -23,10 +24,11 @@ const ChatCard: React.FC<ChatCardProps> = ({
     const getUser = async () => {
       try {
         const { data } = await axiosInstance.get(
-          `/api/v1/users/${participant.user_id}`
+          `/api/v1/users/${participant.user_id}?type=worker`
         );
+
         if (data) {
-          setParticipantUserId(data.id);
+          setParticipantUserId(data.worker_id);
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -48,15 +50,13 @@ const ChatCard: React.FC<ChatCardProps> = ({
     }
   }, [participantUserId]);
 
-  console.log(worker);
-
   return (
     <Card
       sx={{
         display: "flex",
         borderRadius: "12px",
         padding: "16px",
-        height: "80px",
+        height: "100px",
         border: "1px #C5C6D0 solid",
         boxShadow: "none",
       }}
@@ -78,19 +78,22 @@ const ChatCard: React.FC<ChatCardProps> = ({
           <Typography variant="h6">
             {participant.first_name} {participant.last_name}
           </Typography>
-          <Typography variant="subtitle1">#123456</Typography>
+          <Typography variant="subtitle1">Pasig City</Typography>
         </Box>
         <Box
           sx={{
             display: "flex",
-            gap: "10px",
-            alignItems: "center",
+            flexDirection: "column",
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2"></Typography>
-          <Typography variant="body2">&#x2022;</Typography>
-          <Typography variant="body2">Pasig City</Typography>
+          {worker?.profile.job_subtypes
+            .filter((type) => type.active_flg)
+            .map((type) => (
+              <Typography variant="body2">
+                {type.job_type}: {type.job_name}
+              </Typography>
+            ))}
         </Box>
       </CardContent>
     </Card>

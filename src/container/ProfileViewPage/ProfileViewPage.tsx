@@ -85,7 +85,7 @@ const ProfileViewPage: React.FC = () => {
     const conversationRef = query(
       collection(db, "conversations"),
       where("created_by", "==", user.id),
-      where("created_for", "==", worker?.id)
+      where("created_for", "==", worker?.profile.id)
     );
 
     const conversations = await getDocs(conversationRef);
@@ -109,9 +109,9 @@ const ProfileViewPage: React.FC = () => {
         );
 
         const docRef = await addDoc(conversationsRef, {
-          conversation_name: `Conversation by ${user.id} with ${worker?.id}`,
+          conversation_name: `Conversation by ${user.id} with ${worker?.profile.id}`,
           created_by: user.id,
-          created_for: worker?.id,
+          created_for: worker?.profile.id,
         });
 
         const employerRef = query(
@@ -124,7 +124,7 @@ const ProfileViewPage: React.FC = () => {
 
         const workerRef = query(
           collection(db, "users"),
-          where("user_id", "==", worker?.id)
+          where("user_id", "==", worker?.profile.id)
         );
         const workers = await getDocs(workerRef);
         const workerDocRef = workers.docs[0].ref;
@@ -145,10 +145,7 @@ const ProfileViewPage: React.FC = () => {
               user_id: workerDoc.id,
             }
           );
-          console.log(
-            employerConversationParticipantDocRef.id,
-            workerConversationParticipantDocRef.id
-          );
+
           if (
             employerConversationParticipantDocRef.id &&
             workerConversationParticipantDocRef.id
@@ -161,7 +158,7 @@ const ProfileViewPage: React.FC = () => {
       const conversationRef = query(
         collection(db, "conversations"),
         where("created_by", "==", user.id),
-        where("created_for", "==", worker?.id)
+        where("created_for", "==", worker?.profile.id)
       );
 
       const conversations = await getDocs(conversationRef);

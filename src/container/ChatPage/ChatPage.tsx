@@ -167,15 +167,15 @@ const ChatPage = () => {
           }}
         />
       </Box>
-      {conversations.map((conversation: Conversation) => {
+      {conversations.map((conversation: Conversation, index: number) => {
         const user = conversation.users.filter(
-          (user) => user.user_id !== userState.id // update during implementation of authentication
+          (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
         );
 
         const participant = user[0];
         return (
           <ChatCard
-            key={participant.user_id}
+            key={index}
             participant={participant}
             handleCardClick={() => {
               handleCardClick(conversation.conversation_id);

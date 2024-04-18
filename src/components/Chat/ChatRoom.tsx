@@ -11,6 +11,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
 import { db } from "../../firebase";
 import { useAppSelector } from "../../redux/store";
@@ -23,6 +24,7 @@ const ChatRoom: React.FC = () => {
   const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
+  const [workerId, setWorkerId] = useState<number | null>(null);
 
   useEffect(() => {
     if (conversation_id) {
@@ -58,8 +60,28 @@ const ChatRoom: React.FC = () => {
     }
   }, [conversation_id]);
 
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/api/v1/users/${participant?.user_id}?type=worker`
+        );
+
+        if (data) {
+          setWorkerId(data.worker_id);
+        }
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
+    if (participant) {
+      getUser(); // make this a hook
+    }
+  }, [participant]);
+
   const handleHire = () => {
-    navigate(`/workers/${participant?.user_id}/payment`);
+    navigate(`/workers/${workerId}/payment`);
   };
 
   return (
