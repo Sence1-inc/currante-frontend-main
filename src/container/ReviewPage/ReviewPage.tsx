@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Box, Button, Container, TextField} from "@mui/material";
+import { Box, Button, Container} from "@mui/material";
 import BackNavigation from "../../components/TopNavigation/BackNavigation";
 import Reviewee from "../../components/Review/Reviewee";
 import StarRate from "../../components/Review/Rating/StarRate";
@@ -13,12 +13,14 @@ const ReviewPage = () => {
   const [formValues, setFormValues] = useState({
     feedback: "",
     overall_rating: "",
-    order_id: "",
-    user_id: "",
-    created_at: "",
-    category_flg: ""
+    order_id: "1",
+    user_id: "1",
+    created_at: new Date(),
+    updated_at: new Date(),
+    category_flg: "1-reviewForWorker"
   })
   const [feedback, setFeedback] = useState([]);
+  // const [errors, setErrors] = useState([]);
 
   const handleChange = (e) => {
     const { name, value} = e.target;
@@ -28,6 +30,18 @@ const ReviewPage = () => {
     const response = await axios.get("http://localhost/api/v1/reviews");
     setFeedback(response.data.data);
   }
+
+  // const storeReview = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.post("feedback", formValues);
+  //     getFeedback();
+  //   }
+  // }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await axios.post("http://localhost/api/v1/reviews", formValues);
+  };
   return (
     <Box
       sx={{
@@ -63,7 +77,7 @@ const ReviewPage = () => {
             backgroundColor: "secondary.main",
           },
         }}
-        type="submit">Submit</Button>
+        type="submit" onClick={handleSubmit}>Submit</Button>
       </form>
     </Box>
   );
