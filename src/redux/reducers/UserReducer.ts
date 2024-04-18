@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../type";
 
 const initialState: User = {
+  logged_in_as: "",
   id: null,
   email: "",
   role: {
@@ -17,12 +18,14 @@ const initialState: User = {
       job_order_completed_date: "",
       worker_id: null,
       employer_id: null,
+      worker_name: "",
       employer_name: "",
       worker_job_subtype: {
         worker_id: null,
         job_subtype: {
           job_type_id: null,
           job_subtype_id: 0,
+          worker_job_subtype_id: 0,
           job_type: "",
           job_name: "",
           unit: "",
@@ -44,6 +47,7 @@ const initialState: User = {
     {
       job_type_id: null,
       job_subtype_id: 0,
+      worker_job_subtype_id: 0,
       job_type: "",
       job_name: "",
       unit: "",
@@ -82,11 +86,13 @@ const initialState: User = {
         job_order_completed_date: "",
         worker_id: null,
         employer_id: null,
+        worker_name: "",
         employer_name: "",
         worker_job_subtype: {
           worker_id: null,
           job_subtype: {
             job_type_id: null,
+            worker_job_subtype_id: 0,
             job_subtype_id: 0,
             job_type: "",
             job_name: "",

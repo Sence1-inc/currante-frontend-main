@@ -6,6 +6,7 @@ export interface Address {
 }
 
 export interface JobSubType {
+  worker_job_subtype_id: number | null;
   job_subtype_id: number | null;
   job_type: string;
   job_type_id: number | null;
@@ -25,6 +26,7 @@ export interface Order {
   id: number | null;
   worker_id: number | null;
   employer_id: number | null;
+  worker_name: string;
   employer_name: string;
   worker_job_subtype: WorkerJobSubtype;
   quantity: number | null;
@@ -66,6 +68,7 @@ export interface Area {
 }
 
 export interface User {
+  logged_in_as: string;
   id: number | null;
   email: string;
   uuid: string;
