@@ -22,15 +22,10 @@ const style = {
 };
 
 export default function BackWarning(props) {
-
   let navigate = useNavigate()
   const handleClick = () => {
       navigate('/jobs')
    }
-  // const [open, setOpen] = React.useState(false);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-
   return (
     <div>
       <Modal

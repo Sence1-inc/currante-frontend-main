@@ -7,12 +7,14 @@ import StarRate from "../../components/Review/Rating/StarRate";
 import ReviewDescription from "../../components/Review/ReviewDescription";
 import FileUpload from "../../components/Review/FileUpload/FileUpload";
 import './reviewPage.css';
+import SuccessfulReview from '../../components/Modals/SuccessfulReview';
 
 
 const ReviewPage = () => {
+  const [showLogin, setShowLogin] = useState(false);
   const [formValues, setFormValues] = useState({
     feedback: "",
-    overall_rating: "",
+    overall_rating: null,
     order_id: "1",
     user_id: "1",
     created_at: new Date(),
@@ -20,7 +22,8 @@ const ReviewPage = () => {
     category_flg: "1-reviewForWorker"
   })
   const [feedback, setFeedback] = useState([]);
-  // const [errors, setErrors] = useState([]);
+  const [error, setError] = useState([]);
+
 
   const handleChange = (e) => {
     const { name, value} = e.target;
@@ -30,17 +33,24 @@ const ReviewPage = () => {
     const response = await axios.get("http://localhost/api/v1/reviews");
     setFeedback(response.data.data);
   }
-
-  // const storeReview = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     await axios.post("feedback", formValues);
-  //     getFeedback();
-  //   }
-  // }
+  const handleModal = () => {
+    setShowLogin(true)
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost/api/v1/reviews", formValues);
+
+    try {
+      const response = await axios.post("http://localhost/api/v1/reviews", formValues);
+      console.log("THIS", response);
+      if (response.data) {
+        console.log("Profile details successfully saved!");
+        handleModal();
+      }
+    } catch (e) {
+      if(e.response.status === 422)
+      setError(e.response.data.errors);
+      setShowLogin(false);
+    }
   };
   return (
     <Box
@@ -62,7 +72,7 @@ const ReviewPage = () => {
       <Container sx={{padding:"0px !important"}}>
         <Reviewee />
       </Container>
-      <form className="reviewPageForm">
+      <form className="reviewPageForm" name="reviewPageForm">
         <Container>
           <Box sx={{padding: "15px 0px", display: "flex", gap:"10px", flexDirection:"column"}}>
             <StarRate title="Rate your employer" name="overall_rating" value={formValues["overall_rating"]} handleChange={handleChange} />
@@ -79,6 +89,7 @@ const ReviewPage = () => {
         }}
         type="submit" onClick={handleSubmit}>Submit</Button>
       </form>
+        <SuccessfulReview close={() => setShowLogin(false)}/>
     </Box>
   );
 };
