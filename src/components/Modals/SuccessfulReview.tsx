@@ -21,7 +21,7 @@ const style = {
   margin: "0 auto",
 };
 
-export default function SuccessfulReview(props) {
+export default function SuccessfulReview(props:any) {
   let navigate = useNavigate()
   const handleClick = () => {
       navigate('/jobs')

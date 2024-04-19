@@ -10,22 +10,22 @@ import './reviewPage.css';
 import SuccessfulReview from '../../components/Modals/SuccessfulReview';
 
 
-const ReviewPage = () => {
+const ReviewPage: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [formValues, setFormValues] = useState({
     feedback: "",
     overall_rating: null,
-    order_id: "1",
-    user_id: "1",
+    order_id: "1", // to be updated
+    user_id: "1", // to be updated
     created_at: new Date(),
     updated_at: new Date(),
-    category_flg: "1-reviewForWorker"
+    category_flg: "1-reviewForWorker"  // to be updated
   })
   const [feedback, setFeedback] = useState([]);
   const [error, setError] = useState([]);
 
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { name, value} = e.target;
     setFormValues({...formValues, [name]: value});
   }
@@ -33,7 +33,7 @@ const ReviewPage = () => {
     const response = await axios.get("http://localhost/api/v1/reviews");
     setFeedback(response.data.data);
   }
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     try {
@@ -43,10 +43,9 @@ const ReviewPage = () => {
         setShowLogin(true)
         console.log("Profile details successfully saved!");
       }
-    } catch (e) {
-      if(e.response.status === 422)
-      setError(e.response.data.errors);
+    } catch (e:any) {
       setShowLogin(false);
+      setError(e.response.data.errors);  // to be updated
     }
   };
   return (

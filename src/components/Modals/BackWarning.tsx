@@ -21,7 +21,7 @@ const style = {
   margin: "0 auto",
 };
 
-export default function BackWarning(props) {
+export default function BackWarning(props:any) {
   let navigate = useNavigate()
   const handleClick = () => {
       navigate('/jobs')
