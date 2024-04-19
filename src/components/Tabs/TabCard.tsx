@@ -75,11 +75,6 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
           <Box sx={{ marginBottom: "5px" }}>
             <img src={ProfileImage} alt="" />
           </Box>
-          <Typography sx={jobListStyles.card.cardText}>
-            {user.logged_in_as === "worker"
-              ? order.employer_name
-              : order.worker_name}
-          </Typography>
         </Box>
         <Box sx={jobListStyles.card.cardDetailsBox}>
           <Typography sx={jobListStyles.card.cardHeading}>
