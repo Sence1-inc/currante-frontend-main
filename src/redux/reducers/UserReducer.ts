@@ -69,6 +69,7 @@ const initialState: User = {
       city: "",
       barangay: "",
       street: "",
+      house_building_unit: "",
     },
   ],
   user_photos: [{ profile_photo: "", id_photo: "" }],

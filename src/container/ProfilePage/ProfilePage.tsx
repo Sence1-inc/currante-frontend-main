@@ -4,14 +4,16 @@ import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
+import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
 import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
 import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
 import ProfileServicingAreasCard from "../../components/Profile/ProfileServicingAreasCard";
+import { CITIES, PROVINCES } from "../../data/WorkerDetails";
 import { useAppSelector } from "../../redux/store";
-import { Area, JobSubType, User } from "../../redux/type";
+import { Address, Area, JobSubType, User } from "../../redux/type";
 
 export interface JobSubtypeDefault {
   job_type: string;
@@ -46,10 +48,9 @@ const ProfilePage: React.FC = () => {
   const [servicingAreas, setServicingAreas] = useState<Area[]>([
     { id: null, area_name: "" },
   ]);
+  const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [edittingSection, setEdittingSection] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  // const [coverPhotos, setCoverPhotos] = useState<File[] | null>(null);
-  // const { image, uploader } = useDisplayImage();
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
@@ -214,13 +215,14 @@ const ProfilePage: React.FC = () => {
       job_subtypes: jobSubtypes,
       schedule: schedule,
       servicing_areas: servicingAreas,
+      addresses: addresses,
       description: description,
       verified: 1,
     };
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
-      console.log("THIS", response);
+
       if (response.data) {
         setSuccessMessage("Profile details successfully saved!");
         setErrorMessage("");
@@ -295,7 +297,7 @@ const ProfilePage: React.FC = () => {
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}
-            description={description}
+            description={user.logged_in_as === "worker" ? description : ""}
             user={user}
             sectionName="description_photos"
             handleSetEdittingSection={() =>
@@ -340,46 +342,68 @@ const ProfilePage: React.FC = () => {
             handleCancelEdittingSection={() => setEdittingSection("")}
           />
 
-          <ProfileRatesCard
-            edittingSection={edittingSection}
-            jobType={jobType}
-            jobTypes={jobTypes}
-            jobSubtypesDefault={jobSubtypesDefault}
-            jobSubtypes={jobSubtypes}
-            jobTypeId={jobTypeId}
-            sectionName="rates"
-            handleSetEdittingSection={() => setEdittingSection("rates")}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetJobSubtypes={(types) => setJobSubtypes([...types])}
-            handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
-            handleSetInfoMessage={(message) => setInfoMessage(message)}
-            handleSetSelectedJobType={(jobtype) => setSelectedJobType(jobtype)}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileRatesCard
+              edittingSection={edittingSection}
+              jobType={jobType}
+              jobTypes={jobTypes}
+              jobSubtypesDefault={jobSubtypesDefault}
+              jobSubtypes={jobSubtypes}
+              jobTypeId={jobTypeId}
+              sectionName="rates"
+              handleSetEdittingSection={() => setEdittingSection("rates")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetJobSubtypes={(types) => setJobSubtypes([...types])}
+              handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
+              handleSetInfoMessage={(message) => setInfoMessage(message)}
+              handleSetSelectedJobType={(jobtype) =>
+                setSelectedJobType(jobtype)
+              }
+            />
+          )}
 
-          <ProfileScheduleCard
-            errorMessages={errorMessages}
-            edittingSection={edittingSection}
-            schedule={schedule}
-            sectionName="schedule"
-            handleSetEdittingSection={() => setEdittingSection("schedule")}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetSchedule={(sched) => setSchedule(sched)}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileScheduleCard
+              errorMessages={errorMessages}
+              edittingSection={edittingSection}
+              schedule={schedule}
+              sectionName="schedule"
+              handleSetEdittingSection={() => setEdittingSection("schedule")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetSchedule={(sched) => setSchedule(sched)}
+            />
+          )}
 
-          <ProfileServicingAreasCard
-            edittingSection={edittingSection}
-            servicingAreas={servicingAreas}
-            areas={areas}
-            sectionName="servicing_area"
-            handleSetEdittingSection={() =>
-              setEdittingSection("servicing_area")
-            }
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetServicingAreas={(areas) => setServicingAreas([...areas])}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileServicingAreasCard
+              edittingSection={edittingSection}
+              servicingAreas={servicingAreas}
+              areas={areas}
+              sectionName="servicing_area"
+              handleSetEdittingSection={() =>
+                setEdittingSection("servicing_area")
+              }
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetServicingAreas={(areas) => setServicingAreas([...areas])}
+            />
+          )}
+
+          {user.logged_in_as === "employer" && (
+            <ProfileAddressesCard
+              edittingSection={edittingSection}
+              addresses={addresses}
+              cities={CITIES}
+              provinces={PROVINCES}
+              sectionName="addresses"
+              handleSetEdittingSection={() => setEdittingSection("addresses")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetAddresses={(adds) => setAddresses([...adds])}
+            />
+          )}
         </Box>
       </Box>
       <Snackbar

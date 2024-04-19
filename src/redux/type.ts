@@ -67,6 +67,14 @@ export interface Area {
   area_name: string;
 }
 
+export interface Address {
+  province: string;
+  city: string;
+  barangay: string;
+  street: string;
+  house_building_unit: string;
+}
+
 export interface User {
   logged_in_as: string;
   id: number | null;
