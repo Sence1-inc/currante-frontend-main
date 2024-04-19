@@ -29,10 +29,6 @@ const ReviewPage: React.FC = () => {
     const { name, value} = e.target;
     setFormValues({...formValues, [name]: value});
   }
-  const getFeedback = async() => {
-    const response = await axios.get("http://localhost/api/v1/reviews");
-    setFeedback(response.data.data);
-  }
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
