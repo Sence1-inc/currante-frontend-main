@@ -33,18 +33,15 @@ const ReviewPage = () => {
     const response = await axios.get("http://localhost/api/v1/reviews");
     setFeedback(response.data.data);
   }
-  const handleModal = () => {
-    setShowLogin(true)
-  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost/api/v1/reviews", formValues);
+      const response = await axios.post("http://localhost/api/v1/reviews", formValues)
       console.log("THIS", response);
       if (response.data) {
+        setShowLogin(true)
         console.log("Profile details successfully saved!");
-        handleModal();
       }
     } catch (e) {
       if(e.response.status === 422)
@@ -89,7 +86,7 @@ const ReviewPage = () => {
         }}
         type="submit" onClick={handleSubmit}>Submit</Button>
       </form>
-        <SuccessfulReview close={() => setShowLogin(false)}/>
+        <SuccessfulReview show={showLogin} close={() => setShowLogin(false)}/>
     </Box>
   );
 };
