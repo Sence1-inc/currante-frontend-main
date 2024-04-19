@@ -66,7 +66,7 @@ Thank you!
                 "&:hover": {
                     backgroundColor: "secondary.main",
                 },
-                }}>Review now</Button>
+                }} onClick={props.close}>Review now</Button>
             </Box>
           </Box>
       </Modal>
