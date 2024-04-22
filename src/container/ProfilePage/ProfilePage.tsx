@@ -12,7 +12,8 @@ import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
 import ProfileServicingAreasCard from "../../components/Profile/ProfileServicingAreasCard";
 import { CITIES, PROVINCES } from "../../data/WorkerDetails";
-import { useAppSelector } from "../../redux/store";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Address, Area, JobSubType, User } from "../../redux/type";
 
 export interface JobSubtypeDefault {
@@ -33,6 +34,7 @@ const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const userSelector = useMemo(() => (state: any) => state.user, []);
   const user: User = useAppSelector(userSelector);
+  const dispatch = useAppDispatch();
   const [firstName, setFirstName] = useState<string>("");
   const [middleName, setMiddleName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -148,6 +150,7 @@ const ProfilePage: React.FC = () => {
       setJobSubtypes(user.job_subtypes);
       setSchedule(user.schedule);
       setServicingAreas(user.areas);
+      setAddresses(user.addresses);
       setDescription(user.description);
 
       const user_photos = userPhotos(user.user_photos);
@@ -223,10 +226,13 @@ const ProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
 
+      console.log(response);
+
       if (response.data) {
         setSuccessMessage("Profile details successfully saved!");
         setErrorMessage("");
         setErrorMessages({});
+        dispatch(initializeUser(response.data.profile));
       }
     } catch (error: any) {
       setErrorMessages(error.response.data.errors);
@@ -401,7 +407,10 @@ const ProfilePage: React.FC = () => {
               handleSetEdittingSection={() => setEdittingSection("addresses")}
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
-              handleSetAddresses={(adds) => setAddresses([...adds])}
+              handleSetAddresses={(adds) => {
+                console.log(adds);
+                setAddresses([...adds]);
+              }}
             />
           )}
         </Box>

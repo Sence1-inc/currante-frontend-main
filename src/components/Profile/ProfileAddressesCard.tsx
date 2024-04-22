@@ -115,6 +115,10 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
               }}
               value={city}
               onChange={(e: SelectChangeEvent) => {
+                handleSetAddresses([
+                  { ...addresses[0], city: e.target.value },
+                  ...addresses.slice(1),
+                ]);
                 setCity(e.target.value);
               }}
             >
@@ -146,6 +150,10 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
               }}
               value={province}
               onChange={(e: SelectChangeEvent) => {
+                handleSetAddresses([
+                  { ...addresses[0], province: e.target.value },
+                  ...addresses.slice(1),
+                ]);
                 setProvince(e.target.value);
               }}
             >
@@ -170,9 +178,13 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
               <InputAdornment position="start">Street</InputAdornment>
             ),
           }}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setStreet(e.target.value)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleSetAddresses([
+              { ...addresses[0], street: e.target.value },
+              ...addresses.slice(1),
+            ]);
+            setStreet(e.target.value);
+          }}
           // helperText={errorMessages.gender}
         />
 
@@ -188,9 +200,13 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
           sx={{ m: 1, width: "100%" }}
           variant="standard"
           value={barangay}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setBarangay(e.target.value)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleSetAddresses([
+              { ...addresses[0], barangay: e.target.value },
+              ...addresses.slice(1),
+            ]);
+            setBarangay(e.target.value);
+          }}
           // helperText={errorMessages.gender}
         />
 
@@ -206,9 +222,13 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
           sx={{ m: 1, width: "100%" }}
           variant="standard"
           value={houseBuildingUnit}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setHouseBuildingUnit(e.target.value)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            handleSetAddresses([
+              { ...addresses[0], house_building_unit: e.target.value },
+              ...addresses.slice(1),
+            ]);
+            setHouseBuildingUnit(e.target.value);
+          }}
           // helperText={errorMessages.gender}
         />
 
@@ -230,18 +250,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
               variant="contained"
-              onClick={() => {
-                handleSetAddresses([
-                  {
-                    city: city,
-                    province: province,
-                    barangay: barangay,
-                    street: street,
-                    house_building_unit: houseBuildingUnit,
-                  },
-                ]);
-                handleSave();
-              }}
+              onClick={handleSave}
             >
               Save
             </Button>
