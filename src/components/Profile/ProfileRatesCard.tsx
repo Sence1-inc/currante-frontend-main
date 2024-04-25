@@ -154,13 +154,13 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
             return (
               <TextField
                 disabled={edittingSection !== sectionName}
-                key={item.name}
+                key={item.job_name}
                 id="standard-start-adornment"
                 sx={{ m: 1, width: "100%" }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      {item.name} ({item.unit})
+                      {item.job_name} ({item.unit})
                     </InputAdornment>
                   ),
                 }}
@@ -170,7 +170,8 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                   (Array.isArray(jobSubtypes) &&
                     jobSubtypes.find((type) => {
                       return (
-                        type.job_name === item.name && type.job_type === jobType
+                        type.job_name === item.job_name &&
+                        type.job_type === jobType
                       );
                     })?.job_unit_price) ??
                   null
@@ -181,7 +182,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                     jobSubtypes.find(
                       (type) =>
                         type.job_type === jobType &&
-                        type.job_name === item.name &&
+                        type.job_name === item.job_name &&
                         type.active_flg
                     );
                   if (subtype) {
@@ -191,7 +192,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                     };
                     handleSetJobSubtypes([
                       ...jobSubtypes.filter(
-                        (type) => type.job_name !== item.name
+                        (type) => type.job_name !== item.job_name
                       ),
                       { ...subtype, ...subtypeData },
                     ]);
@@ -201,7 +202,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                         job_subtype_id: item.id,
                         job_type: jobType,
                         job_type_id: jobTypeId,
-                        job_name: item.name,
+                        job_name: item.job_name,
                         job_unit_price: Number(e.target.value),
                         unit: item.unit,
                         active_flg: true,

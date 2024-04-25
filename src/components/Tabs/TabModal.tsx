@@ -1,12 +1,17 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { addMinutes, formatISO } from "date-fns";
 import React, { useState } from "react";
+import axiosInstance from "../../../axiosInstance";
 import ArrivedImage from "../../assets/arrived.png";
 import CheckImage from "../../assets/check.png";
 import QuestionImage from "../../assets/question.png";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import jobListStyles from "../../styles/jobListStyles";
 import CustomModal from "./Modal";
 
 interface TabModalProps {
+  orderId: number;
   status: string;
   openModal: boolean;
   handleOpenModal: () => void;
@@ -14,15 +19,72 @@ interface TabModalProps {
 }
 
 const TabModal: React.FC<TabModalProps> = ({
+  orderId,
   status,
   openModal,
   handleCloseModal,
 }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
   const [inputOTP, setInputOTP] = useState<string>("");
   const [validOTP, setValidOTP] = useState<boolean>(false);
 
-  const handleClick = () => {
-    console.log("clicked");
+  const handleAccept = async () => {
+    try {
+      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+        status: "2",
+      });
+      if (response.data) {
+        dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const getUtcNow = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const utcNow = addMinutes(now, offset);
+    return formatISO(utcNow);
+  };
+
+  const handleArrived = async () => {
+    try {
+      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+        status: "3",
+        worker_arrived_date: getUtcNow(),
+      });
+      if (response.data) {
+        dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const handleWorkComplete = async () => {
+    if (inputOTP === "" && inputOTP.length < 6) {
+      console.log("Please input OTP");
+    } else {
+      try {
+        const response = await axiosInstance.patch(
+          `/api/v1/orders/${orderId}`,
+          {
+            status: "4",
+            job_order_completed_date: getUtcNow(),
+          }
+        );
+        if (response.data) {
+          dispatch(initializeUser({ ...user, orders: response.data.orders }));
+          handleCloseModal();
+        }
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +125,7 @@ const TabModal: React.FC<TabModalProps> = ({
     );
   };
 
-  const incomingModalContent = () => {
+  const requestModalContent = () => {
     return (
       <CustomModal isModalOpen={openModal} handleCloseModal={handleCloseModal}>
         <Box sx={{ padding: "24px", paddingBottom: 0 }}>
@@ -117,7 +179,7 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Rethink
           </Button>
-          <Button onClick={handleClick} sx={jobListStyles.button.primary}>
+          <Button onClick={handleAccept} sx={jobListStyles.button.primary}>
             Accept
           </Button>
         </Box>
@@ -158,7 +220,10 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Back
           </Button>
-          <Button onClick={handleOTPInput} sx={jobListStyles.button.primary}>
+          <Button
+            onClick={handleWorkComplete}
+            sx={jobListStyles.button.primary}
+          >
             Complete
           </Button>
         </Box>
@@ -166,7 +231,7 @@ const TabModal: React.FC<TabModalProps> = ({
     );
   };
 
-  const currentModalContent = () => {
+  const incomingModalContent = () => {
     return (
       <CustomModal isModalOpen={openModal} handleCloseModal={handleCloseModal}>
         <Box sx={{ padding: "24px", paddingBottom: 0 }}>
@@ -193,25 +258,25 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Not Yet
           </Button>
-          <Button onClick={handleClick} sx={jobListStyles.button.primary}>
+          <Button onClick={handleArrived} sx={jobListStyles.button.primary}>
             Start
           </Button>
         </Box>
       </CustomModal>
     );
   };
-
+  console.log(status);
   const renderModal = () => {
-    if (status === "incoming") {
-      return incomingModalContent();
-    } else if (status === "completed") {
+    if (status == "1") {
+      return requestModalContent();
+    } else if (status == "4" || status == "3") {
       if (!validOTP) {
         return completedModalContent();
       } else {
         return completedConfirm();
       }
     } else {
-      return currentModalContent();
+      return incomingModalContent();
     }
   };
 

@@ -24,7 +24,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return authenticated ? (
     <React.Fragment>
       <TopNavigation />
-      <Box sx={{ margin: "64px 0" }}>
+      <Box
+        sx={{
+          marginTop: "64px",
+          marginBottom: "84px",
+        }}
+      >
         <Component />
       </Box>
       <BottomNavigation />

@@ -7,25 +7,36 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import * as React from "react";
-import Carousel from "react-material-ui-carousel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import React, { useEffect, useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
+import useGetWorkers from "../../hooks/useGetWorkers";
+import { useAppSelector } from "../../redux/store";
+import { Area, Worker } from "../../redux/type";
 
-const spanStyle = {
-  padding: "20px",
-  background: "#efefef",
-  color: "#000000",
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 3, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
 };
 
-const divStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundSize: "cover",
-  height: "200px",
-  borderRadius: "28px",
-};
 const slideImages = [
   {
     url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
@@ -42,33 +53,166 @@ const slideImages = [
 ];
 
 const SearchWorkerPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const jobSubtypeParam = queryParams.get("jobSubtype");
+  const areaParam = queryParams.get("area");
+  const { id } = useParams();
+  const { getWorkers } = useGetWorkers();
+  const workers = useAppSelector((state) => state.workers);
+  const [areas, setAreas] = useState<Area[] | []>([]);
+  const [area, setArea] = useState<string | null>(areaParam ?? null);
+  const [jobType, setJobType] = useState<string>("");
+  const [subtypes, setSubtypes] = useState<
+    { id: number; job_name: string; unit: string }[] | []
+  >([]);
+  const [subtype, setSubtype] = useState<string | null>(
+    jobSubtypeParam ?? null
+  );
+  const [parameters, setParameters] = useState<
+    { area?: string; jobSubtype?: string } | {}
+  >({});
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    getWorkers(`jobType=${id}`);
+  }, []);
+
+  useEffect(() => {
+    const getAreas = async () => {
+      try {
+        const response = await axiosInstance.get("/api/v1/areas");
+        setAreas(response.data);
+        setJobType(response.data.job_type_name);
+      } catch (error) {
+        console.log("error ", error);
+      }
+    };
+
+    getAreas();
+  }, []);
+
+  useEffect(() => {
+    const getSubTypes = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/jobtypes/${id}`);
+        setSubtypes(response.data.job_subtypes);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    if (id) {
+      getSubTypes();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (areaParam) {
+      setParameters({ ...parameters, area: areaParam });
+      setArea(areaParam);
+    }
+  }, [areaParam]);
+
+  useEffect(() => {
+    if (jobSubtypeParam) {
+      setParameters({ ...parameters, jobSubtype: jobSubtypeParam });
+      setSubtype(jobSubtypeParam);
+    }
+  }, [jobSubtypeParam]);
+
+  useEffect(() => {
+    let paramString = `jobType=${id}`;
+    if (area) {
+      paramString = `jobType=${id}&area=${areaParam}`;
+    } else if (subtype) {
+      paramString = `jobType=${id}&jobSubtype=${jobSubtypeParam}`;
+    } else if (area && subtype) {
+      paramString = `jobType=${id}&area=${areaParam}&jobSubtype=${jobSubtypeParam}`;
+    }
+
+    getWorkers(paramString);
+  }, [area, subtype]);
+
+  const handleFilterChange = (e: SelectChangeEvent, filter: string) => {
+    if (filter === "area") {
+      setArea(e.target.value);
+    }
+
+    if (filter === "jobSubtype") {
+      setSubtype(e.target.value);
+    }
+
+    setParameters({ ...parameters, [filter]: e.target.value });
+
+    const existingParams = new URLSearchParams(searchParams.toString());
+    existingParams.delete(filter);
+
+    const newSearchParams = new URLSearchParams(existingParams.toString());
+    newSearchParams.append(filter, e.target.value);
+
+    const searchString = newSearchParams.toString();
+
+    navigate(`/services/${id}/workers?${searchString}`);
+  };
+
+  const renderTypes = (worker: Worker) => {
+    const jobs = worker?.profile.job_subtypes.filter((type) => type.active_flg);
+
+    let formattedJobs: string[] = [];
+
+    jobs?.forEach((job) => {
+      formattedJobs.push(job.job_name);
+    });
+
+    return formattedJobs;
+  };
+
+  const renderStartPrice = (worker: Worker) => {
+    const activeJobs = worker?.profile.job_subtypes.filter(
+      (type) => type.active_flg
+    );
+    return Math.min(...activeJobs.map((job) => job.job_unit_price)).toString();
+  };
+
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
       }}
     >
-      <Box
-        sx={{
-          padding: "20px 0",
-        }}
-        className="slide-container"
-      >
-        <Carousel>
+      <Box>
+        <Carousel
+          swipeable={true}
+          draggable={true}
+          responsive={responsive}
+          infinite={true}
+          autoPlay={true}
+          autoPlaySpeed={3000}
+          keyBoardControl={true}
+          customTransition="all .5"
+          transitionDuration={500}
+          containerClass="carousel-container"
+          itemClass="carousel-item-padding-40-px"
+        >
           {slideImages.map((slideImage, index) => (
             <Box key={index}>
               <Box
                 sx={{
-                  ...divStyle,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundSize: "cover",
+                  height: "200px",
+                  borderRadius: "4px",
                   backgroundImage: `url(${slideImage.url})`,
                 }}
-              >
-                <span style={spanStyle}>{slideImage.caption}</span>
-              </Box>
+              />
             </Box>
           ))}
         </Carousel>
@@ -175,10 +319,14 @@ const SearchWorkerPage: React.FC = () => {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Area"
+            value={area as string}
+            onChange={(e: SelectChangeEvent) => handleFilterChange(e, "area")}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {areas.map((area) => (
+              <MenuItem key={area.id} value={area.area_name}>
+                {area.area_name}
+              </MenuItem>
+            ))}
           </Select>
           <FormHelperText
             sx={{
@@ -193,16 +341,24 @@ const SearchWorkerPage: React.FC = () => {
         </FormControl>
         <FormControl fullWidth>
           <InputLabel variant="outlined" htmlFor="select-cleaning-type">
-            Select cleaning type
+            Select job type
           </InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            label="Cleaning-Type"
+            label="Job-Subtype"
+            value={subtype as string}
+            onChange={(e: SelectChangeEvent) =>
+              handleFilterChange(e, "jobSubtype")
+            }
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {subtypes.map((type) => {
+              return (
+                <MenuItem key={type.id} value={type.job_name}>
+                  {type.job_name}
+                </MenuItem>
+              );
+            })}
           </Select>
           <FormHelperText
             sx={{
@@ -233,9 +389,25 @@ const SearchWorkerPage: React.FC = () => {
             fontWeight: "500",
           }}
         >
-          Available Cleaners
+          Available Workers
         </Typography>
-        <WorkerCard handleCardClick={() => console.log("clicked")} />
+        {workers.length > 0 ? (
+          workers.map((worker: Worker) => {
+            return (
+              <WorkerCard
+                key={worker.id}
+                name={`${worker.profile.first_name} ${worker.profile.last_name}`}
+                types={renderTypes(worker)}
+                price={renderStartPrice(worker)}
+                handleCardClick={() =>
+                  navigate(`/services/${id}/workers/${worker.id}`)
+                }
+              />
+            );
+          })
+        ) : (
+          <Typography>No data found</Typography>
+        )}
       </Box>
     </Box>
   );

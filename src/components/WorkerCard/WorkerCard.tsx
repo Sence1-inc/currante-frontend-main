@@ -3,9 +3,17 @@ import React from "react";
 
 interface WorkerCardProps {
   handleCardClick: () => void;
+  name: string;
+  types: string[];
+  price: string;
 }
 
-const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
+const WorkerCard: React.FC<WorkerCardProps> = ({
+  handleCardClick,
+  name,
+  types,
+  price,
+}) => {
   return (
     <Card
       sx={{
@@ -32,8 +40,8 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="h6">Header</Typography>
-          <Typography variant="subtitle1">#123456</Typography>
+          <Typography variant="h6">{name}</Typography>
+          {/* <Typography variant="subtitle1">#123456</Typography> */}
         </Box>
         <Box
           sx={{
@@ -43,12 +51,16 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">Jane Doe Smith</Typography>
-          <Typography variant="body2">&#x2022;</Typography>
-          <Typography variant="body2">Pasig City</Typography>
+          {/* <Typography variant="body1">{name}</Typography> */}
+          {types.length > 0 && (
+            <>
+              {/* <Typography variant="body1">&#x2022;</Typography> */}
+              <Typography variant="body1">starts at P {price}</Typography>
+            </>
+          )}
         </Box>
         <Box>
-          <Typography variant="subtitle1">starts at P 500</Typography>
+          <Typography variant="subtitle1">{types.join(", ")}</Typography>
         </Box>
       </CardContent>
     </Card>

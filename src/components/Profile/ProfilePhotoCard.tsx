@@ -169,38 +169,39 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         <Typography>(4 stars)</Typography>
       </Box>
 
-      {edittingSection !== sectionName ? (
-        <>
-          <Typography
-            sx={{
-              fontFamily: "Open Sans",
-              fontWeight: "400",
-              fontSize: "12px",
-              lineHeight: "1.6",
-              margin: "10px 0 20px",
-            }}
-          >
-            {description}
-          </Typography>
-          {errorMessages.description && (
-            <Typography color="error">{errorMessages.description}</Typography>
-          )}
-        </>
-      ) : (
-        <TextField
-          error={isEmptyObject(errorMessages, "description")}
-          multiline
-          minRows={1}
-          id="standard-start-adornment"
-          sx={{ m: 1, width: "100%" }}
-          variant="standard"
-          value={description}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleSetDescription(e.target.value)
-          }
-          helperText={errorMessages.description}
-        />
-      )}
+      {user.logged_in_as === "worker" &&
+        (edittingSection !== sectionName ? (
+          <>
+            <Typography
+              sx={{
+                fontFamily: "Open Sans",
+                fontWeight: "400",
+                fontSize: "12px",
+                lineHeight: "1.6",
+                margin: "10px 0 20px",
+              }}
+            >
+              {description}
+            </Typography>
+            {errorMessages.description && (
+              <Typography color="error">{errorMessages.description}</Typography>
+            )}
+          </>
+        ) : (
+          <TextField
+            error={isEmptyObject(errorMessages, "description")}
+            multiline
+            minRows={1}
+            id="standard-start-adornment"
+            sx={{ m: 1, width: "100%" }}
+            variant="standard"
+            value={description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleSetDescription(e.target.value)
+            }
+            helperText={errorMessages.description}
+          />
+        ))}
 
       {edittingSection === sectionName && (
         <ButtonGroup>
