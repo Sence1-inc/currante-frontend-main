@@ -1,66 +1,45 @@
-import CloseIcon from '@mui/icons-material/Close'
-import {
-  Button,
-  IconButton,
-  Link as MuiLink,
-  Snackbar,
-  TextField,
-  Typography,
-  Box
-} from '@mui/material'
-import { Fragment, useState } from 'react'
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, Button, IconButton, Snackbar, Typography } from "@mui/material";
+import { Fragment, useState } from "react";
 
-import { Link as RouterLink, useNavigate, useLocation} from 'react-router-dom'
-import authPageStyles from '../../styles/authPageStyles'
+import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import authPageStyles from "../../styles/authPageStyles";
 
 interface SignUpVerifyPageProps {}
 
 const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
-  const [userVerifyCode, setUserVerifyCode] = useState({
-    verifyCode: '',
-  })
-
   const [snackBarState, setSnackBarState] = useState({
     state: false,
-    snackBarMessage: '',
+    snackBarMessage: "",
     vertical: "top",
-    horizontal: "center"
-  })
+    horizontal: "center",
+  });
 
   const { vertical, horizontal } = snackBarState;
 
-  const navigate = useNavigate()
-  const location = useLocation();
-  console.log(location)
+  const navigate = useNavigate();
+  const { token } = useParams();
 
-  function handleVerifyCode(inputValue: string) {
-    setUserVerifyCode((prevUserCode) => ({
-      ...prevUserCode,
-      verifyCode: inputValue,
-    }))
-  }
-
-  function handleSubmitVerifyCode() {
-    const isValidCode = userVerifyCode.verifyCode.length > 5
-
-    if (!isValidCode) {
-      setSnackBarState((prevState) => ({
-        ...prevState,
-        state: true,
-        snackBarMessage: 'Please enter correct code',
-      }))
+  const handleSubmitVerifyCode = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/v1/verify/${token}`);
+      if (response.status === 201) {
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      console.log("Error verifying:", error);
     }
-    else {
-      navigate('/verify-complete')
-    }
-  }
+  };
 
   const handleClose = (_event: React.SyntheticEvent | Event) => {
     setSnackBarState((prevState) => ({
       ...prevState,
       state: false,
-    }))
-  }
+    }));
+  };
 
   const action = (
     <Fragment>
@@ -73,67 +52,62 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
         <CloseIcon fontSize="small" />
       </IconButton>
     </Fragment>
-  )
+  );
 
   return (
-    <Box sx={authPageStyles.container.mainContainer}>
-      <Box sx={authPageStyles.container.innerContainer}>
-        <Typography sx={authPageStyles.form.heading}>
-          Verify Email
-        </Typography>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={snackBarState.state}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message={snackBarState.snackBarMessage}
-          action={action}
-          key={vertical + horizontal}
-          sx={{ marginTop: '60px' }}
-        />
-        <Box sx={[authPageStyles.container.buttonsContainer, { gap: '5px', marginTop: '20px'}]}>
-          <Typography sx={authPageStyles.form.formSimpleText}>Enter Code Digits to Verify</Typography>
-          <Typography sx={authPageStyles.form.formHighlightText}>Please check the code digits sent to your</Typography>
-          <Typography sx={authPageStyles.form.formHighlightText}>email: sample@test.com</Typography>
-        </Box>
-        <TextField
-          onChange={(e) => handleVerifyCode(e.target.value)}
-          type="string"
-          id="verifyCode"
-          label="Enter Code"
-          placeholder="Enter the code sent to your email"
-          sx={authPageStyles.form.formInput}
-          InputProps={{ 
-            sx: authPageStyles.form.formInputProp,
-          }}
-          InputLabelProps={{
-            sx: authPageStyles.form.formInputLabel,
-            shrink: true,
-          }}
-        />
-        <Box sx={[authPageStyles.container.buttonsContainer, { gap: '5px', marginTop: '20px'}]}>
-        <MuiLink
-          component={RouterLink}
-          to="/sign-in"
-          underline="none"
-          variant="body1"
-          sx={authPageStyles.form.formSignUpLink}
-        >
-          Resend Code
-        </MuiLink>
-        </Box>
-        <Box sx={authPageStyles.container.buttonsContainer}>
-          <Button
-            onClick={handleSubmitVerifyCode}
-            variant="contained"
-            color="primary"
-            sx={authPageStyles.form.formButton}>
-            Verify
-          </Button>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Header />
+      <Box sx={authPageStyles.container.mainContainer}>
+        <Box sx={authPageStyles.container.innerContainer}>
+          <Typography sx={authPageStyles.form.heading}>Verify Email</Typography>
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={snackBarState.state}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message={snackBarState.snackBarMessage}
+            action={action}
+            key={vertical + horizontal}
+            sx={{ marginTop: "60px" }}
+          />
+          <Box
+            sx={[
+              authPageStyles.container.buttonsContainer,
+              { gap: "5px", marginTop: "20px" },
+            ]}
+          >
+            <Typography
+              variant="body1"
+              color="primary"
+              sx={{ textAlign: "center" }}
+            >
+              Thank you for signing up! To ensure the security of your account
+              and complete the registration process, please click Verify button
+              below to verify your email address. If error persists, contact
+              currante@sence1.com.
+            </Typography>
+          </Box>
+
+          <Box sx={authPageStyles.container.buttonsContainer}>
+            <Button
+              onClick={handleSubmitVerifyCode}
+              variant="contained"
+              color="primary"
+              sx={authPageStyles.form.formButton}
+            >
+              Verify
+            </Button>
+          </Box>
         </Box>
       </Box>
+      <Footer />
     </Box>
-  )
-}
+  );
+};
 
-export default SignUpVerifyPage
+export default SignUpVerifyPage;

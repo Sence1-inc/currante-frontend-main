@@ -11,8 +11,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router";
+import axiosInstance from "../../../axiosInstance";
 import { initializeUser } from "../../redux/reducers/UserReducer";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
 
 const settings = ["Manage Profile", "Logout"];
@@ -139,6 +140,7 @@ const initialState: User = {
 function ResponsiveAppBar() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const user = useAppSelector((state) => state.user);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -159,6 +161,21 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axiosInstance.post("/api/v1/logout", {
+        email: user.email,
+      });
+
+      if (response.status === 200) {
+        dispatch(initializeUser(initialState));
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      console.log("Error logging out: ", error);
+    }
   };
 
   return (
@@ -265,8 +282,7 @@ function ResponsiveAppBar() {
                     if (setting === "Manage Profile") {
                       navigate("/profile");
                     } else {
-                      dispatch(initializeUser(initialState));
-                      navigate("/start"); // update this during implementation of authentication
+                      handleLogout();
                     }
                   }}
                 >

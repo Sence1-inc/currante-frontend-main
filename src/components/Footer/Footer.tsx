@@ -1,17 +1,17 @@
-import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Container,
-  Typography,
+  Link,
   List,
   ListItem,
-  Link,
+  Typography,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import "./Footer.css";
 
 const Footer: React.FC = () => {
   return (
-    <>
+    <Box>
       <Box
         sx={{
           py: 2,
@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
         }}
       >
         <Container sx={{ p: 0 }}>
-          <Typography variant="body1" sx={{ color: "common.white" }}>
+          <Typography variant="body1" sx={{ color: "primary.main" }}>
             <strong>DISCLAIMER:</strong> Currante solely serves as a third-party
             IT intermediary connecting potential employers with potential
             workers and does not engage in hiring or managing any personnel.
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
           </Typography>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
 

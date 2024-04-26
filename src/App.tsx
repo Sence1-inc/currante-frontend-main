@@ -3,23 +3,20 @@ import ChatRoom from "./components/Chat/ChatRoom";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ChatPage from "./container/ChatPage/ChatPage";
 import EmployerDashboard from "./container/Dashboard/EmployerDashboard";
+import ForgotPasswordPage from "./container/ForgotPasswordPage/ForgotPasswordPage";
+import ForgotPasswordVerifyPage from "./container/ForgotPasswordPage/ForgotPasswordVerifyPage";
+import NewPasswordPage from "./container/ForgotPasswordPage/NewPasswordPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import PaymentPage from "./container/PaymentPage/PaymentPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
 import ProfileViewPage from "./container/ProfileViewPage/ProfileViewPage";
 import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
-import TestPage from "./container/TestPage/TestPage";
 import SignInPage from "./container/SignInPage/SignInPage";
 import SignUpPage from "./container/SignUpPage/SignUpPage";
-import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
-import ForgotPasswordPage from "./container/ForgotPasswordPage/ForgotPasswordPage";
-import ForgotPasswordVerifyPage from "./container/ForgotPasswordPage/ForgotPasswordVerifyPage";
-import NewPasswordPage from "./container/ForgotPasswordPage/NewPasswordPage";
-import { LOGGED_IN_USER } from "./data/WorkerDetails";
-import { initializeUser } from "./redux/reducers/UserReducer";
-import { useAppDispatch } from "./redux/store";
+import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
+import TestPage from "./container/TestPage/TestPage";
 
 const App = () => {
   return (
@@ -52,13 +49,22 @@ const App = () => {
         path="/workers/:id/payment"
         element={<PrivateRoute component={PaymentPage} />}
       />
-      <Route path="/sign-in" element={<PrivateRoute component={SignInPage} />} />
-      <Route path="/sign-up" element={<PrivateRoute component={SignUpPage} />} />
-      <Route path="/verify-email" element={<PrivateRoute component={SignUpVerifyPage} />} />
-      <Route path="/verify-complete" element={<PrivateRoute component={SignUpComplete} />} />
-      <Route path="/forgot-password" element={<PrivateRoute component={ForgotPasswordPage} />} />
-      <Route path="/forgot-verify-email" element={<PrivateRoute component={ForgotPasswordVerifyPage} />} />
-      <Route path="/new-password" element={<PrivateRoute component={NewPasswordPage} />} />
+      <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="/verify/:token" element={<SignUpVerifyPage />} />
+      <Route path="/verify-complete" element={<SignUpComplete />} />
+      <Route
+        path="/forgot-password"
+        element={<PrivateRoute component={ForgotPasswordPage} />}
+      />
+      <Route
+        path="/forgot-verify-email"
+        element={<PrivateRoute component={ForgotPasswordVerifyPage} />}
+      />
+      <Route
+        path="/new-password"
+        element={<PrivateRoute component={NewPasswordPage} />}
+      />
     </Routes>
   );
 };
