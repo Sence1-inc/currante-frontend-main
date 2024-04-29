@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+/* eslint-disable no-unused-vars */
 export const isAuthenticatedSlice = createSlice({
   name: "isAuthenticated",
   initialState: false,
   reducers: {
-    // eslint-disable-next-line
     initializeIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       return action.payload;
     },

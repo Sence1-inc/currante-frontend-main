@@ -22,7 +22,7 @@ interface ProfileRatesCardProps {
   jobTypes: { id: number; job_type_name: string }[] | [];
   jobSubtypesDefault: JobSubtypeDefault;
   jobSubtypes: JobSubType[];
-  jobTypeId: number | null;
+  jobTypeId?: number | null;
   sectionName: string;
   handleSetEdittingSection: () => void;
   handleSave: () => void;
@@ -39,7 +39,6 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   jobTypes,
   jobSubtypesDefault,
   jobSubtypes,
-  jobTypeId,
   sectionName,
   handleSetEdittingSection,
   handleSave,

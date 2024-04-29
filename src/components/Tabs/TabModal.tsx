@@ -69,6 +69,7 @@ const TabModal: React.FC<TabModalProps> = ({
     if (inputOTP === "" && inputOTP.length < 6) {
       console.log("Please input OTP");
     } else {
+      setValidOTP(true);
       try {
         const response = await axiosInstance.patch(
           `/api/v1/orders/${orderId}`,
@@ -90,14 +91,6 @@ const TabModal: React.FC<TabModalProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputOTP(event.target.value);
   };
-
-  // const handleOTPInput = () => {
-  //   if (inputOTP.length < 6) {
-  //     console.log("Invalid OTP");
-  //   }
-
-  //   setValidOTP(true);
-  // };
 
   const completedConfirm = () => {
     return (

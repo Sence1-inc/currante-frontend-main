@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";

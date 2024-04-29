@@ -2,12 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Worker } from "../type";
 
 const initialState: Worker[] = [];
-
+/* eslint-disable no-unused-vars */
 export const workersSlice = createSlice({
   name: "workers",
   initialState,
   reducers: {
-    // eslint-disable-next-line
     initializeWorkers: (state, action: PayloadAction<Worker[]>) => {
       return action.payload;
     },
