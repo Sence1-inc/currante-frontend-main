@@ -9,6 +9,7 @@ import NewPasswordPage from "./container/ForgotPasswordPage/NewPasswordPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
 import PaymentPage from "./container/PaymentPage/PaymentPage";
+import PaymentSuccessPage from "./container/PaymentPage/PaymentSuccessPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
 import ProfileViewPage from "./container/ProfileViewPage/ProfileViewPage";
 import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
@@ -22,6 +23,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/payment/success" element={<PaymentSuccessPage />} />
       <Route path="/start" element={<TestPage />} />
       <Route path="/jobs" element={<PrivateRoute component={JobListPage} />} />
       <Route
