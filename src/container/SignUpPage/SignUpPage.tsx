@@ -33,8 +33,6 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
 
   const { vertical, horizontal } = snackBarState;
 
-  const navigate = useNavigate();
-
   function handleEmail(inputValue: string) {
     setUserCredentials((prevUserCredentials) => ({
       ...prevUserCredentials,

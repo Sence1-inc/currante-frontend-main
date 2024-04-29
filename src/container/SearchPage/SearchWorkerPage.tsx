@@ -63,7 +63,6 @@ const SearchWorkerPage: React.FC = () => {
   const workers = useAppSelector((state) => state.workers);
   const [areas, setAreas] = useState<Area[] | []>([]);
   const [area, setArea] = useState<string | null>(areaParam ?? null);
-  const [jobType, setJobType] = useState<string>("");
   const [subtypes, setSubtypes] = useState<
     { id: number; job_name: string; unit: string }[] | []
   >([]);
@@ -73,7 +72,7 @@ const SearchWorkerPage: React.FC = () => {
   const [parameters, setParameters] = useState<
     { area?: string; jobSubtype?: string } | {}
   >({});
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     getWorkers(`jobType=${id}`);
@@ -84,7 +83,6 @@ const SearchWorkerPage: React.FC = () => {
       try {
         const response = await axiosInstance.get("/api/v1/areas");
         setAreas(response.data);
-        setJobType(response.data.job_type_name);
       } catch (error) {
         console.log("error ", error);
       }

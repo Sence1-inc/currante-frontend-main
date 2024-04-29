@@ -91,13 +91,13 @@ const TabModal: React.FC<TabModalProps> = ({
     setInputOTP(event.target.value);
   };
 
-  const handleOTPInput = () => {
-    if (inputOTP.length < 6) {
-      console.log("Invalid OTP");
-    }
+  // const handleOTPInput = () => {
+  //   if (inputOTP.length < 6) {
+  //     console.log("Invalid OTP");
+  //   }
 
-    setValidOTP(true);
-  };
+  //   setValidOTP(true);
+  // };
 
   const completedConfirm = () => {
     return (

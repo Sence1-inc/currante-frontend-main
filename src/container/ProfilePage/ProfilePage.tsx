@@ -2,7 +2,6 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
@@ -31,7 +30,6 @@ interface UserPhotos {
 }
 
 const ProfilePage: React.FC = () => {
-  const navigate = useNavigate();
   const userSelector = useMemo(() => (state: any) => state.user, []);
   const user: User = useAppSelector(userSelector);
   const dispatch = useAppDispatch();

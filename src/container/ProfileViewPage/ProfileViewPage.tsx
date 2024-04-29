@@ -58,7 +58,6 @@ const ProfileViewPage: React.FC = () => {
   const user: User = useAppSelector((state) => state.user);
   const { id } = useParams();
   const navigate = useNavigate();
-  const [conversationId, setConversationId] = useState<string>("");
 
   useEffect(() => {
     const getWorker = async () => {
@@ -163,7 +162,6 @@ const ProfileViewPage: React.FC = () => {
 
       const conversations = await getDocs(conversationRef);
       const conversationDocRef = conversations.docs[0].ref;
-      setConversationId(conversationDocRef.id);
       navigate(`/chat/${conversationDocRef.id}`);
     }
   };

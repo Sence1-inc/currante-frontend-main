@@ -124,6 +124,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    // eslint-disable-next-line
     initializeUser: (state, action: PayloadAction<User>) => {
       return action.payload;
     },

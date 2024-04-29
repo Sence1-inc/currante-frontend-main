@@ -106,6 +106,9 @@ const PaymentPage = () => {
       }
     } catch (error) {
       console.log(error);
+      setErrorMessage("Error");
+      setStepFailed(null);
+      setActiveStep(0);
     }
   };
 

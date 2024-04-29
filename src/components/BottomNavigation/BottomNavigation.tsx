@@ -41,7 +41,10 @@ export default function SimpleBottomNavigation() {
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => handleNavigation(newValue)}
+        onChange={(event, newValue) => {
+          console.log(event);
+          handleNavigation(newValue);
+        }}
         sx={{
           backgroundColor: "#A1B5DE",
           display: "flex",

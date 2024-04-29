@@ -197,19 +197,18 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                       { ...subtype, ...subtypeData },
                     ]);
                   } else {
-                    const newJobSubtype = [
-                      {
-                        job_subtype_id: item.id,
-                        job_type: jobType,
-                        job_type_id: jobTypeId,
-                        job_name: item.job_name,
-                        job_unit_price: Number(e.target.value),
-                        unit: item.unit,
-                        active_flg: true,
-                      },
-                    ];
-
-                    handleSetJobSubtypes([...jobSubtypes, ...newJobSubtype]);
+                    // const newJobSubtype = [
+                    //   {
+                    //     job_subtype_id: item.id,
+                    //     job_type: jobType,
+                    //     job_type_id: jobTypeId,
+                    //     job_name: item.job_name,
+                    //     job_unit_price: Number(e.target.value),
+                    //     unit: item.unit,
+                    //     active_flg: true,
+                    //   },
+                    // ];
+                    // handleSetJobSubtypes([...jobSubtypes, ...newJobSubtype]);
                   }
                 }}
               />

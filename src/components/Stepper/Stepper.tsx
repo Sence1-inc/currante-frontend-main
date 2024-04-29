@@ -7,14 +7,13 @@ import React from "react";
 
 interface StepperWithErrorProps {
   steps: string[];
-  errorMessage: string;
+  errorMessage?: string;
   stepFailed: number;
   activeStep: number;
 }
 
 const StepperWithError: React.FC<StepperWithErrorProps> = ({
   steps,
-  errorMessage,
   stepFailed,
   activeStep,
 }) => {

@@ -7,6 +7,7 @@ export const workersSlice = createSlice({
   name: "workers",
   initialState,
   reducers: {
+    // eslint-disable-next-line
     initializeWorkers: (state, action: PayloadAction<Worker[]>) => {
       return action.payload;
     },

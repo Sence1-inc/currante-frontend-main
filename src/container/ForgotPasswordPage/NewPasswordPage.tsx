@@ -1,69 +1,69 @@
-import CloseIcon from '@mui/icons-material/Close'
+import CloseIcon from "@mui/icons-material/Close";
 import {
+  Box,
   Button,
   IconButton,
   Snackbar,
   TextField,
   Typography,
-  Box
-} from '@mui/material'
-import { Fragment, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import authPageStyles from '../../styles/authPageStyles'
+} from "@mui/material";
+import { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authPageStyles from "../../styles/authPageStyles";
 
 interface NewPasswordPageProps {}
 
 const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
   const [userCredentials, setUserCredentials] = useState({
-    email: '',
-    password: '',
-    password2: '',
-  })
+    email: "",
+    password: "",
+    password2: "",
+  });
 
   const [snackBarState, setSnackBarState] = useState({
     state: false,
-    snackBarMessage: '',
+    snackBarMessage: "",
     vertical: "top",
-    horizontal: "center"
-  })
+    horizontal: "center",
+  });
 
   const { vertical, horizontal } = snackBarState;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function handlePassword(inputValue: string) {
     setUserCredentials((prevUserCredentials) => ({
       ...prevUserCredentials,
       password: inputValue,
-    }))
+    }));
   }
 
   function handlePassword2(inputValue: string) {
     setUserCredentials((prevUserCredentials) => ({
       ...prevUserCredentials,
       password2: inputValue,
-    }))
+    }));
   }
 
   function handleSignUp() {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const isPasswordValid = userCredentials.password.length > 6
-    const isPassword2 = userCredentials.password === userCredentials.password2
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isPasswordValid = userCredentials.password.length > 6;
+    const isPassword2 = userCredentials.password === userCredentials.password2;
 
     if (!isPasswordValid) {
       setSnackBarState((prevState) => ({
         ...prevState,
         state: true,
-        snackBarMessage: 'Please provide a valid password.',
-      }))
+        snackBarMessage: "Please provide a valid password.",
+      }));
     } else if (!isPassword2) {
       setSnackBarState((prevState) => ({
         ...prevState,
         state: true,
-        snackBarMessage: 'Password does not match.',
-      }))
+        snackBarMessage: "Password does not match.",
+      }));
     } else {
-      navigate('/verify-email')
+      navigate("/verify-email");
     }
   }
 
@@ -71,8 +71,8 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
     setSnackBarState((prevState) => ({
       ...prevState,
       state: false,
-    }))
-  }
+    }));
+  };
 
   const action = (
     <Fragment>
@@ -85,11 +85,11 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
         <CloseIcon fontSize="small" />
       </IconButton>
     </Fragment>
-  )
+  );
 
   return (
     <Box sx={authPageStyles.container.mainContainer}>
-      <Box  sx={authPageStyles.container.innerContainer}>
+      <Box sx={authPageStyles.container.innerContainer}>
         <Typography sx={authPageStyles.form.heading}>
           New Password Change
         </Typography>
@@ -101,7 +101,7 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
           message={snackBarState.snackBarMessage}
           action={action}
           key={vertical + horizontal}
-          sx={{ marginTop: '60px' }}
+          sx={{ marginTop: "60px" }}
         />
         <TextField
           onChange={(e) => handlePassword(e.target.value)}
@@ -110,7 +110,7 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
           label="Password"
           placeholder="Enter Your Password"
           sx={authPageStyles.form.formInput}
-          InputProps={{ 
+          InputProps={{
             sx: authPageStyles.form.formInputProp,
           }}
           InputLabelProps={{
@@ -125,7 +125,7 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
           label="Confirm Password"
           placeholder="Reenter Your Password"
           sx={authPageStyles.form.formInput}
-          InputProps={{ 
+          InputProps={{
             sx: authPageStyles.form.formInputProp,
           }}
           InputLabelProps={{
@@ -138,13 +138,14 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = () => {
             onClick={handleSignUp}
             variant="contained"
             color="primary"
-            sx={authPageStyles.form.formButton}>
+            sx={authPageStyles.form.formButton}
+          >
             Sign Up
           </Button>
         </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default NewPasswordPage
+export default NewPasswordPage;
