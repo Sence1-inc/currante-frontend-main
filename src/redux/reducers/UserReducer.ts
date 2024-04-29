@@ -119,7 +119,7 @@ const initialState: User = {
     },
   ],
 };
-/* eslint-disable no-unused-vars */
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -129,7 +129,7 @@ export const userSlice = createSlice({
     },
   },
 });
-
+// eslint-disable-next-line no-unused-vars
 export const { initializeUser } = userSlice.actions;
 
 export default userSlice.reducer;

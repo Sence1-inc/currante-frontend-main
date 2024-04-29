@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-/* eslint-disable no-unused-vars */
+
 export const isAuthenticatedSlice = createSlice({
   name: "isAuthenticated",
   initialState: false,
@@ -9,7 +9,7 @@ export const isAuthenticatedSlice = createSlice({
     },
   },
 });
-
+// eslint-disable-next-line no-unused-vars
 export const { initializeIsAuthenticated } = isAuthenticatedSlice.actions;
 
 export default isAuthenticatedSlice.reducer;
