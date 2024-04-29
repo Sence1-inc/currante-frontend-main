@@ -125,11 +125,12 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     initializeUser: (state, action: PayloadAction<User>) => {
+      console.log(state);
       return action.payload;
     },
   },
 });
-// eslint-disable-next-line no-unused-vars
+
 export const { initializeUser } = userSlice.actions;
 
 export default userSlice.reducer;

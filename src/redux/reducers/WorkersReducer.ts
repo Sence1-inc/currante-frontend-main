@@ -8,11 +8,12 @@ export const workersSlice = createSlice({
   initialState,
   reducers: {
     initializeWorkers: (state, action: PayloadAction<Worker[]>) => {
+      console.log(state);
       return action.payload;
     },
   },
 });
-// eslint-disable-next-line no-unused-vars
+
 export const { initializeWorkers } = workersSlice.actions;
 
 export default workersSlice.reducer;
