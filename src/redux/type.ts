@@ -6,7 +6,7 @@ export interface Address {
 }
 
 export interface JobSubType {
-  worker_job_subtype_id: number | null;
+  worker_job_subtype_id?: number | null;
   job_subtype_id: number | null;
   job_type: string;
   job_type_id: number | null;

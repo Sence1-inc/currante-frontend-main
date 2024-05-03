@@ -36,10 +36,18 @@ export const isEmptyObject = (
   errorMessages: Record<string, string>,
   key: string
 ): boolean => {
-  const keys = Object.keys(errorMessages).filter((messageKey: string) => {
-    return errorMessages[messageKey] !== "";
-  });
-  return keys.includes(key);
+  const keys =
+    errorMessages &&
+    typeof errorMessages === "object" &&
+    Object.keys(errorMessages).filter((messageKey: string) => {
+      return errorMessages[messageKey] !== "";
+    });
+
+  if (keys === false) {
+    return false;
+  }
+
+  return keys?.includes(key);
 };
 
 const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({

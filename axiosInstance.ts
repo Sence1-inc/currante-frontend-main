@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL,
   timeout: 10000,
   withCredentials: true,
@@ -14,5 +14,26 @@ const api = axios.create({
     "Access-Control-Allow-Credentials": " true",
   },
 });
+
+let lastRefreshTime = Date.now();
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const currentTime = Date.now();
+    const elapsedTimeSinceLastRefresh = currentTime - lastRefreshTime;
+
+    if (
+      elapsedTimeSinceLastRefresh >= 4 * 60 * 1000 ||
+      (error.response && error.response.status === 401)
+    ) {
+      axios.post(`${baseURL}/api/v1/refresh`);
+      console.log("Unauthorized, triggering /refresh endpoint");
+      lastRefreshTime = currentTime;
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;

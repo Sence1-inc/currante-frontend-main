@@ -82,32 +82,37 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const uniqueJobType: string = Array.from(
-    new Set(
-      user?.job_subtypes
-        .filter((job) => job.active_flg === 1)
-        .map((job) => job.job_type)
-    )
-  )[0];
+  let uniqueJobType: string;
+  let uniqueJobTypeId: number | null;
 
-  const uniqueJobTypeId = Array.from(
-    new Set(
-      user?.job_subtypes
-        .filter((job) => job.active_flg === 1)
-        .map((job) => job.job_type_id)
-    )
-  )[0];
+  if (user?.job_subtypes) {
+    uniqueJobType = Array.from(
+      new Set(
+        user.job_subtypes
+          .filter((job) => job.active_flg === 1)
+          .map((job) => job.job_type)
+      )
+    )[0];
+
+    uniqueJobTypeId = Array.from(
+      new Set(
+        user.job_subtypes
+          .filter((job) => job.active_flg === 1)
+          .map((job) => job.job_type_id)
+      )
+    )[0];
+  }
 
   const userPhotos = (photos: Photo[]): UserPhotos => {
     const rearrangedPhotos: UserPhotos = { photos: [] };
-
-    photos.forEach((photo) => {
-      if (!rearrangedPhotos.photos) {
-        rearrangedPhotos.photos = [];
-      }
-      rearrangedPhotos.photos.push(photo.profile_photo);
-    });
-
+    if (photos && photos.length > 0) {
+      photos.forEach((photo) => {
+        if (!rearrangedPhotos.photos) {
+          rearrangedPhotos.photos = [];
+        }
+        rearrangedPhotos.photos.push(photo.profile_photo);
+      });
+    }
     return rearrangedPhotos;
   };
 
@@ -123,6 +128,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (
+      jobSubtypes &&
       jobSubtypes.length > 0 &&
       jobSubtypes.find((type) => type.job_name === "")
     ) {
@@ -201,7 +207,7 @@ const ProfilePage: React.FC = () => {
       getJobSubtypes();
     }
   }, [jobType]);
-
+  console.log("selectedJobType", selectedJobType);
   const handleSave = async () => {
     const data = {
       user_id: user.id, // update this during implementation of authentication
@@ -301,7 +307,9 @@ const ProfilePage: React.FC = () => {
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}
-            description={user.logged_in_as === "worker" ? description : ""}
+            description={
+              description && user.logged_in_as === "worker" ? description : ""
+            }
             user={user}
             sectionName="description_photos"
             handleSetEdittingSection={() =>
@@ -317,10 +325,10 @@ const ProfilePage: React.FC = () => {
           <ProfileBasicInfoCard
             errorMessages={errorMessages}
             edittingSection={edittingSection}
-            firstName={firstName}
-            middleName={middleName}
-            lastName={lastName}
-            gender={gender}
+            firstName={firstName ?? ""}
+            middleName={middleName ?? ""}
+            lastName={lastName ?? ""}
+            gender={gender ?? ""}
             sectionName={"basic_info"}
             birthday={birthday}
             handleSetEdittingSection={() => setEdittingSection("basic_info")}
@@ -336,9 +344,9 @@ const ProfilePage: React.FC = () => {
           <ProfileContactInfoCard
             errorMessages={errorMessages}
             edittingSection={edittingSection}
-            phoneNumber={phoneNumber}
+            phoneNumber={phoneNumber ?? ""}
             sectionName={"contact_info"}
-            email={email}
+            email={email ?? ""}
             handleSetEdittingSection={() => setEdittingSection("contact_info")}
             handleSetEmail={(email) => setEmail(email)}
             handleSetPhoneNumber={(number) => setPhoneNumber(number)}
@@ -349,8 +357,8 @@ const ProfilePage: React.FC = () => {
           {user.logged_in_as === "worker" && (
             <ProfileRatesCard
               edittingSection={edittingSection}
-              jobType={jobType}
-              jobTypes={jobTypes}
+              jobType={jobType ?? ""}
+              jobTypes={jobTypes ?? []}
               jobSubtypesDefault={jobSubtypesDefault}
               jobSubtypes={jobSubtypes}
               jobTypeId={jobTypeId}
@@ -358,7 +366,11 @@ const ProfilePage: React.FC = () => {
               handleSetEdittingSection={() => setEdittingSection("rates")}
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
-              handleSetJobSubtypes={(types) => setJobSubtypes([...types])}
+              handleSetJobSubtypes={(types) => {
+                console.log("Wawa");
+                console.log("Types", types);
+                setJobSubtypes([...types]);
+              }}
               handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
               handleSetInfoMessage={(message) => setInfoMessage(message)}
               handleSetSelectedJobType={(jobtype) =>
@@ -371,7 +383,7 @@ const ProfilePage: React.FC = () => {
             <ProfileScheduleCard
               errorMessages={errorMessages}
               edittingSection={edittingSection}
-              schedule={schedule}
+              schedule={schedule ?? ""}
               sectionName="schedule"
               handleSetEdittingSection={() => setEdittingSection("schedule")}
               handleSave={handleSave}
@@ -383,7 +395,7 @@ const ProfilePage: React.FC = () => {
           {user.logged_in_as === "worker" && (
             <ProfileServicingAreasCard
               edittingSection={edittingSection}
-              servicingAreas={servicingAreas}
+              servicingAreas={servicingAreas ?? []}
               areas={areas}
               sectionName="servicing_area"
               handleSetEdittingSection={() =>
@@ -398,7 +410,7 @@ const ProfilePage: React.FC = () => {
           {user.logged_in_as === "employer" && (
             <ProfileAddressesCard
               edittingSection={edittingSection}
-              addresses={addresses}
+              addresses={addresses ?? []}
               cities={CITIES}
               provinces={PROVINCES}
               sectionName="addresses"

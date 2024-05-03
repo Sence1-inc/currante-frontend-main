@@ -37,6 +37,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   edittingSection,
   jobType,
   jobTypes,
+  jobTypeId,
   jobSubtypesDefault,
   jobSubtypes,
   sectionName,
@@ -49,6 +50,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   handleSetSelectedJobType,
 }) => {
   useEffect(() => {
+    console.log("jobtype", jobType);
     if (jobType) {
       const prevJobSubtypes = jobSubtypes?.filter(
         (type) => type.job_type !== jobType
@@ -66,7 +68,9 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
         ...subtype,
         active_flg: 1,
       }));
-
+      console.log("jobSubtypes", jobSubtypes);
+      console.log("inactiveJobSubtypes", inactiveJobSubtypes);
+      console.log("activeJobSubtypes", activeJobSubtypes);
       handleSetJobSubtypes([...inactiveJobSubtypes, ...activeJobSubtypes]);
     }
   }, [jobType]);
@@ -176,19 +180,18 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                   null
                 }
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const subtype =
-                    Array.isArray(jobSubtypes) &&
-                    jobSubtypes.find(
-                      (type) =>
-                        type.job_type === jobType &&
-                        type.job_name === item.job_name &&
-                        type.active_flg
-                    );
+                  const subtype = jobSubtypes.find(
+                    (type) =>
+                      type.job_type === jobType &&
+                      type.job_name === item.job_name &&
+                      type.active_flg
+                  );
                   if (subtype) {
                     const subtypeData = {
                       job_unit_price: Number(e.target.value),
                       unit: item.unit,
                     };
+
                     handleSetJobSubtypes([
                       ...jobSubtypes.filter(
                         (type) => type.job_name !== item.job_name
@@ -196,18 +199,18 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                       { ...subtype, ...subtypeData },
                     ]);
                   } else {
-                    // const newJobSubtype = [
-                    //   {
-                    //     job_subtype_id: item.id,
-                    //     job_type: jobType,
-                    //     job_type_id: jobTypeId,
-                    //     job_name: item.job_name,
-                    //     job_unit_price: Number(e.target.value),
-                    //     unit: item.unit,
-                    //     active_flg: true,
-                    //   },
-                    // ];
-                    // handleSetJobSubtypes([...jobSubtypes, ...newJobSubtype]);
+                    const newJobSubtype = [
+                      {
+                        job_subtype_id: item.id,
+                        job_type: jobType,
+                        job_type_id: jobTypeId as number,
+                        job_name: item.job_name,
+                        job_unit_price: Number(e.target.value),
+                        unit: item.unit,
+                        active_flg: true,
+                      },
+                    ];
+                    handleSetJobSubtypes([...jobSubtypes, ...newJobSubtype]);
                   }
                 }}
               />
