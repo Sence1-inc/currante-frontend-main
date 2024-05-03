@@ -87,6 +87,7 @@ export interface User {
     role_details: string;
   };
   description: string;
+  overall_rating: number | null;
   orders: Order[];
   areas: Area[];
   job_subtypes: JobSubType[];

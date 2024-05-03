@@ -40,6 +40,7 @@ const initialState: User = {
       job_order_code: "",
     },
   ],
+  overall_rating: null,
   description: "",
   schedule: "",
   uuid: "",

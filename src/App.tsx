@@ -12,6 +12,7 @@ import PaymentPage from "./container/PaymentPage/PaymentPage";
 import PaymentSuccessPage from "./container/PaymentPage/PaymentSuccessPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
 import ProfileViewPage from "./container/ProfileViewPage/ProfileViewPage";
+import ReviewPage from "./container/ReviewPage/ReviewPage";
 import SearchWorkerPage from "./container/SearchPage/SearchWorkerPage";
 import SignInPage from "./container/SignInPage/SignInPage";
 import SignUpPage from "./container/SignUpPage/SignUpPage";
@@ -50,6 +51,10 @@ const App = () => {
       <Route
         path="/workers/:id/payment"
         element={<PrivateRoute component={PaymentPage} />}
+      />
+      <Route
+        path="/reviews/:id"
+        element={<PrivateRoute component={ReviewPage} />}
       />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
