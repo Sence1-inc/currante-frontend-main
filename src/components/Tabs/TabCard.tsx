@@ -114,13 +114,11 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
           </Typography>
         </Box>
       </Box>
-      {user.logged_in_as === "worker" && (
-        <TabButton
-          order={order}
-          status={order.status}
-          handleOpenModal={handleOpenModal}
-        />
-      )}
+      <TabButton
+        order={order}
+        status={order.status}
+        handleOpenModal={handleOpenModal}
+      />
       <TabModal
         orderId={order.id as number}
         status={order.status}

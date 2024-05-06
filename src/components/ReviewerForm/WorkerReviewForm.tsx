@@ -5,37 +5,38 @@ import {
   Button,
   ImageList,
   ImageListItem,
-  Rating,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
-import CheckImage from "../../assets/check.png";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
-import CustomModal from "../Tabs/Modal";
+import CustomRating from "./CustomRating";
 
-const WorkerReviewForm: React.FC = () => {
+interface WorkerReviewFormProps {
+  handleSetIsWorkerSuccessModalOpen: (value: boolean) => void;
+}
+
+const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
+  handleSetIsWorkerSuccessModalOpen,
+}) => {
   const [files, setFiles] = useState<FileList | []>([]);
   const maxFileSizeMB = 10;
   const order = useAppSelector((state) => state.order);
   const user = useAppSelector((state) => state.user);
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<string>("");
   const [overallRating, setOverallRating] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbar] = useState<boolean>(false);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const uploadedFiles = event.target.files;
-    console.log("uploadedFiles", uploadedFiles);
+
     if (uploadedFiles && uploadedFiles.length > 0) {
       const filesArray = Array.from(uploadedFiles);
       const previews = filesArray.map((file) => URL.createObjectURL(file));
@@ -76,8 +77,8 @@ const WorkerReviewForm: React.FC = () => {
         overall_rating: overallRating,
         order_id: order.id,
         user_id: user.id,
-        review_for: "employer", // 0 - review for employer; 1 - review for worker
-        reviewee_id: order.employer_id,
+        review_for: "employer",
+        reviewee_id: order.employer_user_id,
       };
       setIsUploading(true);
       const response = await axiosInstance.post("/api/v1/reviews", data);
@@ -89,7 +90,7 @@ const WorkerReviewForm: React.FC = () => {
         if (res.status === 201) {
           setIsUploading(false);
           dispatch(initializeUser({ ...user, orders: res.data.orders }));
-          setIsModalOpen(true);
+          handleSetIsWorkerSuccessModalOpen(true);
           setIsSnackbar(false);
           setErrorMessage("");
         }
@@ -110,7 +111,12 @@ const WorkerReviewForm: React.FC = () => {
         gap: "20px",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
+      <CustomRating
+        handleSetRating={(value) => setOverallRating(value)}
+        rating={overallRating}
+        title="Rate your employer"
+      />
+      {/* <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <Typography variant="body1">Rate your employer</Typography>
         <Rating
           name="simple-controlled"
@@ -120,7 +126,7 @@ const WorkerReviewForm: React.FC = () => {
             setOverallRating(newValue as number);
           }}
         />
-      </Box>
+      </Box> */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Typography variant="body1">Type 200 characters</Typography>
         <TextField
@@ -242,60 +248,6 @@ const WorkerReviewForm: React.FC = () => {
       >
         Submit
       </Button>
-
-      <CustomModal
-        isModalOpen={isModalOpen}
-        handleCloseModal={() => navigate("/jobs")}
-      >
-        <Box
-          sx={{
-            padding: "24px",
-            paddingBottom: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          <Box sx={{ textAlign: "center" }}>
-            <img src={CheckImage} alt="" />
-          </Box>
-          <Typography
-            sx={{
-              fontSize: 16,
-              fontWeight: 600,
-              color: "#1A1B21",
-              textAlign: "center",
-              fontFamily: "Poppins",
-              marginBottom: "10px",
-            }}
-          >
-            Thank you for your review
-          </Typography>
-          <Typography variant="body1" sx={{ textAlign: "center" }}>
-            Your payment will be released within 1-3 business days or upon the
-            employer's confirmation that the job is completed. We'll prompt your
-            employer to leave a review to expedite the payment process. Thank
-            you!
-          </Typography>
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingBottom: "24px",
-            }}
-          >
-            <Button
-              variant="contained"
-              sx={{ widht: "auto" }}
-              onClick={() => navigate("/jobs")}
-            >
-              See Jobs
-            </Button>
-          </Box>
-        </Box>
-      </CustomModal>
 
       <CustomSnackbar
         errorMessage={errorMessage}

@@ -1,13 +1,13 @@
 import CheckIcon from "@mui/icons-material/Check";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-import { Box, Button } from "@mui/material";
-import jobListStyles from "../../styles/jobListStyles";
 import ReviewsIcon from "@mui/icons-material/Reviews";
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router";
-import { Order } from "../../redux/type";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { initializeOrder } from "../../redux/reducers/OrderReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
+import jobListStyles from "../../styles/jobListStyles";
 
 interface TabButtonProps {
   status: string;
@@ -49,7 +49,8 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "3" ||
               status == "4" ||
-              status == "5") &&
+              status == "5" ||
+              status == "6") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -62,7 +63,11 @@ const TabButton: React.FC<TabButtonProps> = ({
     return (
       <Button
         disabled={
-          (status == "1" || status == "2" || status == "4" || status == "5") &&
+          (status == "1" ||
+            status == "2" ||
+            status == "4" ||
+            status == "5" ||
+            status == "6") &&
           true
         }
         onClick={handleOpenModal}
@@ -74,7 +79,8 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "4" ||
-              status == "5") &&
+              status == "5" ||
+              status == "6") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -83,17 +89,20 @@ const TabButton: React.FC<TabButtonProps> = ({
     );
   };
 
-  const reviewButton = () => {
+  const reviewEmployerButton = () => {
     return (
       <Button
-        disabled={(status == "1" || status == "2" || status == "3") && true}
+        disabled={
+          (status == "1" ||
+            status == "2" ||
+            status == "3" ||
+            status == "5" ||
+            status == "6") &&
+          true
+        }
         onClick={() => {
           dispatch(initializeOrder(order));
-          if (user.logged_in_as == "worker") {
-            navigate(`/reviews/${order.employer_id}`);
-          } else {
-            navigate(`/reviews/${order.worker_id}`);
-          }
+          navigate(`/reviews/${order.employer_id}`);
         }}
         sx={jobListStyles.button.simple}
       >
@@ -103,7 +112,36 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "3" ||
-              status == "5") &&
+              status == "5" ||
+              status == "6") &&
+              jobListStyles.icon.buttonIconDisabled,
+          ]}
+        />
+        Review
+      </Button>
+    );
+  };
+
+  const reviewWorkerButton = () => {
+    return (
+      <Button
+        disabled={
+          (status == "1" || status == "2" || status == "3" || status == "6") &&
+          true
+        }
+        onClick={() => {
+          dispatch(initializeOrder(order));
+          navigate(`/reviews/${order.worker_id}`);
+        }}
+        sx={jobListStyles.button.simple}
+      >
+        <ReviewsIcon
+          sx={[
+            jobListStyles.icon.buttonIconBlue,
+            (status == "1" ||
+              status == "2" ||
+              status == "3" ||
+              status == "6") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -113,11 +151,26 @@ const TabButton: React.FC<TabButtonProps> = ({
   };
 
   return (
-    <Box sx={jobListStyles.container.buttonsContainer}>
-      <Box>{incomingButton()}</Box>
-      <Box>{completedButton()}</Box>
-      <Box>{requestButton()}</Box>
-      <Box>{reviewButton()}</Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent:
+          user.logged_in_as === "worker" ? "space-between" : "center",
+        alignItems: "center",
+        marginTop: 2,
+      }}
+    >
+      {user.logged_in_as === "employer" ? (
+        <Box>{reviewWorkerButton()}</Box>
+      ) : (
+        <>
+          <Box>{incomingButton()}</Box>
+          <Box>{completedButton()}</Box>
+          <Box>{requestButton()}</Box>
+          <Box>{reviewEmployerButton()}</Box>
+        </>
+      )}
     </Box>
   );
 };

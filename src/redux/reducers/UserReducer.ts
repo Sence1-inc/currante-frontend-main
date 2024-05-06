@@ -17,7 +17,9 @@ const initialState: User = {
       worker_arrived_date: "",
       job_order_completed_date: "",
       worker_id: null,
+      worker_user_id: null,
       employer_id: null,
+      employer_user_id: null,
       worker_name: "",
       employer_name: "",
       worker_job_subtype: {
@@ -87,7 +89,9 @@ const initialState: User = {
         worker_arrived_date: "",
         job_order_completed_date: "",
         worker_id: null,
+        worker_user_id: null,
         employer_id: null,
+        employer_user_id: null,
         worker_name: "",
         employer_name: "",
         worker_job_subtype: {
@@ -112,6 +116,7 @@ const initialState: User = {
       category_rating: [
         {
           category: {
+            id: null,
             name: "",
           },
           rating: null,

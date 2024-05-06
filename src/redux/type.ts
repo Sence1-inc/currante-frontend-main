@@ -25,7 +25,9 @@ export interface WorkerJobSubtype {
 export interface Order {
   id: number | null;
   worker_id: number | null;
+  worker_user_id: number | null;
   employer_id: number | null;
+  employer_user_id: number | null;
   worker_name: string;
   employer_name: string;
   worker_job_subtype: WorkerJobSubtype;
@@ -40,6 +42,7 @@ export interface Order {
 }
 
 export interface Category {
+  id: number | null;
   name: string;
 }
 

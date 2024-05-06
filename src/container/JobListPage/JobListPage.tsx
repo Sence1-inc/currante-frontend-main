@@ -39,6 +39,8 @@ const JobListPage: React.FC = () => {
             return tabCard;
           } else if (value === 5 && Number(order.status) === 5) {
             return tabCard;
+          } else if (value === 6 && Number(order.status) === 6) {
+            return tabCard;
           }
         })}
       </TabsItem>
@@ -176,6 +178,22 @@ const JobListPage: React.FC = () => {
               },
             }}
             label="Reviewed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Payment Released"
           />
         </Tabs>
       </Box>
