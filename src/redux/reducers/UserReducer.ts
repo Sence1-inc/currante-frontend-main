@@ -78,7 +78,7 @@ const initialState: User = {
     {
       id: null,
       overall_rating: null,
-      category_flg: null,
+      review_for: "",
       feedback: "",
       order: {
         id: null,

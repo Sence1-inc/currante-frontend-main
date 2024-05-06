@@ -51,7 +51,7 @@ export interface CategoryRating {
 export interface Review {
   id: number | null;
   overall_rating: number | null;
-  category_flg: number | null;
+  review_for: string;
   feedback: string;
   order: Order;
   category_rating: CategoryRating[];

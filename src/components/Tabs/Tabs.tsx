@@ -1,5 +1,4 @@
-import { Box, Tab, Tabs } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 import React from "react";
 
 interface TabPanelProps {
@@ -8,56 +7,46 @@ interface TabPanelProps {
   value: number;
 }
 
-interface TabsProps {
-  children?: React.ReactNode;
-  value: number;
-  onChange: (event: React.SyntheticEvent, newValue: number) => void;
-}
+// interface TabsProps {
+//   children?: React.ReactNode;
+//   value: number;
+//   onChange: (event: React.SyntheticEvent, newValue: number) => void;
+// }
 
-interface TabProps {
-  label: string;
-}
+// interface TabProps {
+//   label: string;
+// }
 
-export const TabsContainer = styled((props: TabsProps) => (
-  <Tabs
-    variant="scrollable"
-    scrollButtons="auto"
-    aria-label="scrollable auto tabs example"
-    {...props}
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  "& .MuiTabs-indicator": {
-    display: "flex",
-    justifyContent: "center",
-    backgroundColor: "transparent",
-  },
-  "& .MuiTabs-indicatorSpan": {
-    position: "relative",
-    maxWidth: 20,
-    width: "100%",
-    height: 8,
-    bottom: 3,
-    borderRadius: "4px 4px 0 0",
-    backgroundColor: "#f58a47",
-  },
-});
+// export const TabsContainer = styled(Tabs)(({ theme }) => ({
+//   "& .MuiTabs-indicator": {
+//     display: "flex",
+//     justifyContent: "center",
+//     backgroundColor: "transparent",
+//   },
+//   "& .MuiTabs-indicatorSpan": {
+//     position: "relative",
+//     maxWidth: 20,
+//     width: "100%",
+//     height: 8,
+//     bottom: 3,
+//     borderRadius: "4px 4px 0 0",
+//     backgroundColor: "#f58a47",
+//   },
+// }));
 
-export const TabsMenu = styled((props: TabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  textTransform: "none",
-  fontWeight: "bold",
-  fontSize: theme.typography.pxToRem(15),
-  marginRight: theme.spacing(1),
-  color: "primary.main",
-  "&.Mui-selected": {
-    color: "primary.main",
-  },
-  "&.Mui-focusVisible": {
-    backgroundColor: "rgba(100, 95, 228, 0.32)",
-  },
-}));
+// export const TabsMenu = styled(Tab)(({ theme }) => ({
+//   textTransform: "none",
+//   fontWeight: "bold",
+//   fontSize: theme.typography.pxToRem(15),
+//   marginRight: theme.spacing(1),
+//   color: theme.palette.primary.main,
+//   "&.Mui-selected": {
+//     color: theme.palette.primary.main,
+//   },
+//   "&.Mui-focusVisible": {
+//     backgroundColor: "rgba(100, 95, 228, 0.32)",
+//   },
+// }));
 
 export const TabsItem = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;

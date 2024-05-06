@@ -12,7 +12,7 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
   return (
     <Box
       sx={{
-        padding: "30px 40px",
+        padding: "30px 20px",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
@@ -46,6 +46,7 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
       >
         <Typography variant="body2">Overall rating</Typography>
         <Rating
+          precision={0.5}
           size="small"
           name="read-only"
           value={Number(reviewee?.profile.overall_rating)}

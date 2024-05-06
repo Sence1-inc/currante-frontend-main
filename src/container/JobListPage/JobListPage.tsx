@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TabCard from "../../components/Tabs/TabCard";
-import { TabsContainer, TabsItem, TabsMenu } from "../../components/Tabs/Tabs";
+import { TabsItem } from "../../components/Tabs/Tabs";
 import { useAppSelector } from "../../redux/store";
 import { Order } from "../../redux/type";
 
@@ -12,7 +12,7 @@ const JobListPage: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      setOrders(user.orders);
+      setOrders(user?.orders);
     }
   }, [user]);
 
@@ -37,6 +37,8 @@ const JobListPage: React.FC = () => {
             return tabCard;
           } else if (value === 4 && Number(order.status) === 4) {
             return tabCard;
+          } else if (value === 5 && Number(order.status) === 5) {
+            return tabCard;
           }
         })}
       </TabsItem>
@@ -57,13 +59,125 @@ const JobListPage: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <TabsContainer value={value} onChange={handleChange}>
-          <TabsMenu label="All" />
-          <TabsMenu label="Requests" />
-          <TabsMenu label="Incoming" />
-          <TabsMenu label="To be Completed" />
-          <TabsMenu label="Completed" />
-        </TabsContainer>
+        <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            "& .MuiTabs-indicator": {
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: "transparent",
+            },
+            "& .MuiTabs-indicatorSpan": {
+              position: "relative",
+              maxWidth: 20,
+              width: "100%",
+              height: 8,
+              bottom: 3,
+              borderRadius: "4px 4px 0 0",
+              backgroundColor: "#f58a47",
+            },
+          }}
+          value={value}
+          onChange={handleChange}
+        >
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="All"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Requests"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Incoming"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="To be Completed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Completed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Reviewed"
+          />
+        </Tabs>
       </Box>
       <Box>{showList()}</Box>
     </Box>

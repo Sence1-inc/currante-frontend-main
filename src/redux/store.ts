@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import IsAuthenticatedReducer from "./reducers/IsAuthenticatedReducer";
+import OrderReducer from "./reducers/OrderReducer";
 import UserReducer from "./reducers/UserReducer";
 import WorkersReducer from "./reducers/WorkersReducer";
 import reduxPersistMiddleware from "./reduxPersistMiddleware";
@@ -10,7 +11,7 @@ import reduxPersistMiddleware from "./reduxPersistMiddleware";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"],
+  whitelist: ["user", "order", "isAuthenticated"],
 };
 
 const persistedReducer = persistReducer(
@@ -19,6 +20,7 @@ const persistedReducer = persistReducer(
     user: UserReducer,
     workers: WorkersReducer,
     isAuthenticated: IsAuthenticatedReducer,
+    order: OrderReducer,
   })
 );
 

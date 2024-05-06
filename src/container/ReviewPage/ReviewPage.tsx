@@ -1,20 +1,19 @@
 import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
 import { Box, IconButton, Typography } from "@mui/material";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import axiosInstance from "../../../axiosInstance";
 import RevieweeProfileCard from "../../components/RevieweeProfileCard/RevieweeProfileCard";
+import EmployerReviewForm from "../../components/ReviewerForm/EmployerReviewForm";
+import WorkerReviewForm from "../../components/ReviewerForm/WorkerReviewForm";
 import { useAppSelector } from "../../redux/store";
 import { Employer, Worker } from "../../redux/type";
-import axiosInstance from "../../../axiosInstance";
-import WorkerReviewForm from "../../components/ReviewerForm/WorkerReviewForm";
-import EmployerReviewForm from "../../components/ReviewerForm/EmployerReviewForm";
 
 const ReviewPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const user = useAppSelector((state) => state.user);
   const [reviewee, setReviewee] = useState<Worker | Employer | null>(null);
-  const [employerRating, setEmployerRating] = useState<number>(0);
 
   useEffect(() => {
     const getReviewee = async () => {
@@ -49,13 +48,7 @@ const ReviewPage = () => {
       </Box>
       <RevieweeProfileCard reviewee={reviewee} />
       {user.logged_in_as === "worker" ? (
-        <WorkerReviewForm
-          rating={employerRating}
-          handleSetRating={(e, value) => {
-            console.log(e);
-            setEmployerRating(Number(value));
-          }}
-        />
+        <WorkerReviewForm />
       ) : (
         <EmployerReviewForm />
       )}

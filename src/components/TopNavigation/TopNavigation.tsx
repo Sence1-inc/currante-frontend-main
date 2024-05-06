@@ -21,6 +21,7 @@ const settings = ["Manage Profile", "Logout"];
 const initialState: User = {
   logged_in_as: "",
   id: null,
+  overall_rating: 0,
   email: "",
   role: {
     role_name: "",
@@ -94,7 +95,7 @@ const initialState: User = {
     {
       id: null,
       overall_rating: null,
-      category_flg: null,
+      review_for: "",
       feedback: "",
       order: {
         id: null,

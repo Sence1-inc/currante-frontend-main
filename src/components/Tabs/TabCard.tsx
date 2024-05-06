@@ -40,6 +40,8 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
       return "arrived";
     } else if (Number(order.status) === 4) {
       return "completed";
+    } else if (Number(order.status) === 5) {
+      return "reviewed";
     } else {
       return "all";
     }
@@ -113,7 +115,11 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
         </Box>
       </Box>
       {user.logged_in_as === "worker" && (
-        <TabButton status={order.status} handleOpenModal={handleOpenModal} />
+        <TabButton
+          order={order}
+          status={order.status}
+          handleOpenModal={handleOpenModal}
+        />
       )}
       <TabModal
         orderId={order.id as number}

@@ -1,12 +1,12 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import StarIcon from "@mui/icons-material/Star";
 import {
   Avatar,
   Box,
   Button,
   ButtonGroup,
   IconButton,
+  Rating,
   TextField,
   Typography,
 } from "@mui/material";
@@ -152,21 +152,15 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       </Typography>
 
       <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-        <StarIcon
-          sx={{
-            color: "#F58A47",
-            width: "10px",
-          }}
+        <Rating
+          precision={0.5}
+          size="small"
+          name="read-only"
+          value={Number(user?.overall_rating)}
+          readOnly
         />
 
-        <StarIcon
-          sx={{
-            color: "#A1B5DE",
-            width: "10px",
-          }}
-        />
-
-        <Typography>(4 stars)</Typography>
+        <Typography>{`(${Number(user?.overall_rating)} stars)`}</Typography>
       </Box>
 
       {user.logged_in_as === "worker" &&
