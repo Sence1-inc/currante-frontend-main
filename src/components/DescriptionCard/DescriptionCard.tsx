@@ -38,7 +38,9 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({
         />
       )}
       <Typography variant="h6">{title}</Typography>
-      <Rating size="small" name="read-only" value={rating} readOnly />
+      {rating && (
+        <Rating size="small" name="read-only" value={rating} readOnly />
+      )}
       <Typography variant="body1">{description}</Typography>
     </Box>
   );
