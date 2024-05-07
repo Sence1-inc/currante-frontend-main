@@ -62,9 +62,9 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         };
 
         const response = await axiosInstance.post("/api/v1/login", data);
-        console.log("login response", response);
         if (response.data.user) {
           dispatch(initializeUser(response.data.user));
+
           if (response.data.user.logged_in_as === "worker") {
             navigate("/jobs");
           } else if (response.data.user.logged_in_as === "employer") {

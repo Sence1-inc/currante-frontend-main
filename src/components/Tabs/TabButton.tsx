@@ -28,9 +28,15 @@ const TabButton: React.FC<TabButtonProps> = ({
       <Button
         disabled={status != "1" && true}
         onClick={handleOpenModal}
-        sx={jobListStyles.button.primary}
+        sx={jobListStyles.button.simple}
       >
-        <CheckIcon sx={jobListStyles.icon.buttonIconWhite} />
+        <CheckIcon
+          color="primary"
+          sx={[
+            jobListStyles.icon.buttonIconBlue,
+            status != "1" && jobListStyles.icon.buttonIconDisabled,
+          ]}
+        />
         Accept
       </Button>
     );
@@ -93,11 +99,7 @@ const TabButton: React.FC<TabButtonProps> = ({
     return (
       <Button
         disabled={
-          (status == "1" ||
-            status == "2" ||
-            status == "3" ||
-            status == "5" ||
-            status == "6") &&
+          (status == "1" || status == "2" || status == "3" || status == "5") &&
           true
         }
         onClick={() => {
@@ -112,8 +114,7 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "3" ||
-              status == "5" ||
-              status == "6") &&
+              status == "5") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />

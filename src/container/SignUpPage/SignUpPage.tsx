@@ -1,3 +1,4 @@
+import { addDoc, collection } from "@firebase/firestore";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -13,6 +14,7 @@ import { Link as RouterLink } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { db } from "../../firebase";
 import authPageStyles from "../../styles/authPageStyles";
 
 interface SignUpPageProps {}
@@ -22,6 +24,9 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
     email: "",
     password: "",
     password2: "",
+    first_name: "",
+    last_name: "",
+    middle_name: "",
   });
 
   const [snackBarState, setSnackBarState] = useState({
@@ -80,6 +85,9 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
       }));
     } else {
       const data = {
+        first_name: userCredentials.first_name,
+        last_name: userCredentials.last_name,
+        middle_name: userCredentials.middle_name,
         email: userCredentials.email,
         password: userCredentials.password,
         service_id: Number(import.meta.env.VITE_SERVICE_ID),
@@ -89,8 +97,19 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
 
       try {
         const response = await axiosInstance.post("/api/v1/register", data);
-        console.log(response.data);
         if (response.data) {
+          const userRef = collection(db, "users");
+          console.log(response.data);
+          const docRef = await addDoc(userRef, {
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            middle_name: response.data.user.middle_name,
+            user_id: response.data.user.id,
+            uuid: response.data.user.uuid,
+          });
+
+          console.log(docRef.id);
+
           setSnackBarState((prevState) => ({
             ...prevState,
             state: true,
@@ -144,6 +163,66 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             action={action}
             key={vertical + horizontal}
             sx={{ marginTop: "60px" }}
+          />
+          <TextField
+            onChange={(e) =>
+              setUserCredentials((prevUserCredentials) => ({
+                ...prevUserCredentials,
+                first_name: e.target.value,
+              }))
+            }
+            type="text"
+            id="text"
+            label="First name"
+            placeholder="Enter Your First Name"
+            sx={authPageStyles.form.formInput}
+            InputProps={{
+              sx: authPageStyles.form.formInputProp,
+            }}
+            InputLabelProps={{
+              sx: authPageStyles.form.formInputLabel,
+              shrink: true,
+            }}
+          />
+          <TextField
+            onChange={(e) =>
+              setUserCredentials((prevUserCredentials) => ({
+                ...prevUserCredentials,
+                middle_name: e.target.value,
+              }))
+            }
+            type="text"
+            id="text"
+            label="Middle name"
+            placeholder="Enter Your Middle Name"
+            sx={authPageStyles.form.formInput}
+            InputProps={{
+              sx: authPageStyles.form.formInputProp,
+            }}
+            InputLabelProps={{
+              sx: authPageStyles.form.formInputLabel,
+              shrink: true,
+            }}
+          />
+          <TextField
+            onChange={(e) =>
+              setUserCredentials((prevUserCredentials) => ({
+                ...prevUserCredentials,
+                last_name: e.target.value,
+              }))
+            }
+            type="text"
+            id="text"
+            label="Last name"
+            placeholder="Enter Your Last Name"
+            sx={authPageStyles.form.formInput}
+            InputProps={{
+              sx: authPageStyles.form.formInputProp,
+            }}
+            InputLabelProps={{
+              sx: authPageStyles.form.formInputLabel,
+              shrink: true,
+            }}
           />
           <TextField
             onChange={(e) => handleEmail(e.target.value)}

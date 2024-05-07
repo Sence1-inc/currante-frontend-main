@@ -42,6 +42,7 @@ const PaymentPage = () => {
     Date | Dayjs | string | null
   >(null);
   const [total, setTotal] = useState<number | null>(null);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -54,12 +55,12 @@ const PaymentPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (quantity) {
+    if (quantity || subtypeDetails) {
       setTotal(
         Number(subtypeDetails?.job_unit_price || 0) * Number(quantity || 1)
       );
     }
-  }, [quantity]);
+  }, [quantity, subtypeDetails]);
 
   useEffect(() => {
     const subtypeDetails = worker?.profile?.job_subtypes?.find(
@@ -75,8 +76,7 @@ const PaymentPage = () => {
     }
   }, [jobSubtype]);
 
-  const handleAccept = async () => {
-    // move this after successful payment step
+  const createJobOrder = async () => {
     const workerJobSubtype = worker?.profile.job_subtypes.find(
       (type) => type.active_flg && type.job_name === jobSubtype
     );
@@ -84,7 +84,7 @@ const PaymentPage = () => {
     try {
       const data = {
         worker_id: Number(id),
-        employer_id: user.id,
+        employer_id: user.employer_id,
         worker_job_subtype_id: workerJobSubtype?.worker_job_subtype_id,
         quantity: quantity,
         total: total,
@@ -96,19 +96,40 @@ const PaymentPage = () => {
 
       const response = await axiosInstance.post("/api/v1/orders", data);
       if (response.data) {
+        setOrderId(response.data.order.id);
         dispatch(
           initializeUser({
             ...user,
             orders: [...user.orders, response.data.order as Order],
           })
         );
-        navigate("/jobs");
       }
     } catch (error) {
       console.log(error);
       setErrorMessage("Error");
       setStepFailed(null);
       setActiveStep(0);
+    }
+  };
+
+  const handleAccept = async () => {
+    createJobOrder();
+    try {
+      const data = {
+        email: user.email,
+        currency: "PHP",
+        amount: total,
+        order_id: orderId,
+      };
+      const response = await axiosInstance.post(
+        "/api/v1/payment-requests",
+        data
+      );
+      if (response.data) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.log("Accept error: ", error);
     }
   };
 
