@@ -1,16 +1,9 @@
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  IconButton,
-  Link as MuiLink,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Fragment, useState } from "react";
+import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
+import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
+import CustomTextField from "../../components/CustomTextField/CustomTextField";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { initializeUser } from "../../redux/reducers/UserReducer";
@@ -19,38 +12,61 @@ import authPageStyles from "../../styles/authPageStyles";
 
 interface SignInPageProps {}
 
+type Errors = {
+  email: string;
+  password: string;
+};
+
 const SignInPage: React.FC<SignInPageProps> = () => {
   const dispatch = useAppDispatch();
   const [userCredentials, setUserCredentials] = useState({
     email: "",
     password: "",
   });
-
-  const [open, setOpen] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Errors>({
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
-
-  function handleEmail(inputValue: string) {
-    setUserCredentials((prevUserCredentials) => ({
-      ...prevUserCredentials,
-      email: inputValue,
-    }));
-  }
-
-  function handlePassword(inputValue: string) {
-    setUserCredentials((prevUserCredentials) => ({
-      ...prevUserCredentials,
-      password: inputValue,
-    }));
-  }
 
   const handleSignIn = async (role: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex.test(userCredentials.email);
-    const isPasswordValid = undefined;
 
-    if (!isValidEmail && !isPasswordValid) {
-      setOpen(true);
+    const validationConditions = [
+      {
+        condition: !isValidEmail || !userCredentials.email,
+        field: "email",
+        message: "Please provide a valid registered email address.",
+      },
+      {
+        condition: !userCredentials.password,
+        field: "password",
+        message: "Please provide a valid password.",
+      },
+    ];
+
+    const errorMessages = validationConditions
+      .filter(({ condition }) => condition)
+      .map(({ message }) => message);
+    const hasErrors = errorMessages.length > 0;
+
+    if (hasErrors) {
+      setIsSnackbarOpen(true);
+      setErrorMessage("Please fill in the required details.");
+      const newErrors = validationConditions.reduce<{ [key: string]: string }>(
+        (acc, { condition, field, message }) => {
+          if (condition) {
+            acc[field] = message;
+          }
+          return acc;
+        },
+        {}
+      );
+
+      setErrors({ ...errors, ...newErrors });
     } else {
       try {
         const data = {
@@ -73,28 +89,19 @@ const SignInPage: React.FC<SignInPageProps> = () => {
             navigate("/");
           }
         }
-      } catch (error) {
+      } catch (error: any) {
+        setIsSnackbarOpen(true);
+        setErrorMessage(error.response.data.message);
+        if (error.response.status === 400) {
+          setErrors({
+            email: "",
+            password: "",
+          });
+        }
         console.log("Error logging in: ", error);
       }
     }
   };
-
-  const handleClose = (_event: React.SyntheticEvent | Event) => {
-    setOpen(false);
-  };
-
-  const action = (
-    <Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </Fragment>
-  );
 
   return (
     <Box
@@ -103,50 +110,38 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         flexDirection: "column",
       }}
     >
+      <CustomSnackbar
+        errorMessage={errorMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+      />
       <Header />
       <Box sx={authPageStyles.container.mainContainer}>
         <Box sx={authPageStyles.container.innerContainer}>
           <Typography sx={authPageStyles.form.heading}>Sign-in</Typography>
-          <Snackbar
-            open={open}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            autoHideDuration={3000}
-            onClose={handleClose}
-            message="Password and email Incorrect"
-            action={action}
-            sx={{ marginTop: "60px" }}
+          <CustomTextField
+            inputType="email"
+            label="Email address"
+            placeholder="Enter your registered email"
+            error={errors.email}
+            handleSetUserCredentials={(value) =>
+              setUserCredentials((prevUserCredentials) => ({
+                ...prevUserCredentials,
+                email: value,
+              }))
+            }
           />
-          <TextField
-            onChange={(e) => handleEmail(e.target.value)}
-            value={userCredentials.email}
-            type="email"
-            id="email"
-            label="Email Address"
-            placeholder="Enter Your Email Address"
-            sx={authPageStyles.form.formInput}
-            InputProps={{
-              sx: authPageStyles.form.formInputProp,
-            }}
-            InputLabelProps={{
-              sx: authPageStyles.form.formInputLabel,
-              shrink: true,
-            }}
-          />
-          <TextField
-            onChange={(e) => handlePassword(e.target.value)}
-            value={userCredentials.password}
-            type="password"
-            id="Password"
+          <CustomTextField
+            inputType="password"
             label="Password"
-            placeholder="Enter Your Password"
-            sx={authPageStyles.form.formInput}
-            InputProps={{
-              sx: authPageStyles.form.formInputProp,
-            }}
-            InputLabelProps={{
-              sx: authPageStyles.form.formInputLabel,
-              shrink: true,
-            }}
+            placeholder="Enter your password"
+            error={errors.email}
+            handleSetUserCredentials={(value) =>
+              setUserCredentials((prevUserCredentials) => ({
+                ...prevUserCredentials,
+                password: value,
+              }))
+            }
           />
           <Box sx={authPageStyles.container.buttonsContainer}>
             <Button

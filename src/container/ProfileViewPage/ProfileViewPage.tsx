@@ -80,7 +80,7 @@ const ProfileViewPage: React.FC = () => {
     return formattedJobs.join(", ");
   };
 
-  const isConversationCreated = async () => {
+  const handleMessageClick = async () => {
     const conversationRef = query(
       collection(db, "conversations"),
       where("created_by", "==", user.id),
@@ -88,18 +88,8 @@ const ProfileViewPage: React.FC = () => {
     );
 
     const conversations = await getDocs(conversationRef);
-    if (!conversations.empty) {
-      const conversationDocRef = conversations.docs[0].ref;
-      const conversationDoc = await getDoc(conversationDocRef);
-      return conversationDoc.exists();
-    } else {
-      return false;
-    }
-  };
 
-  const handleMessageClick = async () => {
-    // console.log(await isConversationCreated());
-    if ((await isConversationCreated()) === false) {
+    if (conversations.empty) {
       try {
         const conversationsRef = collection(db, "conversations");
         const conversationParticipantRef = collection(
@@ -152,7 +142,9 @@ const ProfileViewPage: React.FC = () => {
             navigate(`/chat/${docRef.id}`);
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error chat", error);
+      }
     } else {
       const conversationRef = query(
         collection(db, "conversations"),

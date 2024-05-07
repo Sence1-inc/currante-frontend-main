@@ -80,6 +80,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       onClose={() => handleSetIsSnackbarOpen(false)}
       autoHideDuration={warningMessage ? 8000 : 5000}
       key="topcenter"
+      sx={{ width: "80%" }}
     >
       <Alert
         onClose={() => handleSetIsSnackbarOpen(false)}
