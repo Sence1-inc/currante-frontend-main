@@ -210,6 +210,7 @@ const ProfileViewPage: React.FC = () => {
             image="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             title={`${worker?.profile.first_name} ${worker?.profile.last_name}`}
             description={worker?.profile.description as string}
+            rating={worker.profile.overall_rating as number}
           />
           <DescriptionCard
             title="Work Details"

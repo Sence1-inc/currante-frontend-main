@@ -1,16 +1,18 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Rating, Typography } from "@mui/material";
 import React from "react";
 
 interface DescriptionCardProps {
   image?: string;
   title: string;
   description: string;
+  rating?: number;
 }
 
 const DescriptionCard: React.FC<DescriptionCardProps> = ({
   image,
   title,
   description,
+  rating,
 }) => {
   return (
     <Box
@@ -36,6 +38,7 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({
         />
       )}
       <Typography variant="h6">{title}</Typography>
+      <Rating size="small" name="read-only" value={rating} readOnly />
       <Typography variant="body1">{description}</Typography>
     </Box>
   );
