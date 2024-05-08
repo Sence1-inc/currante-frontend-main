@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import ReviewsCard from "../../components/DescriptionCard/ReviewsCard";
 import ServiceCard from "../../components/ServiceCard/ServiceCard";
+import PublicTopNavigation from "../../components/TopNavigation/PublicTopNavigation";
+import { useAppSelector } from "../../redux/store";
 import { JobType, Review } from "../../redux/type";
 import carpenter from "/images/carpenter.png";
 import cleaner from "/images/cleaner.png";
@@ -12,6 +14,7 @@ import plumber from "/images/plumber.png";
 const EmployerDashboard = () => {
   const [jobTypes, setJobTypes] = useState<JobType[] | []>([]);
   const [reviews, setReviews] = useState<Review[] | []>([]);
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
 
   useEffect(() => {
     const getJobTypes = async () => {
@@ -49,25 +52,12 @@ const EmployerDashboard = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        marginTop: "64px",
-        marginBottom: "84px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-      }}
-    >
+    <>
+      {!isAuthenticated && <PublicTopNavigation />}
       <Box
         sx={{
-          height: "180px",
-          width: "100vw",
-          backgroundImage: `url(${image})`,
-        }}
-      ></Box>
-      <Box
-        sx={{
-          padding: "20px",
+          marginTop: "64px",
+          marginBottom: isAuthenticated ? "84px" : "0",
           display: "flex",
           flexDirection: "column",
           gap: "20px",
@@ -75,44 +65,47 @@ const EmployerDashboard = () => {
       >
         <Box
           sx={{
-            padding: "20px",
-            border: "1px solid #F58A47",
-            borderRadius: "4px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
+            height: "180px",
+            width: "100vw",
+            backgroundImage: `url(${image})`,
           }}
-        >
-          <Typography variant="h6">Services</Typography>
-          <Box sx={{ display: "flex", gap: "10px" }}>
-            {jobTypes.map((service) => {
-              return (
-                <ServiceCard
-                  key={service.job_type_name}
-                  id={service.id as number}
-                  title={service.job_type_name}
-                  image={service.image}
-                />
-              );
-            })}
-          </Box>
-        </Box>
+        ></Box>
         <Box
           sx={{
             padding: "20px",
-            border: "1px solid #F58A47",
-            borderRadius: "4px",
             display: "flex",
             flexDirection: "column",
-            gap: "10px",
+            gap: "20px",
           }}
         >
-          <Typography variant="h6">Recently Viewed Services</Typography>
-          <Box sx={{ display: "flex", gap: "10px" }}></Box>
+          <Box
+            sx={{
+              padding: "20px",
+              border: "1px solid #F58A47",
+              borderRadius: "4px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            <Typography variant="h6">Services</Typography>
+            <Box sx={{ display: "flex", gap: "10px" }}>
+              {jobTypes.map((service) => {
+                return (
+                  <ServiceCard
+                    key={service.job_type_name}
+                    id={service.id as number}
+                    title={service.job_type_name}
+                    image={service.image}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+          <ReviewsCard reviews={reviews as Review[]} />
         </Box>
-        <ReviewsCard reviews={reviews as Review[]} />
       </Box>
-    </Box>
+    </>
   );
 };
 

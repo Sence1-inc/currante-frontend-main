@@ -4,12 +4,14 @@ interface PrimaryButtonProps {
   text: string;
   url?: string;
   fullWidth?: boolean;
+  handleClick?: () => void;
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   text,
   url,
   fullWidth,
+  handleClick,
 }) => {
   return (
     <Button
@@ -28,6 +30,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       }}
       fullWidth={fullWidth}
       href={url}
+      onClick={handleClick}
     >
       {text}
     </Button>

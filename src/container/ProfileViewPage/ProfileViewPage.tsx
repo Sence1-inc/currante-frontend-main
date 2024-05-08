@@ -16,6 +16,7 @@ import axiosInstance from "../../../axiosInstance";
 import DescriptionCard from "../../components/DescriptionCard/DescriptionCard";
 import ReviewsCard from "../../components/DescriptionCard/ReviewsCard";
 import FabButton from "../../components/FabButton/FabButton";
+import PublicTopNavigation from "../../components/TopNavigation/PublicTopNavigation";
 import { db } from "../../firebase";
 import { useAppSelector } from "../../redux/store";
 import { Review, User, Worker } from "../../redux/type";
@@ -56,6 +57,7 @@ const slideImages = [
 const ProfileViewPage: React.FC = () => {
   const [worker, setWorker] = useState<Worker | null>(null);
   const user: User = useAppSelector((state) => state.user);
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -81,70 +83,8 @@ const ProfileViewPage: React.FC = () => {
   };
 
   const handleMessageClick = async () => {
-    const conversationRef = query(
-      collection(db, "conversations"),
-      where("created_by", "==", user.id),
-      where("created_for", "==", worker?.profile.id)
-    );
-
-    const conversations = await getDocs(conversationRef);
-
-    if (conversations.empty) {
-      try {
-        const conversationsRef = collection(db, "conversations");
-        const conversationParticipantRef = collection(
-          db,
-          "conversation_participants"
-        );
-
-        const docRef = await addDoc(conversationsRef, {
-          conversation_name: `Conversation by ${user.id} with ${worker?.profile.id}`,
-          created_by: user.id,
-          created_for: worker?.profile.id,
-        });
-
-        const employerRef = query(
-          collection(db, "users"),
-          where("user_id", "==", user.id)
-        );
-        const employers = await getDocs(employerRef);
-        const employerDocRef = employers.docs[0].ref;
-        const employerDoc = await getDoc(employerDocRef);
-
-        const workerRef = query(
-          collection(db, "users"),
-          where("user_id", "==", worker?.profile.id)
-        );
-        const workers = await getDocs(workerRef);
-        const workerDocRef = workers.docs[0].ref;
-        const workerDoc = await getDoc(workerDocRef);
-
-        if (docRef.id) {
-          const employerConversationParticipantDocRef = await addDoc(
-            conversationParticipantRef,
-            {
-              conversation_id: docRef.id,
-              user_id: employerDoc.id,
-            }
-          );
-          const workerConversationParticipantDocRef = await addDoc(
-            conversationParticipantRef,
-            {
-              conversation_id: docRef.id,
-              user_id: workerDoc.id,
-            }
-          );
-
-          if (
-            employerConversationParticipantDocRef.id &&
-            workerConversationParticipantDocRef.id
-          ) {
-            navigate(`/chat/${docRef.id}`);
-          }
-        }
-      } catch (error) {
-        console.log("Error chat", error);
-      }
+    if (!isAuthenticated) {
+      navigate("/sign-in");
     } else {
       const conversationRef = query(
         collection(db, "conversations"),
@@ -153,87 +93,156 @@ const ProfileViewPage: React.FC = () => {
       );
 
       const conversations = await getDocs(conversationRef);
-      const conversationDocRef = conversations.docs[0].ref;
-      navigate(`/chat/${conversationDocRef.id}`);
+
+      if (conversations.empty) {
+        try {
+          const conversationsRef = collection(db, "conversations");
+          const conversationParticipantRef = collection(
+            db,
+            "conversation_participants"
+          );
+
+          const docRef = await addDoc(conversationsRef, {
+            conversation_name: `Conversation by ${user.id} with ${worker?.profile.id}`,
+            created_by: user.id,
+            created_for: worker?.profile.id,
+          });
+
+          const employerRef = query(
+            collection(db, "users"),
+            where("user_id", "==", user.id)
+          );
+          const employers = await getDocs(employerRef);
+          const employerDocRef = employers.docs[0].ref;
+          const employerDoc = await getDoc(employerDocRef);
+
+          const workerRef = query(
+            collection(db, "users"),
+            where("user_id", "==", worker?.profile.id)
+          );
+          const workers = await getDocs(workerRef);
+          const workerDocRef = workers.docs[0].ref;
+          const workerDoc = await getDoc(workerDocRef);
+
+          if (docRef.id) {
+            const employerConversationParticipantDocRef = await addDoc(
+              conversationParticipantRef,
+              {
+                conversation_id: docRef.id,
+                user_id: employerDoc.id,
+              }
+            );
+            const workerConversationParticipantDocRef = await addDoc(
+              conversationParticipantRef,
+              {
+                conversation_id: docRef.id,
+                user_id: workerDoc.id,
+              }
+            );
+
+            if (
+              employerConversationParticipantDocRef.id &&
+              workerConversationParticipantDocRef.id
+            ) {
+              navigate(`/chat/${docRef.id}`);
+            }
+          }
+        } catch (error) {
+          console.log("Error chat", error);
+        }
+      } else {
+        const conversationRef = query(
+          collection(db, "conversations"),
+          where("created_by", "==", user.id),
+          where("created_for", "==", worker?.profile.id)
+        );
+
+        const conversations = await getDocs(conversationRef);
+        const conversationDocRef = conversations.docs[0].ref;
+        navigate(`/chat/${conversationDocRef.id}`);
+      }
     }
   };
 
   return (
-    <Box
-      sx={{
-        marginTop: "64px",
-        marginBottom: "84px",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-      }}
-    >
-      {worker === undefined || worker === null ? (
-        <Box sx={{ display: "flex" }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
-          <Box>
-            <Carousel
-              swipeable={true}
-              draggable={true}
-              responsive={responsive}
-              infinite={true}
-              autoPlay={true}
-              autoPlaySpeed={3000}
-              keyBoardControl={true}
-              customTransition="all .5"
-              transitionDuration={500}
-              containerClass="carousel-container"
-              itemClass="carousel-item-padding-40-px"
-            >
-              {slideImages.map((slideImage, index) => (
-                <Box key={index}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundSize: "cover",
-                      height: "200px",
-                      borderRadius: "4px",
-                      backgroundImage: `url(${slideImage.url})`,
-                    }}
-                  />
-                </Box>
-              ))}
-            </Carousel>
+    <>
+      {!isAuthenticated && <PublicTopNavigation />}
+      <Box
+        sx={{
+          marginTop: "64px",
+          marginBottom: isAuthenticated ? "84px" : "0",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        {worker === undefined || worker === null ? (
+          <Box sx={{ display: "flex" }}>
+            <CircularProgress />
           </Box>
-          <DescriptionCard
-            image="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            title={`${worker?.profile.first_name} ${worker?.profile.last_name}`}
-            description={worker?.profile.description as string}
-            rating={worker.profile.overall_rating as number}
-          />
-          <DescriptionCard
-            title="Work Details"
-            description={worker?.profile.description as string}
-          />
-          <DescriptionCard title="Pricing" description={renderPrices()} />
-          <DescriptionCard
-            title="Business Hours"
-            description={worker?.profile.schedule as string}
-          />
-          <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
-          <FabButton
-            styles={{
-              bottom: "12%",
-              right: "30%",
-            }}
-            handleClick={handleMessageClick}
-            text="Message"
-            icon={<ChatIcon />}
-          />
-        </>
-      )}
-    </Box>
+        ) : (
+          <>
+            <Box>
+              <Carousel
+                swipeable={true}
+                draggable={true}
+                responsive={responsive}
+                infinite={true}
+                autoPlay={true}
+                autoPlaySpeed={3000}
+                keyBoardControl={true}
+                customTransition="all .5"
+                transitionDuration={500}
+                containerClass="carousel-container"
+                itemClass="carousel-item-padding-40-px"
+              >
+                {slideImages.map((slideImage, index) => (
+                  <Box key={index}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundSize: "cover",
+                        height: "200px",
+                        borderRadius: "4px",
+                        backgroundImage: `url(${slideImage.url})`,
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Carousel>
+            </Box>
+            <DescriptionCard
+              image="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              title={`${worker?.profile.first_name} ${worker?.profile.last_name}`}
+              description={worker?.profile.description as string}
+              rating={worker.profile.overall_rating as number}
+            />
+            <DescriptionCard
+              title="Work Details"
+              description={worker?.profile.description as string}
+            />
+            <DescriptionCard title="Pricing" description={renderPrices()} />
+            <DescriptionCard
+              title="Business Hours"
+              description={worker?.profile.schedule as string}
+            />
+            <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
+            <FabButton
+              styles={{
+                bottom: isAuthenticated ? "12%" : "10%",
+                right: "30%",
+              }}
+              handleClick={handleMessageClick}
+              text="Message"
+              icon={<ChatIcon />}
+            />
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 

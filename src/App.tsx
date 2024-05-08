@@ -19,8 +19,10 @@ import SignUpPage from "./container/SignUpPage/SignUpPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
 import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
 import TestPage from "./container/TestPage/TestPage";
+import { useAppSelector } from "./redux/store";
 
 const App = () => {
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -33,11 +35,23 @@ const App = () => {
       />
       <Route
         path="/services"
-        element={<PrivateRoute component={EmployerDashboard} />}
+        element={
+          isAuthenticated ? (
+            <PrivateRoute component={EmployerDashboard} />
+          ) : (
+            <EmployerDashboard />
+          )
+        }
       />
       <Route
         path="/services/:id/workers"
-        element={<PrivateRoute component={SearchWorkerPage} />}
+        element={
+          isAuthenticated ? (
+            <PrivateRoute component={SearchWorkerPage} />
+          ) : (
+            <SearchWorkerPage />
+          )
+        }
       />
       <Route path="/chats" element={<PrivateRoute component={ChatPage} />} />
       <Route
@@ -46,7 +60,13 @@ const App = () => {
       />
       <Route
         path="/services/:service_id/workers/:id"
-        element={<PrivateRoute component={ProfileViewPage} />}
+        element={
+          isAuthenticated ? (
+            <PrivateRoute component={ProfileViewPage} />
+          ) : (
+            <ProfileViewPage />
+          )
+        }
       />
       <Route
         path="/workers/:id/payment"

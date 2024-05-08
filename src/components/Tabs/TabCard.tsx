@@ -84,9 +84,11 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
               ? order.employer_name
               : order.worker_name}
           </Typography>
-          <Typography sx={jobListStyles.card.cardSubHeading}>
-            Quezon City
-          </Typography>
+          {user.logged_in_as === "worker" && (
+            <Typography sx={jobListStyles.card.cardSubHeading}>
+              {order.employer_address}
+            </Typography>
+          )}
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             {createdDate && (
               <Typography sx={jobListStyles.card.cardText}>

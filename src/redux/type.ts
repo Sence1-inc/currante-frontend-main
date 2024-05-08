@@ -28,6 +28,7 @@ export interface Order {
   worker_user_id: number | null;
   employer_id: number | null;
   employer_user_id: number | null;
+  employer_address: string;
   worker_name: string;
   employer_name: string;
   worker_job_subtype: WorkerJobSubtype;

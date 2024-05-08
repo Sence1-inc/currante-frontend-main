@@ -11,6 +11,7 @@ const initialState: Order = {
   worker_user_id: null,
   employer_id: null,
   employer_user_id: null,
+  employer_address: "",
   worker_name: "",
   employer_name: "",
   worker_job_subtype: {

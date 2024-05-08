@@ -11,7 +11,7 @@ interface ReviewsCardProps {
 
 const ReviewsCard: React.FC<ReviewsCardProps> = ({ reviews }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 1;
+  const reviewsPerPage = 3;
 
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
@@ -30,7 +30,7 @@ const ReviewsCard: React.FC<ReviewsCardProps> = ({ reviews }) => {
         borderRadius: "4px",
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "10px",
       }}
     >
       <Typography variant="h6">Reviews</Typography>

@@ -1,11 +1,12 @@
 import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import CustomTextField from "../../components/CustomTextField/CustomTextField";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch } from "../../redux/store";
 import authPageStyles from "../../styles/authPageStyles";
@@ -80,11 +81,12 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         const response = await axiosInstance.post("/api/v1/login", data);
         if (response.data.user) {
           dispatch(initializeUser(response.data.user));
+          dispatch(initializeIsAuthenticated(true));
 
           if (response.data.user.logged_in_as === "worker") {
             navigate("/jobs");
           } else if (response.data.user.logged_in_as === "employer") {
-            navigate("/services");
+            navigate(-1) === undefined ? navigate("/services") : navigate(-1);
           } else {
             navigate("/");
           }

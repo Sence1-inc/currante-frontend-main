@@ -14,6 +14,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
+import PublicTopNavigation from "../../components/TopNavigation/PublicTopNavigation";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
 import useGetWorkers from "../../hooks/useGetWorkers";
 import { useAppSelector } from "../../redux/store";
@@ -54,6 +55,7 @@ const slideImages = [
 
 const SearchWorkerPage: React.FC = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const jobSubtypeParam = queryParams.get("jobSubtype");
@@ -174,240 +176,245 @@ const SearchWorkerPage: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        marginTop: "64px",
-        marginBottom: "84px",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-      }}
-    >
-      <Box>
-        <Carousel
-          swipeable={true}
-          draggable={true}
-          responsive={responsive}
-          infinite={true}
-          autoPlay={true}
-          autoPlaySpeed={3000}
-          keyBoardControl={true}
-          customTransition="all .5"
-          transitionDuration={500}
-          containerClass="carousel-container"
-          itemClass="carousel-item-padding-40-px"
+    <>
+      {!isAuthenticated && <PublicTopNavigation />}
+      <Box
+        sx={{
+          marginTop: "64px",
+          marginBottom: isAuthenticated ? "84px" : "0",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <Box>
+          <Carousel
+            swipeable={true}
+            draggable={true}
+            responsive={responsive}
+            infinite={true}
+            autoPlay={true}
+            autoPlaySpeed={3000}
+            keyBoardControl={true}
+            customTransition="all .5"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            itemClass="carousel-item-padding-40-px"
+          >
+            {slideImages.map((slideImage, index) => (
+              <Box key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundSize: "cover",
+                    height: "200px",
+                    borderRadius: "4px",
+                    backgroundImage: `url(${slideImage.url})`,
+                  }}
+                />
+              </Box>
+            ))}
+          </Carousel>
+        </Box>
+        <Box
+          sx={{
+            background: "#A1B5DE",
+            padding: "20px 10px",
+            borderRadius: "4px",
+            display: "flex",
+            gap: "20px",
+          }}
         >
-          {slideImages.map((slideImage, index) => (
-            <Box key={index}>
-              <Box
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"space-between"}
+            sx={{
+              textAlign: "left",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+              }}
+            >
+              <EventNoteIcon
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundSize: "cover",
-                  height: "200px",
-                  borderRadius: "4px",
-                  backgroundImage: `url(${slideImage.url})`,
+                  color: "#fff",
                 }}
               />
+              <Typography variant="subtitle1">Vaccinated workers</Typography>
             </Box>
-          ))}
-        </Carousel>
-      </Box>
-      <Box
-        sx={{
-          background: "#A1B5DE",
-          padding: "20px 10px",
-          borderRadius: "4px",
-          display: "flex",
-          gap: "20px",
-        }}
-      >
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"space-between"}
-          sx={{
-            textAlign: "left",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-            }}
-          >
-            <EventNoteIcon
+            <Box
               sx={{
-                color: "#fff",
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
               }}
-            />
-            <Typography variant="subtitle1">Vaccinated workers</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-            }}
-          >
-            <MapsHomeWorkIcon
-              sx={{
-                color: "#fff",
-              }}
-            />
-            <Typography variant="subtitle1">5000+ household served</Typography>
-          </Box>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"space-between"}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-            }}
-          >
-            <StarIcon
-              fontSize="small"
-              sx={{
-                color: "#fff",
-              }}
-            />
-            <Typography variant="subtitle1">4.7 service rating</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              gap: "10px",
-              alignItems: "center",
-            }}
-          >
-            <CheckCircleIcon
-              fontSize="small"
-              sx={{
-                color: "#fff",
-              }}
-            />
-            <Typography variant="subtitle1">Verified workers</Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          padding: "10px 20px",
-          border: "1px solid #F58A47",
-          borderRadius: "4px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}
-      >
-        <FormControl fullWidth>
-          <InputLabel variant="outlined" htmlFor="select-area">
-            Select Area
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Area"
-            value={area as string}
-            onChange={(e: SelectChangeEvent) => handleFilterChange(e, "area")}
-          >
-            {areas.map((area) => (
-              <MenuItem key={area.id} value={area.area_name}>
-                {area.area_name}
-              </MenuItem>
-            ))}
-          </Select>
-          <FormHelperText
-            sx={{
-              fontFamily: "Roboto",
-              fontSize: "12px",
-              fontWeight: "400",
-              color: "#00000099",
-            }}
-          >
-            Choose the city in which you wish to receive service
-          </FormHelperText>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel variant="outlined" htmlFor="select-cleaning-type">
-            Select job type
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Job-Subtype"
-            value={subtype as string}
-            onChange={(e: SelectChangeEvent) =>
-              handleFilterChange(e, "jobSubtype")
-            }
-          >
-            {subtypes.map((type) => {
-              return (
-                <MenuItem key={type.id} value={type.job_name}>
-                  {type.job_name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-          <FormHelperText
-            sx={{
-              fontFamily: "Roboto",
-              fontSize: "12px",
-              fontWeight: "400",
-              color: "#00000099",
-            }}
-          >
-            Choose which job type would you like to avail
-          </FormHelperText>
-        </FormControl>
-      </Box>
-      <Box
-        sx={{
-          padding: "20px",
-          border: "1px solid #F58A47",
-          borderRadius: "4px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
-        <Typography
-          sx={{
-            margin: "10px 0 20px",
-            fontSize: "16px",
-            fontWeight: "500",
-          }}
-        >
-          Available Workers
-        </Typography>
-        {workers.length > 0 ? (
-          workers.map((worker: Worker) => {
-            return (
-              <WorkerCard
-                key={worker.id}
-                name={`${worker.profile.first_name} ${worker.profile.last_name}`}
-                types={renderTypes(worker)}
-                price={renderStartPrice(worker)}
-                handleCardClick={() =>
-                  navigate(`/services/${id}/workers/${worker.id}`)
-                }
+            >
+              <MapsHomeWorkIcon
+                sx={{
+                  color: "#fff",
+                }}
               />
-            );
-          })
-        ) : (
-          <Typography>No data found</Typography>
-        )}
+              <Typography variant="subtitle1">
+                5000+ household served
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"space-between"}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+              }}
+            >
+              <StarIcon
+                fontSize="small"
+                sx={{
+                  color: "#fff",
+                }}
+              />
+              <Typography variant="subtitle1">4.7 service rating</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+              }}
+            >
+              <CheckCircleIcon
+                fontSize="small"
+                sx={{
+                  color: "#fff",
+                }}
+              />
+              <Typography variant="subtitle1">Verified workers</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            padding: "10px 20px",
+            border: "1px solid #F58A47",
+            borderRadius: "4px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <FormControl fullWidth>
+            <InputLabel variant="outlined" htmlFor="select-area">
+              Select Area
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Area"
+              value={area as string}
+              onChange={(e: SelectChangeEvent) => handleFilterChange(e, "area")}
+            >
+              {areas.map((area) => (
+                <MenuItem key={area.id} value={area.area_name}>
+                  {area.area_name}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText
+              sx={{
+                fontFamily: "Roboto",
+                fontSize: "12px",
+                fontWeight: "400",
+                color: "#00000099",
+              }}
+            >
+              Choose the city in which you wish to receive service
+            </FormHelperText>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel variant="outlined" htmlFor="select-cleaning-type">
+              Select job type
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Job-Subtype"
+              value={subtype as string}
+              onChange={(e: SelectChangeEvent) =>
+                handleFilterChange(e, "jobSubtype")
+              }
+            >
+              {subtypes.map((type) => {
+                return (
+                  <MenuItem key={type.id} value={type.job_name}>
+                    {type.job_name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            <FormHelperText
+              sx={{
+                fontFamily: "Roboto",
+                fontSize: "12px",
+                fontWeight: "400",
+                color: "#00000099",
+              }}
+            >
+              Choose which job type would you like to avail
+            </FormHelperText>
+          </FormControl>
+        </Box>
+        <Box
+          sx={{
+            padding: "20px",
+            border: "1px solid #F58A47",
+            borderRadius: "4px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <Typography
+            sx={{
+              margin: "10px 0 20px",
+              fontSize: "16px",
+              fontWeight: "500",
+            }}
+          >
+            Available Workers
+          </Typography>
+          {workers.length > 0 ? (
+            workers.map((worker: Worker) => {
+              return (
+                <WorkerCard
+                  key={worker.id}
+                  name={`${worker.profile.first_name} ${worker.profile.last_name}`}
+                  types={renderTypes(worker)}
+                  price={renderStartPrice(worker)}
+                  handleCardClick={() =>
+                    navigate(`/services/${id}/workers/${worker.id}`)
+                  }
+                />
+              );
+            })
+          ) : (
+            <Typography>No data found</Typography>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

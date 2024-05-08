@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
+import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
@@ -107,6 +108,7 @@ const initialState: User = {
         worker_user_id: null,
         employer_id: null,
         employer_user_id: null,
+        employer_address: "",
         worker_name: "",
         employer_name: "",
         worker_job_subtype: {
@@ -175,7 +177,8 @@ function ResponsiveAppBar() {
 
       if (response.status === 200) {
         dispatch(initializeUser(initialState));
-        navigate("/sign-in");
+        dispatch(initializeIsAuthenticated(false));
+        navigate("/sign-in", { replace: true });
       }
     } catch (error) {
       console.log("Error logging out: ", error);
