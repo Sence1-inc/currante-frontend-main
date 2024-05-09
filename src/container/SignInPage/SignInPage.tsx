@@ -1,5 +1,5 @@
 import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
@@ -8,7 +8,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import authPageStyles from "../../styles/authPageStyles";
 
 interface SignInPageProps {}
@@ -31,6 +31,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
 
   const handleSignIn = async (role: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

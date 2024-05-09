@@ -1,5 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Badge, Link } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -210,7 +211,7 @@ function ResponsiveAppBar() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               width: "100%",
               alignItems: "flex-start",
               minHeight: "unset",
@@ -232,7 +233,26 @@ function ResponsiveAppBar() {
             </Link>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: "flex", gap: "20px" }}>
+            <Tooltip title="Open notifications">
+              <IconButton
+                onClick={() => navigate("/notifications")}
+                sx={{
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  height: "40px",
+                }}
+              >
+                <Badge badgeContent={4} color="primary">
+                  <NotificationsIcon
+                    sx={{
+                      fill: "#FFFFFF",
+                    }}
+                  />
+                </Badge>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Open settings">
               <IconButton
                 onClick={handleOpenUserMenu}
@@ -246,14 +266,6 @@ function ResponsiveAppBar() {
                 <AccountCircleIcon
                   sx={{
                     fill: "#FFFFFF",
-                    width: {
-                      sm: "24px",
-                      md: "40px",
-                    },
-                    height: {
-                      sm: "24px",
-                      md: "40px",
-                    },
                   }}
                 />
               </IconButton>

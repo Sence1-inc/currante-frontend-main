@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/Chat/ChatRoom";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import PublicRoute from "./components/PublicRoute/PublicRoute";
 import ChatPage from "./container/ChatPage/ChatPage";
 import EmployerDashboard from "./container/Dashboard/EmployerDashboard";
 import ForgotPasswordPage from "./container/ForgotPasswordPage/ForgotPasswordPage";
@@ -8,6 +9,7 @@ import ForgotPasswordVerifyPage from "./container/ForgotPasswordPage/ForgotPassw
 import NewPasswordPage from "./container/ForgotPasswordPage/NewPasswordPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
+import NotificationPage from "./container/NotificationPage/NotificationPage";
 import PaymentPage from "./container/PaymentPage/PaymentPage";
 import PaymentSuccessPage from "./container/PaymentPage/PaymentSuccessPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
@@ -23,6 +25,7 @@ import { useAppSelector } from "./redux/store";
 
 const App = () => {
   const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -39,9 +42,13 @@ const App = () => {
           isAuthenticated ? (
             <PrivateRoute component={EmployerDashboard} />
           ) : (
-            <EmployerDashboard />
+            <PublicRoute component={EmployerDashboard} />
           )
         }
+      />
+      <Route
+        path="/notifications"
+        element={<PrivateRoute component={NotificationPage} />}
       />
       <Route
         path="/services/:id/workers"
@@ -49,7 +56,7 @@ const App = () => {
           isAuthenticated ? (
             <PrivateRoute component={SearchWorkerPage} />
           ) : (
-            <SearchWorkerPage />
+            <PublicRoute component={SearchWorkerPage} />
           )
         }
       />
@@ -64,7 +71,7 @@ const App = () => {
           isAuthenticated ? (
             <PrivateRoute component={ProfileViewPage} />
           ) : (
-            <ProfileViewPage />
+            <PublicRoute component={ProfileViewPage} />
           )
         }
       />

@@ -4,13 +4,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Box from "@mui/material/Box";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAppSelector } from "../../redux/store";
 
 export default function SimpleBottomNavigation() {
   const user = useAppSelector((state) => state.user);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState<number | null>(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
@@ -20,8 +20,10 @@ export default function SimpleBottomNavigation() {
       setValue(2);
     } else if (pathname.includes("services")) {
       setValue(0);
-    } else {
+    } else if (pathname.includes("jobs")) {
       setValue(1);
+    } else {
+      setValue(null);
     }
   }, [pathname]);
 
