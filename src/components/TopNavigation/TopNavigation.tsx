@@ -40,6 +40,9 @@ const initialState: User = {
       employer_id: null,
       worker_name: "",
       employer_name: "",
+      worker_user_id: null,
+      employer_user_id: null,
+      employer_address: "",
       worker_job_subtype: {
         worker_id: null,
         job_subtype: {
@@ -93,6 +96,7 @@ const initialState: User = {
     },
   ],
   user_photos: [{ profile_photo: "", id_photo: "" }],
+  notifications: [],
   reviews: [
     {
       id: null,
@@ -244,7 +248,14 @@ function ResponsiveAppBar() {
                   height: "40px",
                 }}
               >
-                <Badge badgeContent={4} color="primary">
+                <Badge
+                  badgeContent={
+                    user?.notifications?.filter(
+                      (notification) => !notification?.is_read
+                    ).length ?? 0
+                  }
+                  color="primary"
+                >
                   <NotificationsIcon
                     sx={{
                       fill: "#FFFFFF",

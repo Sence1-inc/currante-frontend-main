@@ -77,6 +77,7 @@ const initialState: User = {
     },
   ],
   user_photos: [{ profile_photo: "", id_photo: "" }],
+  notifications: [],
   reviews: [
     {
       id: null,

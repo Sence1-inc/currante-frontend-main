@@ -105,6 +105,7 @@ export interface User {
   phone_number: string;
   user_photos: UserPhoto[];
   addresses: Address[];
+  notifications: Notification[];
   reviews: Review[];
 }
 
@@ -125,4 +126,11 @@ export type JobType = {
   job_type_name: string;
   job_subtypes: { id: number; job_name: string; unit: string }[];
   image?: any;
+};
+
+export type Notification = {
+  id?: number | null;
+  user_id: number | null;
+  message: string;
+  is_read?: boolean;
 };

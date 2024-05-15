@@ -8,7 +8,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 import authPageStyles from "../../styles/authPageStyles";
 
 interface SignInPageProps {}
@@ -31,7 +31,6 @@ const SignInPage: React.FC<SignInPageProps> = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
 
   const handleSignIn = async (role: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,7 +86,8 @@ const SignInPage: React.FC<SignInPageProps> = () => {
           if (response.data.user.logged_in_as === "worker") {
             navigate("/jobs");
           } else if (response.data.user.logged_in_as === "employer") {
-            navigate(-1) === undefined ? navigate("/services") : navigate(-1);
+            navigate("/services");
+            // navigate(-1) === undefined ? navigate("/services") : navigate(-1);
           } else {
             navigate("/");
           }
