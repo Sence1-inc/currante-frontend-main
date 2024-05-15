@@ -12,35 +12,28 @@ const JobListPage: React.FC = () => {
 
   useEffect(() => {
     if (user) {
+      console.log(user.orders);
       setOrders(user?.orders);
     }
   }, [user]);
-
+  console.log(user.orders);
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    console.log(newValue);
     setValue(newValue);
   };
 
   const showList = () => {
     return (
       <TabsItem value={value} index={value}>
-        {orders.map((order) => {
-          const tabCard = <TabCard key={order.job_order_code} order={order} />;
+        {orders.map((order, index) => {
+          const tabCard = <TabCard key={index} order={order} />;
 
-          if (value === 0) {
+          if (
+            value === 0 ||
+            (Number(order.status) === value && value >= 1 && value <= 6)
+          ) {
             return tabCard;
-          } else if (value === 1 && Number(order.status) === 1) {
-            return tabCard;
-          } else if (value === 2 && Number(order.status) === 2) {
-            return tabCard;
-          } else if (value === 3 && Number(order.status) === 3) {
-            return tabCard;
-          } else if (value === 4 && Number(order.status) === 4) {
-            return tabCard;
-          } else if (value === 5 && Number(order.status) === 5) {
-            return tabCard;
-          } else if (value === 6 && Number(order.status) === 6) {
-            return tabCard;
+          } else {
+            return null;
           }
         })}
       </TabsItem>
@@ -197,7 +190,7 @@ const JobListPage: React.FC = () => {
           />
         </Tabs>
       </Box>
-      <Box>{showList()}</Box>
+      {user?.orders.length > 0 && <Box>{showList()}</Box>}
     </Box>
   );
 };

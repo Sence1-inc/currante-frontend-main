@@ -258,7 +258,7 @@ const TabModal: React.FC<TabModalProps> = ({
       </CustomModal>
     );
   };
-  console.log(status);
+
   const renderModal = () => {
     if (status == "1") {
       return requestModalContent();

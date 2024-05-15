@@ -207,7 +207,7 @@ const ProfilePage: React.FC = () => {
       getJobSubtypes();
     }
   }, [jobType]);
-  console.log("selectedJobType", selectedJobType);
+
   const handleSave = async () => {
     const data = {
       user_id: user.id, // update this during implementation of authentication
@@ -229,8 +229,6 @@ const ProfilePage: React.FC = () => {
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
-
-      console.log(response);
 
       if (response.data) {
         setSuccessMessage("Profile details successfully saved!");
@@ -367,8 +365,6 @@ const ProfilePage: React.FC = () => {
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
               handleSetJobSubtypes={(types) => {
-                console.log("Wawa");
-                console.log("Types", types);
                 setJobSubtypes([...types]);
               }}
               handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
@@ -418,7 +414,6 @@ const ProfilePage: React.FC = () => {
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
               handleSetAddresses={(adds) => {
-                console.log(adds);
                 setAddresses([...adds]);
               }}
             />

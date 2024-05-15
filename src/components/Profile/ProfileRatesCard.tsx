@@ -50,7 +50,6 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   handleSetSelectedJobType,
 }) => {
   useEffect(() => {
-    console.log("jobtype", jobType);
     if (jobType) {
       const prevJobSubtypes = jobSubtypes?.filter(
         (type) => type.job_type !== jobType
@@ -68,9 +67,6 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
         ...subtype,
         active_flg: 1,
       }));
-      console.log("jobSubtypes", jobSubtypes);
-      console.log("inactiveJobSubtypes", inactiveJobSubtypes);
-      console.log("activeJobSubtypes", activeJobSubtypes);
       handleSetJobSubtypes([...inactiveJobSubtypes, ...activeJobSubtypes]);
     }
   }, [jobType]);

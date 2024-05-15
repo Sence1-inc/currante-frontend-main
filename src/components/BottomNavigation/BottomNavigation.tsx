@@ -27,8 +27,6 @@ export default function SimpleBottomNavigation() {
     }
   }, [pathname]);
 
-  console.log("value", value);
-
   const handleNavigation = (newValue: number) => {
     setValue(newValue);
     if (newValue === 0) navigate("/services");

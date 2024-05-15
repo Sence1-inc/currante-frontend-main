@@ -35,7 +35,6 @@ const ChatCard: React.FC<ChatCardProps> = ({
         const { data } = await axiosInstance.get(endpoint);
 
         if (data) {
-          console.log("Data", data);
           setParticipantUserId(
             user.logged_in_as === "worker" ? data.employer_id : data.worker_id
           );
@@ -52,13 +51,11 @@ const ChatCard: React.FC<ChatCardProps> = ({
 
   useEffect(() => {
     const getData = async () => {
-      console.log(participantUserId);
       const data =
         user.logged_in_as === "worker"
           ? await getEmployer(Number(participantUserId))
           : await getWorker(Number(participantUserId));
 
-      console.log("huhu", data);
       user.logged_in_as === "worker" ? setEmployer(data) : setWorker(data); // put this in a state
     };
 

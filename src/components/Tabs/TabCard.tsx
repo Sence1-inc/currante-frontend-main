@@ -30,7 +30,7 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
   const capitalizeFirstLetter = (str: string) => {
     return str[0].toUpperCase() + str.slice(1);
   };
-  console.log(order);
+
   const renderStatus = () => {
     if (Number(order.status) === 1) {
       return "request";

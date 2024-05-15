@@ -93,7 +93,6 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
     if (userCredentials) {
       validationConditions.forEach((validationCondition) => {
         if (!validationCondition.condition) {
-          console.log(validationCondition);
           setErrors({ ...errors, [validationCondition.field]: "" });
         }
       });
@@ -137,7 +136,6 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
         const response = await axiosInstance.post("/api/v1/register", data);
         if (response.data) {
           const userRef = collection(db, "users");
-          console.log(response.data);
           const docRef = await addDoc(userRef, {
             first_name: response.data.user.first_name,
             last_name: response.data.user.last_name,
@@ -146,7 +144,6 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             uuid: response.data.user.uuid,
           });
 
-          console.log(docRef.id);
           setIsSnackbarOpen(true);
           setErrors({
             email: "",

@@ -39,7 +39,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ conversation_id }) => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const messages: any = [];
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
         messages.push({ ...doc.data(), id: doc.id });
       });
       setChats(messages);
