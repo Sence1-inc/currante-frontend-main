@@ -1,22 +1,13 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TabCard from "../../components/Tabs/TabCard";
 import { TabsItem } from "../../components/Tabs/Tabs";
 import { useAppSelector } from "../../redux/store";
-import { Order } from "../../redux/type";
 
 const JobListPage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
   const [value, setValue] = useState<number>(0);
-  const [orders, setOrders] = useState<Order[] | []>([]);
 
-  useEffect(() => {
-    if (user) {
-      console.log(user.orders);
-      setOrders(user?.orders);
-    }
-  }, [user]);
-  console.log(user.orders);
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -24,7 +15,7 @@ const JobListPage: React.FC = () => {
   const showList = () => {
     return (
       <TabsItem value={value} index={value}>
-        {orders.map((order, index) => {
+        {user?.orders.map((order, index) => {
           const tabCard = <TabCard key={index} order={order} />;
 
           if (

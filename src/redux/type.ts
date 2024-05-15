@@ -24,6 +24,7 @@ export interface WorkerJobSubtype {
 
 export interface Order {
   id: number | null;
+  otp?: string;
   worker_id: number | null;
   worker_user_id: number | null;
   employer_id: number | null;

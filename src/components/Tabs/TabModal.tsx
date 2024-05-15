@@ -26,8 +26,8 @@ const TabModal: React.FC<TabModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const [inputOTP, setInputOTP] = useState<string>("");
-  const [validOTP, setValidOTP] = useState<boolean>(false);
+  const [isvalidOTP, setIsValidOTP] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
 
   const handleAccept = async () => {
     try {
@@ -66,30 +66,32 @@ const TabModal: React.FC<TabModalProps> = ({
   };
 
   const handleWorkComplete = async () => {
-    if (inputOTP === "" && inputOTP.length < 6) {
+    if (otp === "" && otp.length < 6) {
       console.log("Please input OTP");
     } else {
-      setValidOTP(true);
       try {
         const response = await axiosInstance.patch(
           `/api/v1/orders/${orderId}`,
           {
             status: "4",
             job_order_completed_date: getUtcNow(),
+            otp: otp,
           }
         );
         if (response.data) {
+          setIsValidOTP(true);
           dispatch(initializeUser({ ...user, orders: response.data.orders }));
           handleCloseModal();
         }
       } catch (error) {
+        setIsValidOTP(false);
         console.log("Error: ", error);
       }
     }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputOTP(event.target.value);
+    setOtp(event.target.value);
   };
 
   const completedConfirm = () => {
@@ -263,7 +265,7 @@ const TabModal: React.FC<TabModalProps> = ({
     if (status == "1") {
       return requestModalContent();
     } else if (status == "4" || status == "3") {
-      if (!validOTP) {
+      if (!isvalidOTP) {
         return completedModalContent();
       } else {
         return completedConfirm();

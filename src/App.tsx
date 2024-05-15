@@ -1,5 +1,4 @@
-import Pusher, { Options } from "pusher-js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/Chat/ChatRoom";
 import CustomSnackbar from "./components/CustomSnackbar/CustomSnackbar";
@@ -24,56 +23,21 @@ import SignUpPage from "./container/SignUpPage/SignUpPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
 import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
 import TestPage from "./container/TestPage/TestPage";
-import { initializeUser } from "./redux/reducers/UserReducer";
-import { useAppDispatch, useAppSelector } from "./redux/store";
+import OrderEventListener from "./listeners/OrderEventListener";
+import { useAppSelector } from "./redux/store";
 
 const App = () => {
   const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
-  const user = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
+
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
-      cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-      encrypted: true,
-    } as Options);
-
-    const channel = pusher.subscribe(`orders.worker.${user.worker_id}`);
-
-    channel.bind("App\\Events\\NewOrderCreated", function (data: any) {
-      console.log("Data", data);
-      dispatch(
-        initializeUser({ ...user, orders: [...user.orders, data.order] })
-      );
-      setInfoMessage(`New order request from ${data.order.employer_name}`);
-      setIsSnackbarOpen(true);
-
-      dispatch(
-        initializeUser({
-          ...user,
-          notifications: [
-            ...user.notifications,
-            {
-              user_id: user.id,
-              message: `New order request from ${data.order.employer_name}`,
-              is_read: false,
-            },
-          ],
-        })
-      );
-    });
-
-    // Cleanup function to unsubscribe when component unmounts
-    return () => {
-      channel.unbind();
-      pusher.unsubscribe(`orders.worker.${user.worker_id}`);
-    };
-  }, []);
-
   return (
     <>
+      <OrderEventListener
+        setInfoMessage={setInfoMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+      />
       <CustomSnackbar
         infoMessage={infoMessage}
         isSnackbarOpen={isSnackbarOpen}

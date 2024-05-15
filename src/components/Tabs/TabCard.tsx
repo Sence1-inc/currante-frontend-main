@@ -84,6 +84,19 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
               ? order.employer_name
               : order.worker_name}
           </Typography>
+          {user.logged_in_as === "employer" &&
+            user.orders.find(
+              (orderItem) => orderItem.id === order.id && orderItem.otp
+            ) && (
+              <Typography sx={jobListStyles.card.cardSubHeading}>
+                OTP:{" "}
+                {
+                  user.orders.find(
+                    (orderItem) => orderItem.id === order.id && orderItem.otp
+                  )?.otp
+                }
+              </Typography>
+            )}
           {user.logged_in_as === "worker" && (
             <Typography sx={jobListStyles.card.cardSubHeading}>
               {order.employer_address}
