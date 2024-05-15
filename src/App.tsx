@@ -1,3 +1,5 @@
+import Pusher, { Options } from "pusher-js";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/Chat/ChatRoom";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
@@ -21,10 +23,35 @@ import SignUpPage from "./container/SignUpPage/SignUpPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
 import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
 import TestPage from "./container/TestPage/TestPage";
-import { useAppSelector } from "./redux/store";
+import { initializeUser } from "./redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "./redux/store";
 
 const App = () => {
   const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
+      cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+      encrypted: true,
+    } as Options);
+
+    const channel = pusher.subscribe(`orders.worker.${user.worker_id}`);
+
+    channel.bind("App\\Events\\NewOrderCreated", function (data: any) {
+      console.log("Data", data);
+      const orders = [...user.orders];
+      orders.push(data.order);
+      dispatch(initializeUser({ ...user, orders: orders }));
+    });
+
+    // Cleanup function to unsubscribe when component unmounts
+    return () => {
+      channel.unbind();
+      pusher.unsubscribe(`orders.worker.${user.worker_id}`);
+    };
+  }, []);
 
   return (
     <Routes>
