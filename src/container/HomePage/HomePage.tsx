@@ -34,7 +34,6 @@ const HomePage: React.FC = () => {
 
   return (
     <Box>
-      <Header />
       <Keyvisual />
       <FloatingElement anchorEl={anchorEl} handleClose={handleClose}>
         <Newsletter />
