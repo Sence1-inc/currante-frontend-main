@@ -15,7 +15,7 @@ import "./Keyvisual.css";
 const Keyvisual: React.FC = () => {
   const navigate = useNavigate();
   const [headingText, setHeadingText] = useState(`All-in-one solution for home repairs and maintenance. 
-  Seek laborers for cleaning, carpentry, and plumbing services.`);
+Seek laborers for cleaning, carpentry, and plumbing services.`);
   const myTimer = (headingTextElem: object) => {
     headingTextElem.classList.toggle("mystyle");
     return null;
