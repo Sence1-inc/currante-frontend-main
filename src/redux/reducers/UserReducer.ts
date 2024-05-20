@@ -4,6 +4,7 @@ import { User } from "../type";
 const initialState: User = {
   logged_in_as: "",
   id: null,
+  id_photo: "",
   email: "",
   role: {
     role_name: "",

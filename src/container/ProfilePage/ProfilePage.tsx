@@ -1,5 +1,6 @@
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
+import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -156,6 +157,7 @@ const ProfilePage: React.FC = () => {
       setServicingAreas(user.areas);
       setAddresses(user.addresses);
       setDescription(user.description);
+      setAvatarImage(user.id_photo);
 
       const user_photos = userPhotos(user.user_photos);
 
@@ -244,10 +246,26 @@ const ProfilePage: React.FC = () => {
 
   const getPresignedURL = async () => {
     try {
-      const response = await axiosInstance.get("/api/v1/upload");
+      const response = await axiosInstance.get("/api/v1/presigned-url");
       setPresignedUrl(response.data.url);
     } catch (error) {
       console.log("Error: ", error);
+    }
+  };
+
+  const savePhoto = async () => {
+    try {
+      const response = await axiosInstance.post("/api/v1/upload", {
+        id: user.id,
+        url: presignedUrl,
+        type: "id_photo",
+      });
+
+      if (response.status === 200) {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log("Error uploading", error);
     }
   };
 
@@ -256,12 +274,13 @@ const ProfilePage: React.FC = () => {
 
     if (file) {
       try {
-        await axiosInstance.put(presignedUrl, avatarImage, {
+        await axios.put(presignedUrl, avatarImage, {
           headers: {
-            "Content-Type": file.type,
+            "Content-Type": "application/octet-stream",
           },
         });
         console.log("File uploaded successfully!");
+        savePhoto();
       } catch (error) {
         console.error("Error uploading file:", error);
       }

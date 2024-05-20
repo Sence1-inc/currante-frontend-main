@@ -22,6 +22,7 @@ const settings = ["Manage Profile", "Logout"];
 
 const initialState: User = {
   logged_in_as: "",
+  id_photo: "",
   id: null,
   overall_rating: 0,
   email: "",

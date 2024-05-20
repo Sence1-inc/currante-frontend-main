@@ -83,6 +83,7 @@ export interface Address {
 export interface User {
   logged_in_as: string;
   id: number | null;
+  id_photo: string;
   worker_id?: number | null;
   employer_id?: number | null;
   email: string;
