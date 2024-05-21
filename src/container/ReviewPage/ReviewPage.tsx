@@ -31,7 +31,7 @@ const ReviewPage = () => {
       let endpoint = "";
       if (user.logged_in_as == "worker") {
         endpoint = `/api/v1/employers/${id}`;
-      } else {
+      } else if (user.logged_in_as == "employer") {
         endpoint = `/api/v1/workers/${id}`;
       }
       try {
