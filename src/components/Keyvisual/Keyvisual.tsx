@@ -72,6 +72,22 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
           >
             {headingText}
           </Typography>
+          <Typography
+            variant="h2"
+            className="headingText" 
+            sx={{
+              textAlign: { md: "left", xs: "center" },
+              // color: "primary.main",
+              whiteSpace: "pre-wrap",
+              fontFamily: "Open Sans",
+              fontSize: "18px",
+              color: "linear-gradient(135deg, rgba(255, 197, 129, 1) 10%, rgba(122, 231, 255, 1) 55%)",
+              lineHeight: 1.5,
+              mb: 4,
+            }}
+          >
+            We provide reliable and trustworthy workers also rated by employers.
+          </Typography>
           <Box sx={{ textAlign: { md: "left", xs: "center" } }}>
             <PrimaryButton
               text="Learn More"
