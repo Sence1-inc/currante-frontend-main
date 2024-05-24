@@ -13,6 +13,7 @@ const initialState: User = {
   orders: [
     {
       id: null,
+      payment_approval_date: "",
       created_at: "",
       job_order_start_date: "",
       worker_arrived_date: "",
@@ -87,6 +88,7 @@ const initialState: User = {
       feedback: "",
       order: {
         id: null,
+        payment_approval_date: "",
         created_at: "",
         job_order_start_date: "",
         worker_arrived_date: "",

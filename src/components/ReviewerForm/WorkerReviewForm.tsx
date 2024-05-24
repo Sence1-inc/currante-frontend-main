@@ -116,17 +116,6 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
         rating={overallRating}
         title="Rate your employer"
       />
-      {/* <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <Typography variant="body1">Rate your employer</Typography>
-        <Rating
-          name="simple-controlled"
-          value={overallRating}
-          onChange={(event, newValue) => {
-            console.log(event);
-            setOverallRating(newValue as number);
-          }}
-        />
-      </Box> */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Typography variant="body1">Type 200 characters</Typography>
         <TextField
@@ -140,7 +129,7 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
           placeholder="Tell us your experience"
         />
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Typography variant="body1">Upload photos</Typography>
         <Box
           sx={{
@@ -239,7 +228,7 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
             </span>
           </Typography>
         </Box>
-      </Box>
+      </Box> */}
       <Button
         color="primary"
         variant="contained"

@@ -45,7 +45,15 @@ const TabButton: React.FC<TabButtonProps> = ({
   const incomingButton = () => {
     return (
       <Button
-        disabled={(status == "1" || status == "3" || status == "4") && true}
+        disabled={
+          (status == "1" ||
+            status == "3" ||
+            status == "4" ||
+            status == "5" ||
+            status == "6" ||
+            status == "7") &&
+          true
+        }
         onClick={handleOpenModal}
         sx={jobListStyles.button.simple}
       >
@@ -56,7 +64,8 @@ const TabButton: React.FC<TabButtonProps> = ({
               status == "3" ||
               status == "4" ||
               status == "5" ||
-              status == "6") &&
+              status == "6" ||
+              status == "7") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -73,7 +82,8 @@ const TabButton: React.FC<TabButtonProps> = ({
             status == "2" ||
             status == "4" ||
             status == "5" ||
-            status == "6") &&
+            status == "6" ||
+            status == "7") &&
           true
         }
         onClick={handleOpenModal}
@@ -86,7 +96,8 @@ const TabButton: React.FC<TabButtonProps> = ({
               status == "2" ||
               status == "4" ||
               status == "5" ||
-              status == "6") &&
+              status == "6" ||
+              status == "7") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -99,7 +110,11 @@ const TabButton: React.FC<TabButtonProps> = ({
     return (
       <Button
         disabled={
-          (status == "1" || status == "2" || status == "3" || status == "5") &&
+          (status == "1" ||
+            status == "2" ||
+            status == "3" ||
+            order.payment_approval_date !== null ||
+            status == "7") &&
           true
         }
         onClick={() => {
@@ -114,7 +129,8 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "3" ||
-              status == "5") &&
+              order.payment_approval_date !== null ||
+              status == "7") &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />

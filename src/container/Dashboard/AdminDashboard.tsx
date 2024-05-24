@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Modal,
   Paper,
   Table,
   TableBody,
@@ -10,15 +11,20 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import { ORDER_STATUSES } from "../../data/WorkerDetails";
 
 interface Payment {
   id: number | null;
   order_id: number | null;
   order_status: string;
+  payment_approval_date: string;
+  payment_released_date: string;
   ref_code_payment_from_employer: string;
   status: string;
   tax: number;
@@ -33,7 +39,16 @@ const AdminDashboard = () => {
   const [payments, setPayments] = useState<Payment[] | []>([]);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [gcashReferenceNumber, setGcashReferenceNumber] = useState<string>("");
+  const [isReleaseModalOpen, setIsReleaseModalOpen] = useState<boolean>(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
+    null
+  );
   const fields = [
     "id",
     "order_id",
@@ -57,7 +72,34 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleRelease = async () => {};
+  const handleRelease = async () => {
+    try {
+      const response = await axiosInstance.patch(
+        `/api/v1/payments/${selectedPaymentId}`,
+        {
+          gcash_reference_number: gcashReferenceNumber,
+        }
+      );
+
+      if (response.data) {
+        setPayments((prevPayments) =>
+          prevPayments.map((payment) =>
+            payment.id === response.data.payment.id
+              ? { ...payment, ...response.data.payment }
+              : payment
+          )
+        );
+        setSuccessMessage(response.data.message);
+        setGcashReferenceNumber("");
+        setSelectedOrderId(null);
+        setSelectedPaymentId(null);
+        setIsReleaseModalOpen(false);
+      }
+    } catch (error) {
+      console.log("Error releasing: ", error);
+      setErrorMessage("Something went wrong");
+    }
+  };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -91,6 +133,66 @@ const AdminDashboard = () => {
 
   return (
     <Box sx={{ padding: "40px" }}>
+      <CustomSnackbar
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+      />
+      <Modal
+        open={isReleaseModalOpen}
+        onClose={() => setIsReleaseModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute" as "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "60%",
+            backgroundColor: "background.paper",
+            border: "2px solid primary.main",
+            boxShadow: 24,
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h4">
+            Enter Gcash Reference Number for order #{selectedOrderId}
+          </Typography>
+          <TextField
+            fullWidth
+            label="Gcash Reference Number"
+            value={gcashReferenceNumber}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setGcashReferenceNumber(e.target.value)
+            }
+          />
+          <Box sx={{ display: "flex", gap: "20px" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setIsReleaseModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              sx={{ color: "common.white" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleRelease}
+            >
+              Release
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <TableContainer
         component={Paper}
         sx={{ backgroundColor: "common.white" }}
@@ -112,7 +214,7 @@ const AdminDashboard = () => {
               borderTop: "1px solid #f58a47",
               borderBottom: "1px solid #f58a47",
             },
-            "& thead .MuiTableCell-root, & tfoot .MuiTableCell-root": {
+            "& thead .MuiTableCell-root": {
               borderTop: "none",
               borderBottom: "none",
             },
@@ -139,14 +241,7 @@ const AdminDashboard = () => {
           <TableBody>
             {payments.map((payment: Payment, index: number) => {
               return (
-                <TableRow
-                  key={index}
-                  // sx={{
-                  //   // border: "2px solid #f58a47"
-                  //   border: "2px solid #f58a47",
-                  //   borderRadius: "10px",
-                  // }}
-                >
+                <TableRow key={index}>
                   <TableCell component="th" scope="row">
                     {payment.id}
                   </TableCell>
@@ -185,9 +280,24 @@ const AdminDashboard = () => {
                     {payment.employer_name}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    <Button variant="contained" onClick={handleRelease}>
-                      Release
-                    </Button>
+                    {payment.payment_approval_date !== null &&
+                    payment.payment_released_date === null ? (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                          setSelectedOrderId(payment.order_id);
+                          setSelectedPaymentId(payment.id);
+                          setIsReleaseModalOpen(true);
+                        }}
+                      >
+                        Release
+                      </Button>
+                    ) : Number(payment.order_status) === 7 ? (
+                      <Typography>Released</Typography>
+                    ) : (
+                      <Typography>Not yet</Typography>
+                    )}
                   </TableCell>
                 </TableRow>
               );

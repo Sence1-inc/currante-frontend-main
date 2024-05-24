@@ -53,4 +53,7 @@ export const ORDER_STATUSES = [
   { id: 2, status_name: "Job Accepted" },
   { id: 3, status_name: "Worker Arrived" },
   { id: 4, status_name: "Job Completed" },
+  { id: 5, status_name: "Worker Reviewed" },
+  { id: 6, status_name: "Employer Reviewed" },
+  { id: 7, status_name: "Payment Released" },
 ];

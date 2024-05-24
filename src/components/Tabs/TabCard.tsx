@@ -40,7 +40,15 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
       return "arrived";
     } else if (Number(order.status) === 4) {
       return "completed";
-    } else if (Number(order.status) === 5) {
+    } else if (
+      (Number(order.status) === 5 && user.logged_in_as == "worker") ||
+      order.payment_approval_date !== null
+    ) {
+      return "reviewed";
+    } else if (
+      (Number(order.status) === 6 && user.logged_in_as == "employer") ||
+      order.payment_approval_date !== null
+    ) {
       return "reviewed";
     } else {
       return "all";

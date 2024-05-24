@@ -41,6 +41,7 @@ export interface Order {
   job_order_start_date: string;
   worker_arrived_date: string;
   job_order_completed_date: string;
+  payment_approval_date: string;
 }
 
 export interface Category {
