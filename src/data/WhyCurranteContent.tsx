@@ -28,6 +28,6 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
   {
     title: "Want assurance that your job will be done right?",
     desc: "To ensure your satisfaction, a job will only be tagged completed, through your One-Time Password (OTP) confirmation.",
-    image: "/images/img_why_cur_5.png",
+    image: "/images/img_why_cur_6.png",
   }
 ];
