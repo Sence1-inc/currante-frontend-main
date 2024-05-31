@@ -16,7 +16,7 @@ const Keyvisual: React.FC = () => {
   const navigate = useNavigate();
   const [headingText, setHeadingText] = useState(`All-in-one solution for home repairs and maintenance. 
 Seek laborers for cleaning, carpentry, and plumbing services.`);
-  const [subHeadingText, setsubHeadingText] = useState(`We provide reliable and trustworthy workers also rated by employers.`);
+  const [subHeadingText, setsubHeadingText] = useState(`We provide reliable and trustworthy workers also rated by short-time clients.`);
   const [counter, setCounter] = useState(0);
   const sliderContainer = useRef(null);
   useLayoutEffect(() => {
