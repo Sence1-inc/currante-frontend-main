@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import{ useState, useEffect } from "react";
+import{ useState, useLayoutEffect, useRef } from "react";
 import LogoLarge from "../../assets/currante-logo-key-visual.png";
 import HomeMaintenanceImg from "../../assets/home-maintenance.png";
 import PlumbingImg from "../../assets/plumbing-services.png";
@@ -16,24 +16,30 @@ const Keyvisual: React.FC = () => {
   const navigate = useNavigate();
   const [headingText, setHeadingText] = useState(`All-in-one solution for home repairs and maintenance. 
 Seek laborers for cleaning, carpentry, and plumbing services.`);
-  const [subHeadingText, setsubHeadingText] = useState(`We provide reliable and trustworthy workers 
-also rated by employers.`);
-  const myTimer = (headingTextElem: object) => {
-    headingTextElem.classList.toggle("mystyle");
-    return null;  
-  }
-  useEffect(() => {
-    const headingTextElem = document.querySelector(".headingText");
-    setInterval(myTimer(headingTextElem), 2000);
-  }, []);
+  const [subHeadingText, setsubHeadingText] = useState(`We provide reliable and trustworthy workers also rated by employers.`);
+  const [counter, setCounter] = useState(0);
+  const sliderContainer = useRef(null);
+  useLayoutEffect(() => {
+    
+    const interval = setInterval(() => {
+    
+      setCounter((counter) => counter + 50);
+      sliderContainer.current.style.transform = `translateX(${counter})`;
+      console.log(counter);
+      
+    }, 100);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [counter]);
 
   return (
-    <Box sx={{pt: '50px', px: { md: "80px", sm: "20px"}, pb: '80px', 
+    <Box sx={{pt: '50px', px: { lg: "80px", md: "40px", xs: "20px"}, pb: '80px', 
       backgroundColor: "primary.light" }}>
       <Container
         sx={{
           py: 4,
-          px: { lg: "0px", md: "20px" },
+          px: "0px !important",
           display: "flex",
           flexDirection: { md: "row", xs: "column" },
           gap: { md: 5, xs: 4 },
@@ -48,15 +54,16 @@ also rated by employers.`);
                 color: "primary.main",
                 fontWeight: 600,
                 fontStyle: "italic",
-                mb: 2,
+                mb: {xs: 2, sm: 2, md: "40px", lg: "40px", xl: "32px"},
+                //display: {xs: "block", lg: "none"}
               }}
             >
               Need a carpenter, cleaner, and plumber but with no leads?
             </Typography>
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
-            height: 120.07,
-            mb: 5 }}>
+            maxWidth: {md: "455px"},
+            mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px"} }}>
               <img className="keyvisual__img" src={LogoLarge} alt="" />
             </Box>
         </Box>
@@ -69,6 +76,7 @@ also rated by employers.`);
                 fontWeight: 600,
                 fontStyle: "italic",
                 mb: 2,
+                display: {xs: "none", md: "block", lg: "block"}
               }}
             >
               Need a carpenter, cleaner, and plumber but with no leads?
@@ -76,7 +84,7 @@ also rated by employers.`);
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
             height: 120.07,
-            mb: 5,
+            mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px"},
             display: {xs: "none", sm: "none", md: "block", lg: "block"} }}>
               <img className="keyvisual__img" src={LogoLarge} alt="" />
             </Box>
@@ -86,12 +94,13 @@ also rated by employers.`);
             className="headingText" 
             sx={{
               textAlign: { md: "left", xs: "center" },
-              color: "primary.main",
+              color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: "22px",
+              fontSize: "28px",
+              fontWeight: "700",
               lineHeight: 1.5,
-              mb: 4,
+              mb: 4
             }}
           >
             {headingText}
@@ -104,10 +113,11 @@ also rated by employers.`);
               // color: "primary.main",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
+              fontWeight: "650",
               fontSize: "17.5px !important",
-              color: "linear-gradient(135deg, rgba(255, 197, 129, 1) 10%, rgba(122, 231, 255, 1) 55%)",
+              color: "#335393",
               lineHeight: 1.5,
-              mb: 4,
+              mb: "17px",
             }}
           >
             {subHeadingText}
@@ -119,7 +129,7 @@ also rated by employers.`);
             />
           </Box>
         </Box>
-        <Box className="scroll-parent" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll" }}>
+        <Box className="scroll-parent" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}} ref={sliderContainer}>
         <Stack className="scroll-element primary" sx={{ width: "100vw", display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
           <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
           <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
@@ -135,3 +145,4 @@ also rated by employers.`);
 };
 
 export default Keyvisual;
+
