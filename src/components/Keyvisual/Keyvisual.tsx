@@ -129,8 +129,20 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             />
           </Box>
         </Box>
-        <Box className="scroll-parent" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}} ref={sliderContainer}>
-        <Stack className="scroll-element primary" sx={{ width: "100vw", display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
+        <Box className="wrapper" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}} ref={sliderContainer}>
+        <Stack className="track primary" sx={{ width: "100vw", display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
+          <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
+          <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
+          <Box component="img" sx={{ maxWidth: "315px"}} src={FixturesImg}></Box> 
+          <Box component="img" sx={{ maxWidth: "295px"}} src={LeakRepairImg}></Box>  
+          <Box component="img" sx={{ maxWidth: "315px"}} src={CarpentryImg}></Box>  
+          <Box component="img" sx={{ maxWidth: "295px"}} src={DeepCleaningImg}></Box>  
+          <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
+          <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
+          <Box component="img" sx={{ maxWidth: "315px"}} src={FixturesImg}></Box> 
+          <Box component="img" sx={{ maxWidth: "295px"}} src={LeakRepairImg}></Box>  
+          <Box component="img" sx={{ maxWidth: "315px"}} src={CarpentryImg}></Box>  
+          <Box component="img" sx={{ maxWidth: "295px"}} src={DeepCleaningImg}></Box>  
           <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
           <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
           <Box component="img" sx={{ maxWidth: "315px"}} src={FixturesImg}></Box> 
