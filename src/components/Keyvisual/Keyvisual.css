@@ -34,7 +34,7 @@
 .wrapper .track {
 	display: flex;
 	width: calc(338px * 10);
-	animation: scroll 30s 0.5s linear infinite;
+	animation: scroll 60s 0.5s linear infinite;
 }
 
 .wrapper .logo img {
@@ -50,6 +50,20 @@
 		transform: translateX(calc(-338px * 12));
 	}
 }
+
+/* slide down and up */
+
+.slide-up, .slide-down {
+  overflow: hidden;
+}
+.slide-up > div {
+  transform: translateY(0);
+  transition: .4s ease-in-out;
+}
+.slide-down > div {            
+  transform: translateY(160%);
+} 
+
 /* 
 .scroll-parent {
   position: relative;

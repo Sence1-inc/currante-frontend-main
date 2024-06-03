@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import{ useState, useLayoutEffect, useRef } from "react";
+import{ useState, useEffect } from "react";
 import LogoLarge from "../../assets/currante-logo-key-visual.png";
 import HomeMaintenanceImg from "../../assets/home-maintenance.png";
 import PlumbingImg from "../../assets/plumbing-services.png";
@@ -18,20 +18,41 @@ const Keyvisual: React.FC = () => {
 Seek laborers for cleaning, carpentry, and plumbing services.`);
   const [subHeadingText, setsubHeadingText] = useState(`We provide reliable and trustworthy workers also rated by short-time clients.`);
   const [counter, setCounter] = useState(0);
-  const sliderContainer = useRef(null);
-  useLayoutEffect(() => {
-    
-    const interval = setInterval(() => {
-    
-      setCounter((counter) => counter + 50);
-      sliderContainer.current.style.transform = `translateX(${counter})`;
-      console.log(counter);
-      
-    }, 100);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [counter]);
+  const [topText, setTopText] = useState(`Need a carpenter, cleaner, and plumber but with no leads?`);
+
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      setCounter(counter + 1);
+      console.log(`counter: ` + counter)
+      if(counter % 5 == 0) {
+        if(topText === `Need a carpenter, cleaner, and plumber but with no leads?`) {
+          setTopText(`Join Currante to connect with short-term clients`);
+          setHeadingText(`Looking for a short part-time job as a maid, carpenter, or plumber?`);
+        } else {
+          console.log(`changed`);
+          setTopText(`Need a carpenter, cleaner, and plumber but with no leads?`);
+          setHeadingText(`All-in-one solution for home repairs and maintenance. Seek laborers for cleaning, carpentry, and plumbing services.`)
+        }
+      }
+    }, 1000);
+      return () => {
+        clearInterval(interval);
+      }
+    }, [counter]);
+
+  const notDivBy5 = () => {
+    console.log(`NOT DIV by 5: ` + counter);
+  }
+  const isCounterDivBy5 = () => {
+    if(counter % 5 == 0) {
+      return ` slide-down`;
+    } else {
+      console.log(`not yet divisible by 5`);
+      return ``;
+    }
+  }
+
 
   return (
     <Box sx={{pt: '50px', px: { lg: "80px", md: "40px", xs: "20px"}, pb: '80px', 
@@ -44,22 +65,27 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
           flexDirection: { md: "row", xs: "column" },
           gap: { md: 5, xs: 4 },
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box sx={{ order: {md: 1}, display: {sm: "block", md: "none"}, width: {md: "100%"} }}>
-          <Typography
-              sx={{
-                textAlign: { md: "left", xs: "center" },
-                color: "primary.main",
-                fontWeight: 600,
-                fontStyle: "italic",
-                mb: {xs: 2, sm: 2, md: "40px", lg: "40px", xl: "32px"},
-                //display: {xs: "block", lg: "none"}
-              }}
-            >
-              Need a carpenter, cleaner, and plumber but with no leads?
-            </Typography>
+          <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
+            <Box>
+              <Typography
+                  sx={{
+                    textAlign: { md: "left", xs: "center" },
+                    color: "primary.main",
+                    fontWeight: 600,
+                    fontStyle: "italic",
+                    mb: {xs: 2, sm: 2, md: "40px", lg: "40px", xl: "32px"},
+                    //display: {xs: "block", lg: "none"}
+                  }}
+                >
+                  {topText}             
+                </Typography>
+            </Box>
+          </Box>
+
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
             maxWidth: {md: "455px"},
@@ -69,18 +95,22 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
         </Box>
         <Box sx={{ order: { md: 2, xs: 2 }, width: { lg: "50%", md: "100%" }}}>
           <Box sx={{ display: {sm: "none", md: "block", lg: "block"} }}>
-            <Typography
-              sx={{
-                textAlign: { md: "left", xs: "center" },
-                color: "primary.main",
-                fontWeight: 600,
-                fontStyle: "italic",
-                mb: 2,
-                display: {xs: "none", md: "block", lg: "block"}
-              }}
-            >
-              Need a carpenter, cleaner, and plumber but with no leads?
-            </Typography>
+            <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
+              <Box>
+                <Typography
+                  sx={{
+                    textAlign: { md: "left", xs: "center" },
+                    color: "primary.main",
+                    fontWeight: 600,
+                    fontStyle: "italic",
+                    mb: 2,
+                    display: {xs: "none", md: "block", lg: "block"}
+                  }}
+                >
+                  {topText}
+                </Typography>
+              </Box>
+            </Box>
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
             height: 120.07,
@@ -91,19 +121,23 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
           </Box>
           <Typography
             variant="h1"
-            className="headingText" 
+            className="headingText"
             sx={{
               textAlign: { md: "left", xs: "center" },
               color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: "28px",
+              fontSize: "25px",
               fontWeight: "700",
               lineHeight: 1.5,
-              mb: 4
+              height: {lg: "20vh"}
             }}
           >
-            {headingText}
+           <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
+              <Box>
+                {headingText}
+              </Box>
+           </Box>
           </Typography>
           <Typography
             variant="h2"
@@ -129,7 +163,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             />
           </Box>
         </Box>
-        <Box className="wrapper" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}} ref={sliderContainer}>
+        <Box className="wrapper" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}}>
         <Stack className="track primary" sx={{ width: "100vw", display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
           <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
           <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
