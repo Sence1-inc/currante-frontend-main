@@ -7,57 +7,88 @@ import {
   where,
 } from "@firebase/firestore";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import PaymentIcon from "@mui/icons-material/Payment";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
+import FabButton from "../FabButton/FabButton";
 import ChatBox from "./ChatBox";
 import SendChat from "./SendChat";
 
 const ChatRoom: React.FC = () => {
   const { conversation_id } = useParams();
+  const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
+  const [workerId, setWorkerId] = useState<number | null>(null);
 
   useEffect(() => {
-    const getConversations = async (conversationId: string) => {
-      const conversationsRef = query(
-        collection(db, "conversation_participants"),
-        where("conversation_id", "==", conversationId)
-      );
+    if (conversation_id) {
+      const getConversations = async (conversationId: string) => {
+        const conversationsRef = query(
+          collection(db, "conversation_participants"),
+          where("conversation_id", "==", conversationId)
+        );
 
-      const conversationsSnapshot = await getDocs(conversationsRef);
+        const conversationsSnapshot = await getDocs(conversationsRef);
 
-      return conversationsSnapshot.docs.map((doc) => doc.data());
+        return conversationsSnapshot.docs.map((doc) => doc.data());
+      };
+
+      const getParticipant = async () => {
+        const allUserConversations = await getConversations(
+          conversation_id as string
+        );
+        const usersPromises = allUserConversations.map(async (convo) => {
+          const userRef = document(db, "users", convo.user_id);
+          const userDoc = await getDoc(userRef);
+          return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
+        });
+
+        const user = (await Promise.all(usersPromises)).filter((user) => {
+          return user !== null && user.user_id !== userState.id;
+        }) as FirebaseUser[];
+
+        setParticipant(user[0]);
+      };
+
+      getParticipant();
+    }
+  }, [conversation_id]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/api/v1/users/${participant?.user_id}?type=worker`
+        );
+
+        if (data) {
+          setWorkerId(data.worker_id);
+        }
+      } catch (error) {
+        console.log("Error: ", error);
+      }
     };
 
-    const getParticipant = async () => {
-      const allUserConversations = await getConversations(
-        conversation_id as string
-      );
+    if (participant) {
+      getUser(); // make this a hook
+    }
+  }, [participant]);
 
-      const usersPromises = allUserConversations.map(async (convo) => {
-        const userRef = document(db, "users", convo.user_id);
-        const userDoc = await getDoc(userRef);
-        return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
-      });
-
-      const user = (await Promise.all(usersPromises)).filter((user) => {
-        return user !== null && user.user_id !== LOGGED_IN_USER;
-      }) as FirebaseUser[];
-
-      setParticipant(user[0]);
-    };
-
-    getParticipant();
-  }, []);
+  const handleHire = () => {
+    navigate(`/workers/${workerId}/payment`);
+  };
 
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         width: "100vw",
         display: "flex",
         flexDirection: "column",
@@ -91,6 +122,18 @@ const ChatRoom: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+
+      {userState.logged_in_as === "employer" && (
+        <FabButton
+          text="Hire"
+          icon={<PaymentIcon />}
+          handleClick={handleHire}
+          styles={{
+            bottom: "170px",
+            right: "36%",
+          }}
+        />
+      )}
 
       <ChatBox conversation_id={conversation_id} />
       <SendChat conversation_id={conversation_id} />

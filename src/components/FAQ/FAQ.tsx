@@ -13,6 +13,7 @@ const FAQ: React.FC = () => {
 
   const handleChange =
     (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+      console.log(event);
       setExpanded(isExpanded ? panel : false);
     };
 

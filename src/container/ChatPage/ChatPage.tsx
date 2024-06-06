@@ -11,8 +11,8 @@ import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
 
 export interface FirebaseUser {
   user_id: number;
@@ -30,6 +30,7 @@ export interface Conversation {
 const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const navigate = useNavigate();
+  const userState = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -37,7 +38,7 @@ const ChatPage = () => {
         const getUser = async () => {
           const userRef = query(
             collection(db, "users"),
-            where("user_id", "==", LOGGED_IN_USER) // update during authentication implementation
+            where("user_id", "==", userState.id) // update during authentication implementation
           );
           const users = await getDocs(userRef);
           const docRef = users.docs[0].ref;
@@ -115,7 +116,8 @@ const ChatPage = () => {
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         padding: "20px 10px 30px 10px",
         display: "flex",
         flexDirection: "column",
@@ -165,16 +167,16 @@ const ChatPage = () => {
           }}
         />
       </Box>
-      {conversations.map((conversation: Conversation) => {
+      {conversations.map((conversation: Conversation, index: number) => {
         const user = conversation.users.filter(
-          (user) => user.user_id !== LOGGED_IN_USER // update during implementation of authentication
+          (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
         );
 
         const participant = user[0];
         return (
           <ChatCard
-            key={participant.user_id}
-            user={participant}
+            key={index}
+            participant={participant}
             handleCardClick={() => {
               handleCardClick(conversation.conversation_id);
             }}

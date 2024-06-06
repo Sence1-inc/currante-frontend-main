@@ -1,17 +1,11 @@
+import { Box, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
-import { Box } from "@mui/material";
-import { TabsContainer, TabsItem, TabsMenu } from "../../components/Tabs/Tabs";
 import TabCard from "../../components/Tabs/TabCard";
-
-const jobListSampleData: Array<{ id: string; status: string }> = Array(
-  { id: "123456", status: "incoming", provider_name: "Jane Smith" },
-  { id: "123457", status: "current", provider_name: "Lara Croft" },
-  { id: "123458", status: "completed", provider_name: "Jane Doe" },
-  { id: "123459", status: "incoming", provider_name: "John Snow" },
-  { id: "123460", status: "incoming", provider_name: "Christopher Nolan" }
-);
+import { TabsItem } from "../../components/Tabs/Tabs";
+import { useAppSelector } from "../../redux/store";
 
 const JobListPage: React.FC = () => {
+  const user = useAppSelector((state) => state.user);
   const [value, setValue] = useState<number>(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -21,17 +15,16 @@ const JobListPage: React.FC = () => {
   const showList = () => {
     return (
       <TabsItem value={value} index={value}>
-        {jobListSampleData.map((jobitem) => {
-          const tabCard = <TabCard key={jobitem.id} item={jobitem} />;
+        {user?.orders.map((order, index) => {
+          const tabCard = <TabCard key={index} order={order} />;
 
-          if (value === 0) {
+          if (
+            value === 0 ||
+            (Number(order.status) === value && value >= 1 && value <= 6)
+          ) {
             return tabCard;
-          } else if (value === 1 && jobitem.status === "incoming") {
-            return tabCard;
-          } else if (value === 2 && jobitem.status === "current") {
-            return tabCard;
-          } else if (value === 3 && jobitem.status === "completed") {
-            return tabCard;
+          } else {
+            return null;
           }
         })}
       </TabsItem>
@@ -39,7 +32,12 @@ const JobListPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ marginTop: "64px" }}>
+    <Box
+      sx={{
+        marginTop: "64px",
+        marginBottom: "84px",
+      }}
+    >
       <Box
         sx={{
           backgroundColor: "#d7e3ff",
@@ -47,18 +45,143 @@ const JobListPage: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <TabsContainer
+        <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            "& .MuiTabs-indicator": {
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: "transparent",
+            },
+            "& .MuiTabs-indicatorSpan": {
+              position: "relative",
+              maxWidth: 20,
+              width: "100%",
+              height: 8,
+              bottom: 3,
+              borderRadius: "4px 4px 0 0",
+              backgroundColor: "#f58a47",
+            },
+          }}
           value={value}
           onChange={handleChange}
-          aria-label="styled tabs example"
         >
-          <TabsMenu label="All" />
-          <TabsMenu label="Incoming" />
-          <TabsMenu label="Current" />
-          <TabsMenu label="Completed" />
-        </TabsContainer>
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="All"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Requests"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Incoming"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="To be Completed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Completed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Reviewed"
+          />
+          <Tab
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginRight: "10px",
+              color: "primary.main",
+              "&.Mui-selected": {
+                color: "primary.main",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "rgba(100, 95, 228, 0.32)",
+              },
+            }}
+            label="Payment Released"
+          />
+        </Tabs>
       </Box>
-      <Box>{showList()}</Box>
+      {user?.orders.length > 0 && <Box>{showList()}</Box>}
     </Box>
   );
 };

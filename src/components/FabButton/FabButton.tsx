@@ -6,9 +6,15 @@ interface FabButtonProps {
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   icon: React.ReactNode;
   text: string;
+  styles?: any;
 }
 
-const FabButton: React.FC<FabButtonProps> = ({ handleClick, icon, text }) => {
+const FabButton: React.FC<FabButtonProps> = ({
+  handleClick,
+  icon,
+  text,
+  styles,
+}) => {
   const theme = useTheme();
   return (
     <Fab
@@ -25,9 +31,13 @@ const FabButton: React.FC<FabButtonProps> = ({ handleClick, icon, text }) => {
         "&:hover": {
           backgroundColor: "primary.main",
         },
+        ...styles,
       }}
     >
-      {icon} {window.innerWidth > theme.breakpoints.values.sm && text}
+      {icon}
+      {"  "}
+      {(window.innerWidth > theme.breakpoints.values.sm || text.length < 10) &&
+        text}
     </Fab>
   );
 };

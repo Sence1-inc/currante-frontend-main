@@ -1,9 +1,11 @@
 import { Box, Container, Typography } from "@mui/material";
+import { useNavigate } from "react-router";
 import BannerImage from "../../assets/banner.png";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
 import "./Keyvisual.css";
 
 const Keyvisual: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <Box sx={{ py: 1, px: { md: 0, xs: 3 }, backgroundColor: "primary.light" }}>
       <Container
@@ -39,7 +41,10 @@ const Keyvisual: React.FC = () => {
             Hire at Currante
           </Typography>
           <Box sx={{ textAlign: { md: "left", xs: "center" } }}>
-            <PrimaryButton text="Get Started" />
+            <PrimaryButton
+              text="Get Started"
+              handleClick={() => navigate("/services")}
+            />
           </Box>
         </Box>
         <Box sx={{ order: { md: 2, xs: 1 }, width: "auto" }}>

@@ -1,24 +1,38 @@
 import { MapsHomeWorkRounded } from "@mui/icons-material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import HomeIcon from "@mui/icons-material/Home";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Box from "@mui/material/Box";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { useAppSelector } from "../../redux/store";
 
 export default function SimpleBottomNavigation() {
-  const [value, setValue] = React.useState(0);
+  const user = useAppSelector((state) => state.user);
+  const [value, setValue] = useState<number | null>(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
 
   useEffect(() => {
     if (pathname.includes("chat")) {
+      setValue(2);
+    } else if (pathname.includes("services")) {
+      setValue(0);
+    } else if (pathname.includes("jobs")) {
       setValue(1);
     } else {
-      setValue(0);
+      setValue(null);
     }
   }, [pathname]);
+
+  const handleNavigation = (newValue: number) => {
+    setValue(newValue);
+    if (newValue === 0) navigate("/services");
+    else if (newValue === 1) navigate("/jobs");
+    else if (newValue === 2) navigate("/chats");
+  };
 
   return (
     <Box
@@ -27,8 +41,9 @@ export default function SimpleBottomNavigation() {
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(_event, newValue) => {
-          setValue(newValue);
+        onChange={(event, newValue) => {
+          console.log(event);
+          handleNavigation(newValue);
         }}
         sx={{
           backgroundColor: "#A1B5DE",
@@ -55,10 +70,38 @@ export default function SimpleBottomNavigation() {
           },
         }}
       >
+        {user.logged_in_as === "employer" && (
+          <BottomNavigationAction
+            label="Home"
+            icon={<HomeIcon />}
+            onClick={() => navigate("/services")}
+            sx={{
+              fontFamily: "Poppins !important",
+              fontWeight: "600",
+              fontSize: "12px",
+              transition: "none !important",
+              webkitTransition: "none !important",
+              height: "80px",
+              ".css-lo76r6-MuiBottomNavigationAction-label": {
+                fontFamily: "Poppins",
+                fontSize: "12px",
+                color: "#FFFFFF",
+                letterSpacing: "0.5px",
+                marginTop: "5px",
+              },
+              ".MuiSvgIcon-root": {
+                width: "64px",
+                borderRadius: "16px",
+                padding: "3px",
+                color: "#FFFFFF",
+              },
+            }}
+          />
+        )}
         <BottomNavigationAction
           label="Job List"
           icon={<MapsHomeWorkRounded />}
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/jobs")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",

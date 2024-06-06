@@ -1,12 +1,12 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import StarIcon from "@mui/icons-material/Star";
 import {
   Avatar,
   Box,
   Button,
   ButtonGroup,
   IconButton,
+  Rating,
   TextField,
   Typography,
 } from "@mui/material";
@@ -152,55 +152,50 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       </Typography>
 
       <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-        <StarIcon
-          sx={{
-            color: "#F58A47",
-            width: "10px",
-          }}
+        <Rating
+          precision={0.5}
+          size="small"
+          name="read-only"
+          value={Number(user?.overall_rating)}
+          readOnly
         />
 
-        <StarIcon
-          sx={{
-            color: "#A1B5DE",
-            width: "10px",
-          }}
-        />
-
-        <Typography>(4 stars)</Typography>
+        <Typography>{`(${Number(user?.overall_rating)} stars)`}</Typography>
       </Box>
 
-      {edittingSection !== sectionName ? (
-        <>
-          <Typography
-            sx={{
-              fontFamily: "Open Sans",
-              fontWeight: "400",
-              fontSize: "12px",
-              lineHeight: "1.6",
-              margin: "10px 0 20px",
-            }}
-          >
-            {description}
-          </Typography>
-          {errorMessages.description && (
-            <Typography color="error">{errorMessages.description}</Typography>
-          )}
-        </>
-      ) : (
-        <TextField
-          error={isEmptyObject(errorMessages, "description")}
-          multiline
-          minRows={1}
-          id="standard-start-adornment"
-          sx={{ m: 1, width: "100%" }}
-          variant="standard"
-          value={description}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleSetDescription(e.target.value)
-          }
-          helperText={errorMessages.description}
-        />
-      )}
+      {user.logged_in_as === "worker" &&
+        (edittingSection !== sectionName ? (
+          <>
+            <Typography
+              sx={{
+                fontFamily: "Open Sans",
+                fontWeight: "400",
+                fontSize: "12px",
+                lineHeight: "1.6",
+                margin: "10px 0 20px",
+              }}
+            >
+              {description}
+            </Typography>
+            {errorMessages.description && (
+              <Typography color="error">{errorMessages.description}</Typography>
+            )}
+          </>
+        ) : (
+          <TextField
+            error={isEmptyObject(errorMessages, "description")}
+            multiline
+            minRows={1}
+            id="standard-start-adornment"
+            sx={{ m: 1, width: "100%" }}
+            variant="standard"
+            value={description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleSetDescription(e.target.value)
+            }
+            helperText={errorMessages.description}
+          />
+        ))}
 
       {edittingSection === sectionName && (
         <ButtonGroup>
