@@ -1,4 +1,3 @@
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
@@ -55,6 +54,7 @@ const ProfilePage: React.FC = () => {
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
+  const [gsUrl, setGsUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -75,7 +75,7 @@ const ProfilePage: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        getPresignedURL();
+        getPresignedURL(file);
         setAvatarImage(reader.result as string);
         setFile(file);
       };
@@ -159,9 +159,9 @@ const ProfilePage: React.FC = () => {
       setDescription(user.description);
       setAvatarImage(user.id_photo);
 
-      const user_photos = userPhotos(user.user_photos);
+      // const user_photos = userPhotos(user.user_photos);
 
-      console.log(user_photos);
+      // console.log(user_photos);
     }
   }, [user]);
 
@@ -244,9 +244,14 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const getPresignedURL = async () => {
+  const getPresignedURL = async (file: File) => {
     try {
-      const response = await axiosInstance.get("/api/v1/presigned-url");
+      const response = await axiosInstance.get("/api/v1/presigned-url", {
+        params: {
+          filename: file?.name,
+          filetype: file?.type,
+        },
+      });
       setPresignedUrl(response.data.url);
     } catch (error) {
       console.log("Error: ", error);
@@ -257,11 +262,12 @@ const ProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.post("/api/v1/upload", {
         id: user.id,
-        url: presignedUrl,
-        type: "id_photo",
+        filename: file?.name,
+        type: "avatar",
       });
 
       if (response.status === 200) {
+        dispatch(initializeUser({ ...user, id_photo: response.data.avatar }));
         console.log(response.data.message);
       }
     } catch (error) {
@@ -274,11 +280,12 @@ const ProfilePage: React.FC = () => {
 
     if (file) {
       try {
-        await axios.put(presignedUrl, avatarImage, {
+        await axios.put(presignedUrl, file, {
           headers: {
-            "Content-Type": "application/octet-stream",
+            "Content-Type": file.type,
           },
         });
+
         console.log("File uploaded successfully!");
         savePhoto();
       } catch (error) {
@@ -291,26 +298,6 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Box>
-      <Box
-        component={"section"}
-        sx={{
-          textAlign: "center",
-          padding: "0",
-        }}
-      >
-        <Box
-          padding={"20px 0"}
-          sx={{
-            background: "#A1B5DE",
-          }}
-        >
-          <CameraAltIcon
-            sx={{
-              color: "#fff",
-            }}
-          />
-        </Box>
-      </Box>
       <Box component={"section"} sx={{ padding: "0" }}>
         <Box
           sx={{
@@ -321,6 +308,7 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
+            getPresignedURL={getPresignedURL}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}

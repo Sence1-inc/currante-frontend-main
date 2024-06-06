@@ -85,6 +85,7 @@ export interface User {
   logged_in_as: string;
   id: number | null;
   id_photo: string;
+  covers: string[];
   worker_id?: number | null;
   employer_id?: number | null;
   email: string;
@@ -106,7 +107,7 @@ export interface User {
   birthday: string;
   gender: string;
   phone_number: string;
-  user_photos: UserPhoto[];
+  user_photos?: UserPhoto[];
   addresses: Address[];
   notifications: Notification[];
   reviews: Review[];

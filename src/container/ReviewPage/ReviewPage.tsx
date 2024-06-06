@@ -264,7 +264,7 @@ const ReviewPage = () => {
               >
                 <Button
                   variant="contained"
-                  sx={{ width: "auto" }} // Fixed typo in "widht" to "width"
+                  sx={{ width: "auto" }}
                   onClick={() => navigate("/jobs")}
                 >
                   Back to Jobs List

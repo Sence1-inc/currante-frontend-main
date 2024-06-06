@@ -79,6 +79,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         };
 
         const response = await axiosInstance.post("/api/v1/login", data);
+        // const imageResponse = await axiosInstance.get("/api/v1/images");
         if (response.data.user) {
           dispatch(initializeUser(response.data.user));
           dispatch(initializeIsAuthenticated(true));

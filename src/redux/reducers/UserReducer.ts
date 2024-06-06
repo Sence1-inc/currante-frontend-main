@@ -5,6 +5,7 @@ const initialState: User = {
   logged_in_as: "",
   id: null,
   id_photo: "",
+  covers: [],
   email: "",
   role: {
     role_name: "",
