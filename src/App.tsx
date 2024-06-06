@@ -25,6 +25,7 @@ import SignUpPage from "./container/SignUpPage/SignUpPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
 import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
 import TestPage from "./container/TestPage/TestPage";
+import UsersPage from "./container/UsersPage/UsersPage";
 import OrderEventListener from "./listeners/OrderEventListener";
 import { useAppSelector } from "./redux/store";
 
@@ -58,6 +59,7 @@ const App = () => {
           path="/admin"
           element={<PrivateRoute component={AdminDashboard} />}
         />
+        <Route path="/users" element={<PrivateRoute component={UsersPage} />} />
         <Route
           path="/jobs"
           element={<PrivateRoute component={JobListPage} />}

@@ -85,6 +85,8 @@ export interface User {
   logged_in_as: string;
   id: number | null;
   id_photo: string;
+  identification_photo?: string;
+  is_identification_verified?: boolean;
   covers: string[];
   worker_id?: number | null;
   employer_id?: number | null;
