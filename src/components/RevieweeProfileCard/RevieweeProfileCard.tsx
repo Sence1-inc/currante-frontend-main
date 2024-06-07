@@ -1,4 +1,5 @@
-import { Avatar, Box, Rating, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import { Avatar, Badge, Box, Rating, Typography } from "@mui/material";
 import React from "react";
 import { Employer, Worker } from "../../redux/type";
 
@@ -25,10 +26,22 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
           padding: "10px 0",
         }}
       >
-        <Avatar
-          sx={{ width: "80px", height: "80px", alignSelf: "center" }}
-          src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-        />
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            reviewee?.profile.is_identification_verified ? (
+              <CheckCircle color="success" />
+            ) : (
+              <></>
+            )
+          }
+        >
+          <Avatar
+            sx={{ width: "80px", height: "80px", alignSelf: "center" }}
+            src={reviewee?.profile.id_photo}
+          />
+        </Badge>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="body2">
             {reviewee?.profile.first_name} {reviewee?.profile.middle_name}

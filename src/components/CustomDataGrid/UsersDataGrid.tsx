@@ -150,10 +150,7 @@ const UsersDataGrid = () => {
         handleButtonClick={handleVerifyIdentification}
         isOpen={isOpen}
         title={`Identification`}
-        isButtonDisabled={
-          Boolean(selectedRow?.is_identification_verified) ||
-          !selectedRow?.identification_photo
-        }
+        isButtonDisabled={!selectedRow?.identification_photo}
         buttonTitle={`Verify ${selectedRow?.first_name} ${selectedRow?.last_name}'s identification `}
       >
         <Box

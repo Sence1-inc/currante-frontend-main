@@ -392,6 +392,10 @@ const SearchWorkerPage: React.FC = () => {
           workers.map((worker: Worker) => {
             return (
               <WorkerCard
+                isIdentificationVerified={
+                  worker.profile.is_identification_verified as boolean
+                }
+                avatar={worker.profile.id_photo as string}
                 key={worker.id}
                 name={`${worker.profile.first_name} ${worker.profile.last_name}`}
                 types={renderTypes(worker)}

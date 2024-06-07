@@ -1,4 +1,5 @@
-import { Avatar, Box, Rating, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import { Avatar, Badge, Box, Rating, Typography } from "@mui/material";
 import React from "react";
 
 interface DescriptionCardProps {
@@ -6,6 +7,7 @@ interface DescriptionCardProps {
   title: string;
   description: string;
   rating?: number;
+  isIdentificationVerified?: boolean;
 }
 
 const DescriptionCard: React.FC<DescriptionCardProps> = ({
@@ -13,7 +15,9 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({
   title,
   description,
   rating,
+  isIdentificationVerified,
 }) => {
+  console.log(image);
   return (
     <Box
       sx={{
@@ -28,14 +32,22 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({
       }}
     >
       {image && (
-        <Avatar
-          sx={{
-            width: "60px",
-            height: "60px",
-            alignSelf: "center",
-          }}
-          src={image}
-        />
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            isIdentificationVerified ? <CheckCircle color="success" /> : <></>
+          }
+        >
+          <Avatar
+            sx={{
+              width: "60px",
+              height: "60px",
+              alignSelf: "center",
+            }}
+            src={image}
+          />
+        </Badge>
       )}
       <Typography variant="h6">{title}</Typography>
       {rating && (

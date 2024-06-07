@@ -1,8 +1,8 @@
-import { Clear, FileUpload } from "@mui/icons-material";
+import { CameraAlt, CheckCircle, Clear, FileUpload } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   ButtonGroup,
@@ -13,15 +13,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import React, { ChangeEvent, useState } from "react";
+import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import axiosInstance from "../../../axiosInstance";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch } from "../../redux/store";
 import { User } from "../../redux/type";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
-import axiosInstance from "../../../axiosInstance";
-import axios from "axios";
-import { useAppDispatch } from "../../redux/store";
-import { initializeUser } from "../../redux/reducers/UserReducer";
-import Carousel from "react-multi-carousel";
 
 const responsive = {
   desktop: {
@@ -78,7 +78,16 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
-  console.log(user.covers.length);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const uploadedFiles = event.target.files;
 
@@ -183,6 +192,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         sx={{
           position: "relative",
           width: "100%",
+          zIndex: 20,
         }}
       >
         <IconButton
@@ -196,7 +206,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           <EditIcon fontSize="small" />
         </IconButton>
       </Box>
-      {user.covers.length > 0 && (
+      {user.covers.length > 0 && edittingSection !== sectionName && (
         <Box sx={{ width: "90vw", height: "200px" }}>
           <Carousel
             swipeable={true}
@@ -357,59 +367,117 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               type="file"
               onChange={handleAvatarImageChange}
             />
-            <label htmlFor="avatar-upload-button">
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
+            <label
+              htmlFor="avatar-upload-button"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={
+                  user.is_identification_verified ? (
+                    <CheckCircle color="success" />
+                  ) : (
+                    <></>
+                  )
+                }
               >
-                <PhotoCamera />
-              </IconButton>
+                <Avatar
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  src={!isHovered ? (avatarImage as string) : undefined}
+                  sx={{
+                    border: "1px solid #F58A47",
+                    borderRadius: "90px",
+                    width: "90px",
+                    height: "90px",
+                    padding: "10px",
+                    backgroundColor: "background.default",
+                    color: "primary.main",
+                  }}
+                  alt={user.first_name}
+                >
+                  {isHovered ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CameraAlt />
+                      <Typography variant="subtitle1">
+                        Click to choose
+                      </Typography>
+                    </Box>
+                  ) : null}
+                </Avatar>
+              </Badge>
+
+              <Button variant="contained" onClick={handleUpload}>
+                Upload Profile Photo
+              </Button>
             </label>
-            {avatarImage && (
-              <Avatar
-                src={avatarImage}
-                sx={{
-                  border: "1px solid #F58A47",
-                  borderRadius: "90px",
-                  width: "90px",
-                  height: "90px",
-                  padding: "10px",
-                  backgroundColor: "background.default",
-                  color: "primary.main",
-                }}
-              />
-            )}
-            {avatarImage && <button onClick={handleUpload}>Upload</button>}
           </div>
         </>
       ) : user.id_photo ? (
-        <Avatar
-          src={user.id_photo}
-          sx={{
-            border: "1px solid #F58A47",
-            borderRadius: "90px",
-            width: "90px",
-            height: "90px",
-            padding: "10px",
-            backgroundColor: "background.default",
-            color: "primary.main",
-          }}
-        />
-      ) : (
-        <Avatar
-          sx={{
-            border: "1px solid #F58A47",
-            borderRadius: "90px",
-            width: "90px",
-            height: "90px",
-            padding: "10px",
-            backgroundColor: "background.default",
-            color: "primary.main",
-          }}
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            user.is_identification_verified ? (
+              <CheckCircle color="success" />
+            ) : (
+              <></>
+            )
+          }
         >
-          {user.first_name.charAt(0)}
-        </Avatar>
+          <Avatar
+            src={user.id_photo}
+            sx={{
+              border: "1px solid #F58A47",
+              borderRadius: "90px",
+              width: "90px",
+              height: "90px",
+              padding: "10px",
+              backgroundColor: "background.default",
+              color: "primary.main",
+            }}
+          />
+        </Badge>
+      ) : (
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            user.is_identification_verified ? (
+              <CheckCircle color="success" />
+            ) : (
+              <></>
+            )
+          }
+        >
+          <Avatar
+            sx={{
+              border: "1px solid #F58A47",
+              borderRadius: "90px",
+              width: "90px",
+              height: "90px",
+              padding: "10px",
+              backgroundColor: "background.default",
+              color: "primary.main",
+            }}
+          >
+            {user.first_name.charAt(0)}
+          </Avatar>
+        </Badge>
       )}
 
       <Typography

@@ -1,4 +1,12 @@
-import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
@@ -76,10 +84,30 @@ const ChatCard: React.FC<ChatCardProps> = ({
       }}
       onClick={handleCardClick}
     >
-      <Avatar
-        sx={{ width: "40px", height: "40px", alignSelf: "center" }}
-        src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+      <Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          (user.logged_in_as === "worker" &&
+            worker?.profile.is_identification_verified) ||
+          (user.logged_in_as === "employer" &&
+            employer?.profile.is_identification_verified) ? (
+            <CheckCircle color="success" />
+          ) : (
+            <></>
+          )
+        }
+      >
+        <Avatar
+          sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+          src={
+            user.logged_in_as === "worker"
+              ? employer?.profile.id_photo
+              : worker?.profile.id_photo
+          }
+        />
+      </Badge>
+
       <CardContent>
         <Box
           sx={{

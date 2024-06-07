@@ -27,7 +27,11 @@ export interface Order {
   otp?: string;
   worker_id: number | null;
   worker_user_id: number | null;
+  is_worker_identification_verified: boolean;
+  is_employer_identification_verified: boolean;
   employer_id: number | null;
+  employer_avatar_photo: string;
+  worker_avatar_photo: string;
   employer_user_id: number | null;
   employer_address: string;
   worker_name: string;

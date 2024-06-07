@@ -6,6 +6,7 @@ import axiosInstance from "../../../axiosInstance";
 import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
 import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
+import ProfileIDPhotoCard from "../../components/Profile/ProfileIDPhotoCard";
 import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
@@ -52,7 +53,9 @@ const ProfilePage: React.FC = () => {
   const [edittingSection, setEdittingSection] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const [idImage, setIdImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [idFile, setIdFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
   const [gsUrl, setGsUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
@@ -78,6 +81,19 @@ const ProfilePage: React.FC = () => {
         getPresignedURL(file);
         setAvatarImage(reader.result as string);
         setFile(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        getPresignedURL(file);
+        setIdImage(reader.result as string);
+        setIdFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -258,12 +274,13 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const savePhoto = async () => {
+  const savePhoto = async (type: string) => {
     try {
+      const filename = type === "identification" ? idFile?.name : file?.name;
       const response = await axiosInstance.post("/api/v1/upload", {
         id: user.id,
-        filename: file?.name,
-        type: "avatar",
+        filename: filename,
+        type: type,
       });
 
       if (response.status === 200) {
@@ -275,19 +292,19 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handeUpload = async () => {
+  const handleUpload = async (type: string) => {
     if (!presignedUrl || !avatarImage) return;
-
-    if (file) {
+    const image = type === "avatar" ? file : idFile;
+    if (image) {
       try {
-        await axios.put(presignedUrl, file, {
+        await axios.put(presignedUrl, image, {
           headers: {
-            "Content-Type": file.type,
+            "Content-Type": image.type,
           },
         });
 
         console.log("File uploaded successfully!");
-        savePhoto();
+        savePhoto(type);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -322,7 +339,7 @@ const ProfilePage: React.FC = () => {
             }
             handleCancelEdittingSection={() => setEdittingSection("")}
             handleAvatarImageChange={handleAvatarImageChange}
-            handleUpload={handeUpload}
+            handleUpload={() => handleUpload("avatar")}
             handleSetDescription={(desc) => setDescription(desc)}
             handleSave={handleSave}
           />
@@ -425,6 +442,16 @@ const ProfilePage: React.FC = () => {
               }}
             />
           )}
+
+          <ProfileIDPhotoCard
+            idImage={idImage}
+            handleImageChange={handleImageChange}
+            edittingSection={edittingSection}
+            sectionName="philsys"
+            handleSetEdittingSection={() => setEdittingSection("philsys")}
+            handleUpload={() => handleUpload("identification")}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+          />
         </Box>
       </Box>
       <Snackbar
