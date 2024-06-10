@@ -1,6 +1,5 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { Badge, Link } from "@mui/material";
+import { Avatar, Badge, Link } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -290,10 +289,13 @@ function ResponsiveAppBar() {
                   height: "40px",
                 }}
               >
-                <AccountCircleIcon
+                <Avatar
                   sx={{
-                    fill: "#FFFFFF",
+                    width: "30px",
+                    height: "30px",
+                    alignSelf: "center",
                   }}
+                  src={user.id_photo}
                 />
               </IconButton>
             </Tooltip>
