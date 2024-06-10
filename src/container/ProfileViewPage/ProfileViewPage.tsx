@@ -213,7 +213,7 @@ const ProfileViewPage: React.FC = () => {
           <DescriptionCard
             image={worker?.profile.id_photo}
             title={`${worker?.profile.first_name} ${worker?.profile.last_name}`}
-            description={worker?.profile.description as string}
+            description={worker?.profile.role.role_details as string}
             rating={worker.profile.overall_rating as number}
             isIdentificationVerified={worker.profile.is_identification_verified}
           />

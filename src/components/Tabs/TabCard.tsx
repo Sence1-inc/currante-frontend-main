@@ -168,7 +168,7 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
         handleOpenModal={handleOpenModal}
       />
       <TabModal
-        orderId={order.id as number}
+        order={order}
         status={order.status}
         openModal={openModal}
         handleOpenModal={handleOpenModal}

@@ -47,7 +47,9 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
             {reviewee?.profile.first_name} {reviewee?.profile.middle_name}
             {reviewee?.profile.last_name}
           </Typography>
-          <Typography variant="body1">description</Typography>
+          <Typography variant="body1">
+            {reviewee?.profile.description ?? ""}
+          </Typography>
         </Box>
       </Box>
       <Box

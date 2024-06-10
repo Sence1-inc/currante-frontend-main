@@ -264,7 +264,7 @@ const ProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.get("/api/v1/presigned-url", {
         params: {
-          filename: file?.name,
+          filename: `${file?.name}-${file?.lastModified}`,
           filetype: file?.type,
         },
       });
@@ -276,7 +276,10 @@ const ProfilePage: React.FC = () => {
 
   const savePhoto = async (type: string) => {
     try {
-      const filename = type === "identification" ? idFile?.name : file?.name;
+      const filename =
+        type === "identification"
+          ? `${idFile?.name}-${idFile?.lastModified}`
+          : `${file?.name}-${file?.lastModified}`;
       const response = await axiosInstance.post("/api/v1/upload", {
         id: user.id,
         filename: filename,

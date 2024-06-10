@@ -110,7 +110,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       for (const file of filesArray) {
         const response = await axiosInstance.get("/api/v1/presigned-url", {
           params: {
-            filename: file?.name,
+            filename: `${file?.name}-${file?.lastModified}`,
             filetype: file?.type,
           },
         });
@@ -148,7 +148,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         filesArray.map(async (file) => {
           const response = await axiosInstance.post("/api/v1/upload", {
             id: user.id,
-            filename: file?.name,
+            filename: `${file?.name}-${file?.lastModified}`,
             type: "cover",
           });
           setFiles([]);

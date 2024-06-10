@@ -1,5 +1,6 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { addMinutes, formatISO } from "date-fns";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import ArrivedImage from "../../assets/arrived.png";
@@ -7,11 +8,12 @@ import CheckImage from "../../assets/check.png";
 import QuestionImage from "../../assets/question.png";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
 import jobListStyles from "../../styles/jobListStyles";
 import CustomModal from "./Modal";
 
 interface TabModalProps {
-  orderId: number;
+  order: Order;
   status: string;
   openModal: boolean;
   handleOpenModal: () => void;
@@ -19,7 +21,7 @@ interface TabModalProps {
 }
 
 const TabModal: React.FC<TabModalProps> = ({
-  orderId,
+  order,
   status,
   openModal,
   handleCloseModal,
@@ -31,7 +33,7 @@ const TabModal: React.FC<TabModalProps> = ({
 
   const handleAccept = async () => {
     try {
-      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
         status: "2",
       });
       if (response.data) {
@@ -52,7 +54,7 @@ const TabModal: React.FC<TabModalProps> = ({
 
   const handleArrived = async () => {
     try {
-      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
         status: "3",
         worker_arrived_date: getUtcNow(),
       });
@@ -71,7 +73,7 @@ const TabModal: React.FC<TabModalProps> = ({
     } else {
       try {
         const response = await axiosInstance.patch(
-          `/api/v1/orders/${orderId}`,
+          `/api/v1/orders/${order.id}`,
           {
             status: "4",
             job_order_completed_date: getUtcNow(),
@@ -153,7 +155,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Location:
             </Typography>{" "}
-            Quezon City
+            {order.employer_address}
           </Typography>
           <Typography
             sx={[
@@ -164,7 +166,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Time:
             </Typography>{" "}
-            Feb. 10 7am-12pm
+            {formatISO(new Date(dayjs(order.job_order_start_date).format()))}
           </Typography>
         </Box>
         <Box sx={jobListStyles.container.buttonContainer}>

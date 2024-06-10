@@ -72,6 +72,12 @@ const ChatCard: React.FC<ChatCardProps> = ({
     }
   }, [participantUserId]);
 
+  const getAddress = (): string => {
+    return user.logged_in_as === "employer"
+      ? (user.addresses[0].city as string)
+      : (user.areas[0].area_name as string);
+  };
+
   return (
     <Card
       sx={{
@@ -122,7 +128,7 @@ const ChatCard: React.FC<ChatCardProps> = ({
               ? `${worker?.profile.first_name} ${worker?.profile.last_name}`
               : `${employer?.profile.first_name} ${employer?.profile.last_name}`}
           </Typography>
-          <Typography variant="subtitle1">Pasig City</Typography>
+          <Typography variant="subtitle1">{getAddress()}</Typography>
         </Box>
         <Box
           sx={{
