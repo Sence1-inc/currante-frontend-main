@@ -499,7 +499,9 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           readOnly
         />
 
-        <Typography>{`(${Number(user?.overall_rating)} stars)`}</Typography>
+        <Typography>{`(${Number(user?.overall_rating).toFixed(
+          2
+        )} stars)`}</Typography>
       </Box>
       {user.logged_in_as === "worker" &&
         (edittingSection !== sectionName ? (
@@ -521,6 +523,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           </>
         ) : (
           <TextField
+            placeholder="e.g. Enjoy a pristine home with my expert cleaning services, ensuring every corner sparkles with freshness!"
             error={isEmptyObject(errorMessages, "description")}
             multiline
             minRows={1}

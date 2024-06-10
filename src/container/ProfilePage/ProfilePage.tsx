@@ -57,7 +57,6 @@ const ProfilePage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [idFile, setIdFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
-  const [gsUrl, setGsUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -174,10 +173,6 @@ const ProfilePage: React.FC = () => {
       setAddresses(user.addresses);
       setDescription(user.description);
       setAvatarImage(user.id_photo);
-
-      // const user_photos = userPhotos(user.user_photos);
-
-      // console.log(user_photos);
     }
   }, [user]);
 
@@ -248,13 +243,15 @@ const ProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
 
-      if (response.data) {
-        setSuccessMessage("Profile details successfully saved!");
+      if (response.status === 201) {
+        setSuccessMessage(response.data.message);
+        setIsSnackbarOpen(true);
         setErrorMessage("");
         setErrorMessages({});
         dispatch(initializeUser(response.data.profile));
       }
     } catch (error: any) {
+      setIsSnackbarOpen(true);
       setErrorMessages(error.response.data.errors);
       setSuccessMessage("");
     }
@@ -269,8 +266,8 @@ const ProfilePage: React.FC = () => {
         },
       });
       setPresignedUrl(response.data.url);
-    } catch (error) {
-      console.log("Error: ", error);
+    } catch (error: any) {
+      setErrorMessages(error.response.data.errors);
     }
   };
 
@@ -292,6 +289,7 @@ const ProfilePage: React.FC = () => {
             ? { identification_photo: response.data.identification }
             : { id_photo: response.data.avatar };
         dispatch(initializeUser({ ...user, ...savedPhoto }));
+        setIsSnackbarOpen(true);
         setSuccessMessage(response.data.message);
         setErrorMessage("");
       }
