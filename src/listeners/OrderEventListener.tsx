@@ -69,18 +69,24 @@ const OrderEventListener = ({
         return `Order ${order.job_order_code} has been completed. Please review to release compensation.`;
       } else if (parseInt(order.status) === 2) {
         return `Order ${order.job_order_code} has been accepted by ${order.worker_name}`;
+      } else if (parseInt(order.status) === 7) {
+        return `Order ${order.job_order_code} payment has been released`;
       }
       return "";
     };
 
     if (user.logged_in_as === "worker") {
-      const channel = pusher.subscribe(`orders.worker.${user.worker_id}`);
+      const workerChannel = `orders.worker.${user.worker_id}`;
+      const channel = pusher.subscribe(workerChannel);
+
       channel.bind("App\\Events\\NewOrderCreated", handleNewOrderCreated);
+      channel.bind("App\\Events\\PaymentReleased", handleOrderUpdated);
 
       // Cleanup function to unsubscribe when component unmounts
       return () => {
-        channel.unbind();
-        pusher.unsubscribe(`orders.worker.${user.worker_id}`);
+        channel.unbind("App\\Events\\NewOrderCreated", handleNewOrderCreated);
+        channel.unbind("App\\Events\\PaymentReleased", handleOrderUpdated);
+        pusher.unsubscribe(workerChannel);
       };
     }
 

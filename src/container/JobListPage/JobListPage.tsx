@@ -22,8 +22,8 @@ const JobListPage: React.FC = () => {
           if (
             value === 0 ||
             (Number(order.status) === value && value >= 1 && value <= 7) ||
-            (value === 5 && Number(order.status) === 7) ||
-            (value === 6 && Number(order.status) === 7)
+            value === 5 ||
+            value === 6
           ) {
             return tabCard;
           } else {

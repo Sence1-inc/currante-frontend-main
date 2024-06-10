@@ -2,7 +2,7 @@ import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import CheckImage from "../../assets/check.png";
 import RevieweeProfileCard from "../../components/RevieweeProfileCard/RevieweeProfileCard";
@@ -14,7 +14,7 @@ import { Employer, Worker } from "../../redux/type";
 
 const ReviewPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const order = useAppSelector((state) => state.order);
   const user = useAppSelector((state) => state.user);
   const [reviewee, setReviewee] = useState<Worker | Employer | null>(null);
   const [isEmployerSuccessModalOpen, setIsEmployerSuccessModalOpen] =
@@ -30,9 +30,9 @@ const ReviewPage = () => {
     const getReviewee = async () => {
       let endpoint = "";
       if (user.logged_in_as == "worker") {
-        endpoint = `/api/v1/employers/${id}`;
+        endpoint = `/api/v1/employers/${order.employer_id}`;
       } else if (user.logged_in_as == "employer") {
-        endpoint = `/api/v1/workers/${id}`;
+        endpoint = `/api/v1/workers/${order.worker_id}`;
       }
       try {
         const response = await axiosInstance.get(endpoint);
@@ -45,7 +45,7 @@ const ReviewPage = () => {
     };
 
     getReviewee();
-  }, [id]);
+  }, [order]);
 
   return (
     <Box>

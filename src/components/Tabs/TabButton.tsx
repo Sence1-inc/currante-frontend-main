@@ -113,8 +113,9 @@ const TabButton: React.FC<TabButtonProps> = ({
           (status == "1" ||
             status == "2" ||
             status == "3" ||
-            order.payment_approval_date !== null ||
-            status == "7") &&
+            status == "6" ||
+            status == "7" ||
+            order.payment_approval_date !== null) &&
           true
         }
         onClick={() => {
@@ -129,8 +130,9 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "3" ||
-              status == "7") &&
-              order.payment_approval_date !== null &&
+              status == "6" ||
+              status == "7" ||
+              order.payment_approval_date !== null) &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
@@ -147,8 +149,8 @@ const TabButton: React.FC<TabButtonProps> = ({
             status == "2" ||
             status == "3" ||
             status == "6" ||
-            status == "7") &&
-          order.payment_approval_date !== null &&
+            status == "7" ||
+            order.payment_approval_date !== null) &&
           true
         }
         onClick={() => {
@@ -164,8 +166,8 @@ const TabButton: React.FC<TabButtonProps> = ({
               status == "2" ||
               status == "3" ||
               status == "6" ||
-              status == "7") &&
-              order.payment_approval_date !== null &&
+              status == "7" ||
+              order.payment_approval_date !== null) &&
               jobListStyles.icon.buttonIconDisabled,
           ]}
         />
