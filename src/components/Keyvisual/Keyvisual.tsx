@@ -11,6 +11,7 @@ import DeepCleaningImg from "../../assets/cleaning-services.png";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
 import Stack from '@mui/material/Stack';
 import "./Keyvisual.css";
+import { AutoAwesomeMosaicOutlined } from "@mui/icons-material";
 
 const Keyvisual: React.FC = () => {
   const navigate = useNavigate();
@@ -89,11 +90,16 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
             maxWidth: {md: "455px"},
+            minWidth: {sm: "auto", md: "400px", lg: "auto"},
             mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px"} }}>
               <img className="keyvisual__img" src={LogoLarge} alt="" />
             </Box>
         </Box>
-        <Box sx={{ order: { md: 2, xs: 2 }, width: { lg: "50%", md: "100%" }}}>
+        <Box sx={{ 
+          order: { md: 2, xs: 2 }, 
+          width: {md: "100% ", lg: "50%"},
+          minWidth: {md: "50vw", lg: "auto"}
+          }}>
           <Box sx={{ display: {sm: "none", md: "block", lg: "block"} }}>
             <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
               <Box>
@@ -113,7 +119,6 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             </Box>
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
-            height: 120.07,
             mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px"},
             display: {xs: "none", sm: "none", md: "block", lg: "block"} }}>
               <img className="keyvisual__img" src={LogoLarge} alt="" />
@@ -127,10 +132,12 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: "25px",
+              fontSize: {xs: "20px", sm: "20px", md: "24px", lg: "25px"},
               fontWeight: "700",
               lineHeight: 1.5,
-              height: {lg: "20vh"}
+              height: {md: "12vh", lg: "20vh"},
+              display: "flex",
+              alignItems: "center"
             }}
           >
            <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
@@ -163,7 +170,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             />
           </Box>
         </Box>
-        <Box className="wrapper" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}}>
+        <Box className="kv-track wrapper" sx={{ order: { md: 3, xs: 1 }, width: {lg: "50%", sm: "100%"}, overflowX: "scroll"}}>
         <Stack className="track primary" sx={{ width: "100vw", display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
           <Box component="img" sx={{ maxWidth: "338px"}} src={HomeMaintenanceImg}></Box>
           <Box component="img" sx={{ maxWidth: "315px"}} src={PlumbingImg}></Box>
