@@ -230,7 +230,7 @@ const ProfileViewPage: React.FC = () => {
           <FabButton
             styles={{
               bottom: isAuthenticated ? "12%" : "10%",
-              right: "30%",
+              right: "40%",
             }}
             handleClick={handleMessageClick}
             text="Message"

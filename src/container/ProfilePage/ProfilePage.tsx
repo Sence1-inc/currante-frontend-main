@@ -284,8 +284,13 @@ const ProfilePage: React.FC = () => {
       });
 
       if (response.status === 200) {
-        dispatch(initializeUser({ ...user, id_photo: response.data.avatar }));
-        console.log(response.data.message);
+        const savedPhoto =
+          type === "identification"
+            ? { identification_photo: response.data.identification }
+            : { id_photo: response.data.avatar };
+        dispatch(initializeUser({ ...user, ...savedPhoto }));
+        setSuccessMessage(response.data.message);
+        setErrorMessage("");
       }
     } catch (error) {
       console.log("Error uploading", error);
