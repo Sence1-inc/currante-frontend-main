@@ -132,12 +132,14 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: {xs: "20px", sm: "20px", md: "24px", lg: "25px"},
+              fontSize: {xs: "20px", md: "23px", lg: "25px"},
               fontWeight: "700",
               lineHeight: 1.5,
               height: {md: "12vh", lg: "20vh"},
               display: "flex",
-              alignItems: "center"
+              alignItems: "center",
+              mt: {md: "50px", lg: "30px"},
+              mb: {md: "50px", lg: "30px"}
             }}
           >
            <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
