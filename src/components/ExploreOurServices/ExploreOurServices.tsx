@@ -80,14 +80,22 @@ const ExploreOurServices = () => {
         </CardActions>
       </Card>
 
+      <Box sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        order: "2",
+        columnGap: "40px",
+        rowGap: "40px",
+        justifyContent: "center"
+      }}>
       {SERVICES.map((service: ServiceItem, index: number) => {
         return (
           <Card
             key={index}
             sx={{
               order: { xs: index + 1, lg: service.order },
-              height: { xs: "250px", md: "374px" },
-              width: { md: "600px" },
+              height: { xs: "250px", md: "300px" },
+              width: { xs: "100%",md: "calc((510/1200) * 100%)" },
             }}
           >
             <CardMedia
@@ -112,6 +120,7 @@ const ExploreOurServices = () => {
           </Card>
         );
       })}
+      </Box>
     </Box>
   );
 };

@@ -8,7 +8,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
         margin: "0",
         width: {xs: "100%", md: "calc((370/1200) * 100%)"},
         padding: "20px",
-        minHeight: "400px",
+        height: "370px",
         borderRadius: "16px",
         display: "flex",
         flexDirection: "row",
@@ -20,7 +20,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
       <CardMedia
         component="img"
         alt=""
-        height="auto"
+        height="220px"
         image={image}
         sx={{ objectFit: "contain", mb: "10px"}}
       />

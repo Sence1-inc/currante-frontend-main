@@ -50,9 +50,9 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            columnGap: "40px",
+            columnGap: "50px",
             rowGap: "40px",
-            marginBottom: "75px",
+            mb: "40px",
             justifyContent: "space-evenly"
           }}
         >
