@@ -21,9 +21,11 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
   return (
     <Box
       sx={{
-        padding: { xs: "62px 0", lg: "62px 97px" },
+        padding: { xs: "62px 20px", md: "62px 40px", lg: "62px 97px" },
         backgroundColor: "#d8e5ff",
         textAlign: { xs: "center", lg: "left" },
+        display: "flex",
+        justifyContent: "center"
       }}
     >
       <Container
@@ -32,12 +34,13 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          padding: "0 !important"
         }}
       >
         <Typography
           variant="h2"
           sx={{
-            marginBottom: "75px",
+            mb: {xs: "40px", lg:"75px"},
             alignSelf: { md: "start" },
           }}
         >
@@ -47,8 +50,10 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "40px",
+            columnGap: "40px",
+            rowGap: "40px",
             marginBottom: "75px",
+            justifyContent: "space-evenly"
           }}
         >
           {introduction.map((introItem: IntroItem, index: number) => {

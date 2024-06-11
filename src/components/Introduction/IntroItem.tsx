@@ -5,10 +5,10 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
   return (
     <Card
       sx={{
-        margin: "auto",
-        width: "300px",
+        margin: "0",
+        width: {xs: "100%", md: "calc((370/1200) * 100%)"},
         padding: "20px",
-        minHeight: "460px",
+        minHeight: "400px",
         borderRadius: "16px",
         display: "flex",
         flexDirection: "row",
@@ -20,20 +20,23 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
       <CardMedia
         component="img"
         alt=""
-        height="240"
+        height="auto"
         image={image}
-        sx={{ mb: 1 }}
+        sx={{ objectFit: "contain", mb: "10px"}}
       />
       <Typography
         variant="h2"
         align="center"
         sx={{
-          margin: "0 auto 15px",
+          margin: "0 auto",
           fontFamily: "Poppins",
           fontWeight: 600,
-          fontSize: "24px",
+          fontSize: {xs: "18px", md: "16px", lg: "24px"},
           color: "#d2580b",
           lineHeight: 1.25,
+          display: "flex",
+          alignItems: "center",
+          mb: "15px"
         }}
       >
         {title}
@@ -42,7 +45,8 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
         variant="body2"
         sx={{
           fontFamily: "Open Sans",
-          fontSize: "16px",
+          fontSize: {xs: "14px", md: "14px", lg: "16px"},
+          fontWeight: "400"
         }}
       >
         {desc}
