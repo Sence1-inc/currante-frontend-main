@@ -29,7 +29,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
         src={image}
         sx={{ mb: 1, height: "104px", width: "120px" }}
       ></Box>
-      <Box>
+      <Box sx={{mb: "0"}}>
         <Typography
           variant="h2"
           align="center"
@@ -37,7 +37,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
             margin: "0 auto 15px",
             fontFamily: "Poppins",
             fontWeight: 600,
-            fontSize: {xs: "18px", md: "18px", lg: "24px"},
+            fontSize: {xs: "18px", md: "16px", lg: "24px"},
             color: "#F58A47",
             lineHeight: 1.25,
           }}
