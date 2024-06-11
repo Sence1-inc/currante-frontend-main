@@ -49,8 +49,8 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "flex-start",
+            justifyContent: "space-evenly",
             flexWrap: "wrap",
             width: "100%",
             gap: {
