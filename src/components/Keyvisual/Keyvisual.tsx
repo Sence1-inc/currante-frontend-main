@@ -78,6 +78,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
                     color: "primary.main",
                     fontWeight: 600,
                     fontStyle: "italic",
+                    fontSize: "18.5px !important",
                     mb: {xs: 2, sm: 2, md: "40px", lg: "40px", xl: "32px"},
                     //display: {xs: "block", lg: "none"}
                   }}
@@ -109,6 +110,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
                     color: "primary.main",
                     fontWeight: 600,
                     fontStyle: "italic",
+                    fontSize: {xs: "15px !important", md: "14px !important"},
                     mb: 2,
                     display: {xs: "none", md: "block", lg: "block"}
                   }}
@@ -119,7 +121,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             </Box>
             <Box sx={{ 
             width: { lg: "449px", sm: "100%"},
-            mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px"},
+            mb: { xs: 0, sm: 0, md: "20px", lg: 3, xl: "32px"},
             display: {xs: "none", sm: "none", md: "block", lg: "block"} }}>
               <img className="keyvisual__img" src={LogoLarge} alt="" />
             </Box>
@@ -132,14 +134,15 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: {xs: "20px", md: "23px", lg: "25px"},
+              fontSize: {xs: "24px", md: "26px", lg: "25px"},
               fontWeight: "700",
               lineHeight: 1.5,
-              height: {md: "12vh", lg: "20vh"},
+              height: {xs: "34vh", md: "20vh", lg: "20vh"},
               display: "flex",
               alignItems: "center",
-              mt: {md: "50px", lg: "30px"},
-              mb: {md: "50px", lg: "30px"}
+              maxWidth: {md:"48vw"},
+              // mt: {md: "50px", lg: "30px"},
+              // mb: {md: "50px", lg: "30px"}
             }}
           >
            <Box id="Slider" className={`slide-up` + isCounterDivBy5()} >
@@ -160,7 +163,9 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               fontSize: "17.5px !important",
               color: "#335393",
               lineHeight: 1.5,
-              mb: "17px",
+              mb: {xs: "30px"},
+              mt: {md: "10px"},
+              maxWidth: {md:"46vw"}
             }}
           >
             {subHeadingText}

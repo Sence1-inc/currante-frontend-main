@@ -61,7 +61,7 @@
   transition: .4s ease-in-out;
 }
 .slide-down > div {            
-  transform: translateY(180%);
+  transform: translateY(200%);
 } 
 
 .kv-track::-webkit-scrollbar {
