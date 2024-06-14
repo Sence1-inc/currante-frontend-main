@@ -1,3 +1,123 @@
 .keyvisual__img {
   width: 100%;
 }
+
+
+.wrapper {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+}
+
+.wrapper:before, .wrapper:after {
+	content: "";
+	position: absolute;
+	height: 130px;
+	width: 338px;
+	z-index: 2;
+}
+
+.wrapper:after {
+	right: 0;
+	top: 0;
+	transform: rotateZ(180deg);
+}
+
+.wrapper:before {
+	left: 0;
+	top: 0;
+}
+
+.wrapper .track {
+	display: flex;
+	width: calc(338px * 10);
+	animation: scroll 60s 0.5s linear infinite;
+}
+
+.wrapper .logo img {
+  width: 338px;
+	/* height: 90px; */
+}
+
+@keyframes  scroll {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(calc(-338px * 12));
+	}
+}
+
+/* slide down and up */
+
+.slide-up, .slide-down {
+  overflow: hidden;
+}
+.slide-up > div {
+  transform: translateY(0);
+  transition: .4s ease-in-out;
+}
+.slide-down > div {            
+  transform: translateY(200%);
+} 
+
+.kv-track::-webkit-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+    display: none;
+  }
+.kv-track.track.primary {
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+}
+
+/* 
+.scroll-parent {
+  position: relative;
+  width: 50;
+  height: 500px;
+  overflow-x: hidden;
+}
+
+.scroll-element {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  animation: primary 3s linear infinite;
+}
+
+.scroll-element img {
+  width: 100%;
+}
+
+.primary {
+  animation: primary 3s linear infinite;
+}
+
+.secondary {
+  animation: secondary 3s linear infinite;
+}
+
+@keyframes primary {
+  from {
+    left: 0%;
+  }
+  to {
+    left: -100%;
+  }
+}
+
+@keyframes secondary {
+  from {
+    left: 100%;
+  }
+  to {
+    left: 0%;
+  }
+} */

@@ -34,7 +34,7 @@ export const TEASER_GENERAL_FAQ: FaqItem[] = [
     id: "panel6",
     title: "Is there a review system for service providers?",
     content:
-      "Yes, after receiving a service, you can leave a review and rating for the service provider. This helps build a trustworthy community and assists other employers in making informed decisions.",
+      "Yes, after receiving a service, you can leave a review and rating for the service provider. This helps build a trustworthy community and assists other short-time clients in making informed decisions.",
   },
   {
     id: "panel7",
@@ -47,7 +47,7 @@ export const TEASER_GENERAL_FAQ: FaqItem[] = [
     id: "panel8",
     title: "Is there a booking fee?",
     content:
-      "Yes, a booking fee will be collected from potential employers. Please see our Terms and Conditions for the booking fee.",
+      "Yes, a booking fee will be collected from potential short-time clients. Please see our Terms and Conditions for the booking fee.",
   },
   {
     id: "panel9",
@@ -57,8 +57,8 @@ export const TEASER_GENERAL_FAQ: FaqItem[] = [
   },
   {
     id: "panel10",
-    title: "Can I communicate with employers before accepting a job?",
+    title: "Can I communicate with short-time clients before accepting a job?",
     content:
-      "Yes, our platform provides a messaging system that allows you to communicate directly with employers. Feel free to discuss job details, expectations, and any specific requirements before accepting an offer.",
+      "Yes, our platform provides a messaging system that allows you to communicate directly with short-time clients. Feel free to discuss job details, expectations, and any specific requirements before accepting an offer.",
   },
 ];

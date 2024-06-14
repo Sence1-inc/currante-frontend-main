@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
         <Container sx={{ p: 0 }}>
           <Typography variant="body1" sx={{ color: "primary.main" }}>
             <strong>DISCLAIMER:</strong> Currante solely serves as a third-party
-            IT intermediary connecting potential employers with potential
+            IT intermediary connecting potential short-time clients with potential
             workers and does not engage in hiring or managing any personnel.
           </Typography>
         </Container>
