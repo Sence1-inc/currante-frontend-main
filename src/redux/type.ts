@@ -13,13 +13,15 @@ export interface JobSubType {
   job_name: string;
   unit: string;
   job_unit_price: number;
+  total_price?: number;
   active_flg: boolean | number;
 }
 
 export interface WorkerJobSubtype {
   worker_id: number | null;
   job_subtype: JobSubType;
-  job_unit_price: number | null;
+  job_unit_price?: number | null;
+  total_price: number | null;
 }
 
 export interface Order {

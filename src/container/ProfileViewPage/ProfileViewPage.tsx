@@ -75,7 +75,7 @@ const ProfileViewPage: React.FC = () => {
     let formattedJobs: string[] = [];
 
     jobs?.forEach((job) => {
-      formattedJobs.push(`${job.job_name}: ${job.job_unit_price} ${job.unit}`);
+      formattedJobs.push(`${job.job_name}: ${job.total_price} ${job.unit}`);
     });
 
     return formattedJobs.join(", ");

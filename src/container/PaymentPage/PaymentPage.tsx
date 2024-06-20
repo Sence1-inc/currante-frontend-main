@@ -53,7 +53,7 @@ const PaymentPage = () => {
   useEffect(() => {
     if (quantity || subtypeDetails) {
       setTotal(
-        Number(subtypeDetails?.job_unit_price || 0) * Number(quantity || 1)
+        Number(subtypeDetails?.total_price || 0) * Number(quantity || 1)
       );
     }
   }, [quantity, subtypeDetails]);
@@ -239,7 +239,7 @@ const PaymentPage = () => {
                 lineHeight: "1.7",
               }}
             >
-              {subtypeDetails?.job_unit_price}
+              {subtypeDetails?.total_price}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
