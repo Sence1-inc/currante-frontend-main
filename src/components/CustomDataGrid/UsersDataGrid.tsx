@@ -69,12 +69,10 @@ const UsersDataGrid = () => {
       headerName: "Is Verified",
       width: 100,
       flex: 1.5,
-      valueGetter: (value, row) =>
+      valueGetter: (_value, row) =>
         row.is_identification_verified === 1 ? "Yes" : "No",
     },
   ];
-
-  const handleButtonClick = (rowId: number) => {};
 
   const handleVerifyIdentification = async () => {
     try {

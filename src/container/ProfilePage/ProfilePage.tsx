@@ -21,15 +21,6 @@ export interface JobSubtypeDefault {
   job_subtypes: { job_name: string; unit: string; id: number }[];
 }
 
-interface Photo {
-  profile_photo: string;
-  id_photo: string;
-}
-
-interface UserPhotos {
-  photos: string[];
-}
-
 const ProfilePage: React.FC = () => {
   const userSelector = useMemo(() => (state: any) => state.user, []);
   const user: User = useAppSelector(userSelector);
@@ -118,19 +109,6 @@ const ProfilePage: React.FC = () => {
       )
     )[0];
   }
-
-  const userPhotos = (photos: Photo[]): UserPhotos => {
-    const rearrangedPhotos: UserPhotos = { photos: [] };
-    if (photos && photos.length > 0) {
-      photos.forEach((photo) => {
-        if (!rearrangedPhotos.photos) {
-          rearrangedPhotos.photos = [];
-        }
-        rearrangedPhotos.photos.push(photo.profile_photo);
-      });
-    }
-    return rearrangedPhotos;
-  };
 
   useEffect(() => {
     if (edittingSection !== "servicing_areas") {
@@ -331,7 +309,6 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
-            getPresignedURL={getPresignedURL}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}

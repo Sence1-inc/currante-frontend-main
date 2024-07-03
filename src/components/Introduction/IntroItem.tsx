@@ -1,7 +1,8 @@
 import { Card, CardMedia, Typography } from "@mui/material";
 import React from "react";
+import { IntroItem as IntroItemProps } from "../../global";
 
-const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
+const IntroItem: React.FC<IntroItemProps> = ({ title, desc, image }) => {
   return (
     <Card
       sx={{

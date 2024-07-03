@@ -20,6 +20,7 @@ const initialState: Order = {
   worker_name: "",
   employer_name: "",
   worker_job_subtype: {
+    total_price: null,
     worker_id: null,
     job_subtype: {
       job_type_id: null,

@@ -20,7 +20,7 @@ import { Order, User } from "../../redux/type";
 
 const settings = ["Manage Profile", "Logout"];
 
-const orderInitialState: Order = {
+export const orderInitialState: Order = {
   id: null,
   created_at: "",
   is_worker_identification_verified: false,
@@ -39,6 +39,7 @@ const orderInitialState: Order = {
   worker_name: "",
   employer_name: "",
   worker_job_subtype: {
+    total_price: null,
     worker_id: null,
     job_subtype: {
       job_type_id: null,
@@ -89,6 +90,7 @@ const initialState: User = {
       employer_user_id: null,
       employer_address: "",
       worker_job_subtype: {
+        total_price: null,
         worker_id: null,
         job_subtype: {
           job_type_id: null,

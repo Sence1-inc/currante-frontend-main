@@ -136,14 +136,13 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
         const response = await axiosInstance.post("/api/v1/register", data);
         if (response.data) {
           const userRef = collection(db, "users");
-          const docRef = await addDoc(userRef, {
+          await addDoc(userRef, {
             first_name: response.data.user.first_name,
             last_name: response.data.user.last_name,
             middle_name: response.data.user.middle_name,
             user_id: response.data.user.id,
             uuid: response.data.user.uuid,
           });
-
           setIsSnackbarOpen(true);
           setErrors({
             email: "",

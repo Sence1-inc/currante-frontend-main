@@ -3,6 +3,7 @@ import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp
 import { Box, Collapse, Container, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
+import { IntroItem as IntroItemType, IntroProps } from "../../global";
 import IntroItem from "./IntroItem";
 
 const Introduction: React.FC<IntroProps> = ({ introduction }) => {
@@ -51,7 +52,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
             marginBottom: "75px",
           }}
         >
-          {introduction.map((introItem: IntroItem, index: number) => {
+          {introduction.map((introItem: IntroItemType, index: number) => {
             if (index < 4 || areAllIntrosShown) {
               return (
                 <IntroItem
@@ -80,7 +81,7 @@ const Introduction: React.FC<IntroProps> = ({ introduction }) => {
             >
               {introduction
                 .slice(introduction.length)
-                .map((introItem: IntroItem, index: number) => (
+                .map((introItem: IntroItemType, index: number) => (
                   <IntroItem
                     key={index + 4}
                     title={introItem.title}

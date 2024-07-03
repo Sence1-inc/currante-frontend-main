@@ -64,7 +64,7 @@ const AdminDashboard = () => {
   ];
 
   const handlePageChange = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
+    _event: React.MouseEvent<HTMLButtonElement> | null,
     value: number
   ) => {
     if (value >= 0 && value < Math.ceil(totalCount / rowsPerPage)) {

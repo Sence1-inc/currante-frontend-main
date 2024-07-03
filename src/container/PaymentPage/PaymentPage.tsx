@@ -13,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { formatISO } from "date-fns";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import PaymentCard from "../../components/PaymentCard/PaymentCard";
 import StepperWithError from "../../components/Stepper/Stepper";
@@ -26,7 +26,6 @@ const PaymentPage = () => {
   const { id } = useParams();
   const user = useAppSelector((state) => state.user);
   const { getWorker } = useGetWorker();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [stepFailed, setStepFailed] = useState<number | null>(null);

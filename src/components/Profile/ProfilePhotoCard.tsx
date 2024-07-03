@@ -42,7 +42,6 @@ const responsive = {
 };
 
 interface ProfilePhotoCardProps {
-  getPresignedURL: (file: File) => void;
   edittingSection: string;
   avatarImage: string | null;
   description: string;
@@ -58,7 +57,6 @@ interface ProfilePhotoCardProps {
 }
 
 const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
-  getPresignedURL,
   edittingSection,
   avatarImage,
   description,
@@ -89,6 +87,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   };
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    setIsUploading(true);
     const uploadedFiles = event.target.files;
 
     if (uploadedFiles && uploadedFiles.length > 0) {
@@ -101,6 +100,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       );
 
       if (fileSizeExceedsLimit) {
+        setIsUploading(false);
         alert(
           `One or more files exceed the maximum size of ${maxFileSizeMB} MB`
         );
@@ -117,7 +117,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         urls.push(response.data.url);
         previews.push(URL.createObjectURL(file));
       }
-
+      setIsUploading(false);
       setPreviewImages(previews);
       setFiles(uploadedFiles);
       setPresignedUrls(urls);

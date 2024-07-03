@@ -1,3 +1,5 @@
+import { WhyCurranteItem } from "../global";
+
 export const WHYCURRANTE: WhyCurranteItem[] = [
   /* to be edited */
   {
@@ -29,5 +31,5 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
     title: "Guaranteed completion of work",
     desc: "To ensure your satisfaction, a job will only be tagged completed, through your One-Time Password (OTP) confirmation.",
     image: "/images/img_why_cur_5.png",
-  }
+  },
 ];

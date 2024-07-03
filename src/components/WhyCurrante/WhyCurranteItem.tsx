@@ -1,7 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import { WhyCurranteItem as WhyCurranteItemProps } from "../../global";
 
-const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
+const WhyCurranteItem: React.FC<WhyCurranteItemProps> = ({
+  title,
+  desc,
+  image,
+}) => {
   return (
     <Box
       sx={{
