@@ -15,6 +15,7 @@ import JobListPage from "./container/JobListPage/JobListPage";
 import NotificationPage from "./container/NotificationPage/NotificationPage";
 import PaymentPage from "./container/PaymentPage/PaymentPage";
 import PaymentSuccessPage from "./container/PaymentPage/PaymentSuccessPage";
+import PrivacyPolicyPage from "./container/PrivacyPolicyPage/PrivacyPolicyPage";
 import ProfilePage from "./container/ProfilePage/ProfilePage";
 import ProfileViewPage from "./container/ProfileViewPage/ProfileViewPage";
 import ReviewPage from "./container/ReviewPage/ReviewPage";
@@ -24,6 +25,7 @@ import SignInPage from "./container/SignInPage/SignInPage";
 import SignUpPage from "./container/SignUpPage/SignUpPage";
 import SignUpComplete from "./container/SignUpVerifyPage/SignUpComplete";
 import SignUpVerifyPage from "./container/SignUpVerifyPage/SignUpVerifyPage";
+import TermsAndConditionsPage from "./container/TermsAndConditionsPage/TermsAndConditionsPage";
 import TestPage from "./container/TestPage/TestPage";
 import UsersPage from "./container/UsersPage/UsersPage";
 import OrderEventListener from "./listeners/OrderEventListener";
@@ -131,6 +133,14 @@ const App = () => {
         <Route
           path="/new-password"
           element={<PrivateRoute component={NewPasswordPage} />}
+        />
+        <Route
+          path="/terms-and-conditions"
+          element={<PublicRoute component={TermsAndConditionsPage} />}
+        />
+        <Route
+          path="/privacy-policy"
+          element={<PublicRoute component={PrivacyPolicyPage} />}
         />
       </Routes>
     </>
