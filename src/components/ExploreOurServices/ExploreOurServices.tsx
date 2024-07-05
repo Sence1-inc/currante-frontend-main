@@ -17,7 +17,7 @@ const ExploreOurServices = () => {
         display: "flex",
         flexDirection: { xs: "column", lg: "row" },
         gap: "40px",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
         padding: "80px 20px",
         flexWrap: "wrap",
@@ -26,23 +26,24 @@ const ExploreOurServices = () => {
       <Card
         sx={{
           order: { xs: 1, lg: 2 },
-          height: { xs: "250px", lg: "370px" },
           backgroundColor: "transparent",
           boxShadow: "none",
           border: "none",
           borderRadius: 0,
-          width: { lg: "600px" },
+          width: {lg: "calc((510/1200) * 100%)"},
           display: "flex",
           flexDirection: "column",
-          gap: "24px",
+          rowGap: "18px",
+          alignItems: {xs: "center", lg: "flex-start"}
         }}
       >
         <CardContent
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "24px",
-            alignItems: "center",
+            justifyContent: "flex-start",
+            rowGap: "18px",
+            alignItems: "flex-start",
             padding: "0",
             margin: { lg: "auto 0 0 0" },
           }}
@@ -56,7 +57,10 @@ const ExploreOurServices = () => {
           <Typography
             variant="body2"
             color="primary.main"
-            sx={{ textAlign: { xs: "center", lg: "left" } }}
+            sx={{ 
+              textAlign: { xs: "center", md: "center", lg: "left" },
+              fontWeight: "400",
+              fontSize: "16.5px" }}
           >
             Explore our services today and experience the joy of a sparkling,
             well-maintained space. 
@@ -80,14 +84,6 @@ const ExploreOurServices = () => {
         </CardActions>
       </Card>
 
-      <Box sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        order: "2",
-        columnGap: "40px",
-        rowGap: "40px",
-        justifyContent: "center"
-      }}>
       {SERVICES.map((service: ServiceItem, index: number) => {
         return (
           <Card
@@ -121,7 +117,7 @@ const ExploreOurServices = () => {
         );
       })}
       </Box>
-    </Box>
+    
   );
 };
 

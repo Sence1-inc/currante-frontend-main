@@ -7,7 +7,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
       sx={{
         maxWidth: {
           xs: "100%",
-          md: "37%"
+          md: "40%"
         },
         padding: "20px",
         minHeight: "157px",
@@ -37,7 +37,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
             margin: "0 auto 15px",
             fontFamily: "Poppins",
             fontWeight: 600,
-            fontSize: {xs: "18px", md: "16px", lg: "24px"},
+            fontSize: {xs: "18px", md: "16px", lg: "21px"},
             color: "#F58A47",
             lineHeight: 1.25,
           }}

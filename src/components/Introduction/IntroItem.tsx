@@ -1,4 +1,4 @@
-import { Card, CardMedia, Typography } from "@mui/material";
+import { Box, Card, CardMedia, Typography } from "@mui/material";
 import React from "react";
 
 const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
@@ -6,24 +6,30 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
     <Card
       sx={{
         margin: "0",
-        width: {xs: "100%", md: "calc((370/1200) * 100%)"},
+        width: {xs: "100%", md: "calc((300/1200) * 100%)"},
         padding: "20px",
-        height: "370px",
+        height: "auto",
         borderRadius: "16px",
         display: "flex",
         flexDirection: "row",
         boxShadow: "2px 4px rgba(245, 138, 71, 0.22)",
         backgroundColor: "#bcd2ff",
         flexWrap: "wrap",
+        alignItems: "flex-start"
       }}
     >
-      <CardMedia
-        component="img"
-        alt=""
-        height="220px"
-        image={image}
-        sx={{ objectFit: "contain", mb: "10px"}}
-      />
+      <Box
+       sx={{ 
+        display: "flex",
+        justifyContent: "center",
+        width: "100%"}}>
+        <CardMedia
+          component="img"
+          alt=""
+          image={image}
+          sx={{ objectFit: "contain", maxHeight: "280px"}}
+        />
+      </Box>
       <Typography
         variant="h2"
         align="center"
@@ -31,12 +37,12 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
           margin: "0 auto",
           fontFamily: "Poppins",
           fontWeight: 600,
-          fontSize: {xs: "18px", md: "16px", lg: "24px"},
+          fontSize: {xs: "18px", md: "16px", lg: "21px"},
           color: "#d2580b",
           lineHeight: 1.25,
           display: "flex",
           alignItems: "center",
-          mb: "15px"
+          mb: "14px"
         }}
       >
         {title}
