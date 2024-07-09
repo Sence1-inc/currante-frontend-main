@@ -17,7 +17,7 @@ const ExploreOurServices = () => {
         display: "flex",
         flexDirection: { xs: "column", lg: "row" },
         gap: "40px",
-        alignItems: "flex-start",
+        alignItems: {xs: "center", lg: "flex-start"},
         justifyContent: "center",
         padding: "80px 20px",
         flexWrap: "wrap",
@@ -43,14 +43,14 @@ const ExploreOurServices = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             rowGap: "18px",
-            alignItems: "flex-start",
+            alignItems: {xs: "center", lg: "flex-start"},
             padding: "0",
             margin: { lg: "auto 0 0 0" },
+            textAlign: { xs: "center", lg: "left" }
           }}
         >
           <Typography
             variant="h2"
-            sx={{ textAlign: { xs: "center", lg: "left" } }}
           >
             Explore our Services
           </Typography>
@@ -91,7 +91,7 @@ const ExploreOurServices = () => {
             sx={{
               order: { xs: index + 1, lg: service.order },
               height: { xs: "250px", md: "300px" },
-              width: { xs: "100%",md: "calc((510/1200) * 100%)" },
+              width: { xs: "100%", lg: "calc((510/1200) * 100%)" },
             }}
           >
             <CardMedia

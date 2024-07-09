@@ -25,8 +25,11 @@ const FAQ: React.FC = () => {
           <Accordion
             sx={{
               background: "#D8E5FF",
-              borderRadius: "8px",
+              borderRadius: "8px !important",
               marginBottom: "20px",
+              '&::before': {
+                display: "none"
+              }
             }}
             key={item.id}
             expanded={expanded === item.id}
@@ -60,6 +63,8 @@ const FAQ: React.FC = () => {
                 color: "#000",
                 background: "#fff",
                 padding: "25px 15px",
+                borderBottomLeftRadius: "8px",
+                borderBottomRightRadius: "8px",
               }}
             >
               <Typography>{item.content}</Typography>

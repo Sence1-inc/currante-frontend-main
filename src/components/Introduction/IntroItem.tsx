@@ -6,7 +6,7 @@ const IntroItem: React.FC<IntroItem> = ({ title, desc, image }) => {
     <Card
       sx={{
         margin: "0",
-        width: {xs: "100%", md: "calc((300/1200) * 100%)"},
+        width: {xs: "100%", md: "calc((410/1200) * 100%)", lg: "calc((300/1200) * 100%)"},
         padding: "20px",
         height: "auto",
         borderRadius: "16px",
