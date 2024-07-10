@@ -19,7 +19,7 @@ const FAQ: React.FC = () => {
 
   return (
     <Box className="faq__wrapper">
-      <Container>
+      <Container sx={{ padding: "0px !important" }}>
         <Typography variant="h2">Currante's FAQ</Typography>
         {TEASER_GENERAL_FAQ.map((item) => (
           <Accordion

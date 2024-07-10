@@ -137,7 +137,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               fontSize: {xs: "24px", md: "26px", lg: "25px"},
               fontWeight: "700",
               lineHeight: 1.5,
-              height: {xs: "34vh", md: "20vh", lg: "20vh"},
+              height: {xs: "30vh", md: "20vh", lg: "20vh"},
               display: "flex",
               alignItems: "center",
               maxWidth: {md:"48vw"},

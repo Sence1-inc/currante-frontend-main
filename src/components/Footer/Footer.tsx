@@ -14,13 +14,13 @@ const Footer: React.FC = () => {
     <Box>
       <Box
         sx={{
-          py: 2,
-          px: { md: 0, xs: 3 },
+          p: 2,
           backgroundColor: "background.paper",
+          textAlign: "center"
         }}
       >
-        <Container sx={{ p: 0 }}>
-          <Typography variant="body1" sx={{ color: "primary.main" }}>
+        <Container sx={{ p: "0 !important" }}>
+          <Typography variant="body1" sx={{ color: "primary.main"}}>
             <strong>DISCLAIMER:</strong> Currante solely serves as a third-party
             IT intermediary connecting potential short-time clients with potential
             workers and does not engage in hiring or managing any personnel.
