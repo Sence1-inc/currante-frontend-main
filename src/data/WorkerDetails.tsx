@@ -47,3 +47,18 @@ export const CITIES = [
   { id: 17, city_name: "Pateros" },
 ];
 export const PROVINCES = [{ id: 1, province_name: "Metro Manila" }];
+
+export type Status = {
+  id: number;
+  status_name: string;
+};
+
+export const ORDER_STATUSES: Status[] = [
+  { id: 1, status_name: "Job Requested" },
+  { id: 2, status_name: "Job Accepted" },
+  { id: 3, status_name: "Worker Arrived" },
+  { id: 4, status_name: "Job Completed" },
+  { id: 5, status_name: "Worker Reviewed" },
+  { id: 6, status_name: "Employer Reviewed" },
+  { id: 7, status_name: "Payment Released" },
+];

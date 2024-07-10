@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { SERVICES } from "../../data/ExploreOurServicesContent";
+import { ServiceItem } from "../../global";
 
 const ExploreOurServices = () => {
   return (

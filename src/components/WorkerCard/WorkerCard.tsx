@@ -1,4 +1,12 @@
-import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import React from "react";
 
 interface WorkerCardProps {
@@ -6,6 +14,8 @@ interface WorkerCardProps {
   name: string;
   types: string[];
   price: string;
+  isIdentificationVerified: boolean;
+  avatar: string;
 }
 
 const WorkerCard: React.FC<WorkerCardProps> = ({
@@ -13,6 +23,8 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
   name,
   types,
   price,
+  isIdentificationVerified,
+  avatar,
 }) => {
   return (
     <Card
@@ -27,10 +39,18 @@ const WorkerCard: React.FC<WorkerCardProps> = ({
       }}
       onClick={handleCardClick}
     >
-      <Avatar
-        sx={{ width: "40px", height: "40px", alignSelf: "center" }}
-        src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+      <Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          isIdentificationVerified ? <CheckCircle color="success" /> : <></>
+        }
+      >
+        <Avatar
+          sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+          src={avatar}
+        />
+      </Badge>
       <CardContent>
         <Box
           sx={{

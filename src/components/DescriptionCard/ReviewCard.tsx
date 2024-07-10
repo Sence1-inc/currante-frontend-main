@@ -1,5 +1,7 @@
+import { CheckCircle } from "@mui/icons-material";
 import {
   Avatar,
+  Badge,
   Box,
   Card,
   CardContent,
@@ -32,10 +34,23 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             padding: "10px 0",
           }}
         >
-          <Avatar
-            sx={{ width: "40px", height: "40px", alignSelf: "center" }}
-            src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          />
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              review.order.is_employer_identification_verified ? (
+                <CheckCircle color="success" />
+              ) : (
+                <></>
+              )
+            }
+          >
+            <Avatar
+              sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+              src={review.order.employer_avatar_photo}
+            />
+          </Badge>
+
           <Box
             sx={{
               display: "flex",

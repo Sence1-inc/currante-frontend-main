@@ -4,6 +4,7 @@ import carpenter1 from "/images/img_services_carpentry_1.jpg";
 import carpenter2 from "/images/img_services_carpentry_2.jpg";
 import cleaner1 from "/images/img_services_cleaning_1.jpg";
 import cleaner2 from "/images/img_services_cleaning_2.jpg";
+import { ServiceItem } from "../global";
 
 export const SERVICES: ServiceItem[] = [
   {

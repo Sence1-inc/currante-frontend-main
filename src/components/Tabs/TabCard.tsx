@@ -30,22 +30,55 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
   const capitalizeFirstLetter = (str: string) => {
     return str[0].toUpperCase() + str.slice(1);
   };
-  console.log(order);
+
   const renderStatus = () => {
-    if (Number(order.status) === 1) {
-      return "request";
-    } else if (Number(order.status) === 2) {
-      return "incoming";
-    } else if (Number(order.status) === 3) {
-      return "arrived";
-    } else if (Number(order.status) === 4) {
-      return "completed";
-    } else if (Number(order.status) === 5) {
+    const status = Number(order.status);
+    const statusMap: { [key: number]: string } = {
+      1: "request",
+      2: "incoming",
+      3: "arrived",
+      4: "completed",
+      7: "released",
+    };
+
+    if (statusMap[status]) {
+      return statusMap[status];
+    } else if (
+      (status === 5 && user.logged_in_as === "worker") ||
+      (status === 6 && user.logged_in_as === "employer") ||
+      order.payment_approval_date !== null
+    ) {
       return "reviewed";
     } else {
       return "all";
     }
   };
+
+  // const renderStatus = () => {
+  //   if (Number(order.status) === 1) {
+  //     return "request";
+  //   } else if (Number(order.status) === 2) {
+  //     return "incoming";
+  //   } else if (Number(order.status) === 3) {
+  //     return "arrived";
+  //   } else if (Number(order.status) === 4) {
+  //     return "completed";
+  //   } else if (
+  //     (Number(order.status) === 5 && user.logged_in_as == "worker") ||
+  //     order.payment_approval_date !== null
+  //   ) {
+  //     return "reviewed";
+  //   } else if (
+  //     (Number(order.status) === 6 && user.logged_in_as == "employer") ||
+  //     order.payment_approval_date !== null
+  //   ) {
+  //     return "reviewed";
+  //   } else if (Number(order.status) === 7) {
+  //     return "released";
+  //   } else {
+  //     return "all";
+  //   }
+  // };
 
   useEffect(() => {
     if (order.job_order_start_date) {
@@ -84,6 +117,19 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
               ? order.employer_name
               : order.worker_name}
           </Typography>
+          {user.logged_in_as === "employer" &&
+            user.orders.find(
+              (orderItem) => orderItem.id === order.id && orderItem.otp
+            ) && (
+              <Typography sx={jobListStyles.card.cardSubHeading}>
+                OTP:{" "}
+                {
+                  user.orders.find(
+                    (orderItem) => orderItem.id === order.id && orderItem.otp
+                  )?.otp
+                }
+              </Typography>
+            )}
           {user.logged_in_as === "worker" && (
             <Typography sx={jobListStyles.card.cardSubHeading}>
               {order.employer_address}
@@ -122,7 +168,7 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
         handleOpenModal={handleOpenModal}
       />
       <TabModal
-        orderId={order.id as number}
+        order={order}
         status={order.status}
         openModal={openModal}
         handleOpenModal={handleOpenModal}

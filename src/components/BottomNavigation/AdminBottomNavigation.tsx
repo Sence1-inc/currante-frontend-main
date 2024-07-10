@@ -1,26 +1,20 @@
-import { MapsHomeWorkRounded } from "@mui/icons-material";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import HomeIcon from "@mui/icons-material/Home";
+import { Man, Money } from "@mui/icons-material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAppSelector } from "../../redux/store";
 
-export default function SimpleBottomNavigation() {
-  const user = useAppSelector((state) => state.user);
+export default function AdminBottomNavigation() {
   const [value, setValue] = useState<number | null>(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
 
   useEffect(() => {
-    if (pathname.includes("chat")) {
-      setValue(2);
-    } else if (pathname.includes("services")) {
+    if (pathname.includes("payments")) {
       setValue(0);
-    } else if (pathname.includes("jobs")) {
+    } else if (pathname.includes("users")) {
       setValue(1);
     } else {
       setValue(null);
@@ -29,9 +23,8 @@ export default function SimpleBottomNavigation() {
 
   const handleNavigation = (newValue: number) => {
     setValue(newValue);
-    if (newValue === 0) navigate("/services");
-    else if (newValue === 1) navigate("/jobs");
-    else if (newValue === 2) navigate("/chats");
+    if (newValue === 0) navigate("/admin");
+    else if (newValue === 1) navigate("/users");
   };
 
   return (
@@ -70,38 +63,10 @@ export default function SimpleBottomNavigation() {
           },
         }}
       >
-        {user.logged_in_as === "employer" && (
-          <BottomNavigationAction
-            label="Home"
-            icon={<HomeIcon />}
-            onClick={() => navigate("/services")}
-            sx={{
-              fontFamily: "Poppins !important",
-              fontWeight: "600",
-              fontSize: "12px",
-              transition: "none !important",
-              webkitTransition: "none !important",
-              height: "80px",
-              ".css-lo76r6-MuiBottomNavigationAction-label": {
-                fontFamily: "Poppins",
-                fontSize: "12px",
-                color: "#FFFFFF",
-                letterSpacing: "0.5px",
-                marginTop: "5px",
-              },
-              ".MuiSvgIcon-root": {
-                width: "64px",
-                borderRadius: "16px",
-                padding: "3px",
-                color: "#FFFFFF",
-              },
-            }}
-          />
-        )}
         <BottomNavigationAction
-          label="Job List"
-          icon={<MapsHomeWorkRounded />}
-          onClick={() => navigate("/jobs")}
+          label="Payments"
+          icon={<Money />}
+          onClick={() => navigate("/admin")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",
@@ -124,10 +89,11 @@ export default function SimpleBottomNavigation() {
             },
           }}
         />
+
         <BottomNavigationAction
-          label="Messages"
-          icon={<ChatBubbleIcon />}
-          onClick={() => navigate("/chats")}
+          label="Users"
+          icon={<Man />}
+          onClick={() => navigate("/users")}
           sx={{
             fontFamily: "Poppins !important",
             fontWeight: "600",

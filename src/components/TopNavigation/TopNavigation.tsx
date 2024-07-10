@@ -1,6 +1,5 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { Badge, Link } from "@mui/material";
+import { Avatar, Badge, Link } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -14,14 +13,56 @@ import * as React from "react";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
+import { initializeOrder } from "../../redux/reducers/OrderReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { User } from "../../redux/type";
+import { Order, User } from "../../redux/type";
 
 const settings = ["Manage Profile", "Logout"];
 
+export const orderInitialState: Order = {
+  id: null,
+  created_at: "",
+  is_worker_identification_verified: false,
+  is_employer_identification_verified: false,
+  employer_avatar_photo: "",
+  worker_avatar_photo: "",
+  payment_approval_date: "",
+  job_order_start_date: "",
+  worker_arrived_date: "",
+  job_order_completed_date: "",
+  worker_id: null,
+  worker_user_id: null,
+  employer_id: null,
+  employer_user_id: null,
+  employer_address: "",
+  worker_name: "",
+  employer_name: "",
+  worker_job_subtype: {
+    total_price: null,
+    worker_id: null,
+    job_subtype: {
+      job_type_id: null,
+      job_subtype_id: 0,
+      worker_job_subtype_id: 0,
+      job_type: "",
+      job_name: "",
+      unit: "",
+      job_unit_price: 0,
+      active_flg: false,
+    },
+    job_unit_price: null,
+  },
+  quantity: null,
+  total: null,
+  status: "",
+  job_order_code: "",
+};
+
 const initialState: User = {
   logged_in_as: "",
+  id_photo: "",
+  covers: [],
   id: null,
   overall_rating: 0,
   email: "",
@@ -32,6 +73,11 @@ const initialState: User = {
   orders: [
     {
       id: null,
+      is_worker_identification_verified: false,
+      is_employer_identification_verified: false,
+      employer_avatar_photo: "",
+      worker_avatar_photo: "",
+      payment_approval_date: "",
       created_at: "",
       job_order_start_date: "",
       worker_arrived_date: "",
@@ -40,7 +86,11 @@ const initialState: User = {
       employer_id: null,
       worker_name: "",
       employer_name: "",
+      worker_user_id: null,
+      employer_user_id: null,
+      employer_address: "",
       worker_job_subtype: {
+        total_price: null,
         worker_id: null,
         job_subtype: {
           job_type_id: null,
@@ -93,44 +143,14 @@ const initialState: User = {
     },
   ],
   user_photos: [{ profile_photo: "", id_photo: "" }],
+  notifications: [],
   reviews: [
     {
       id: null,
       overall_rating: null,
       review_for: "",
       feedback: "",
-      order: {
-        id: null,
-        created_at: "",
-        job_order_start_date: "",
-        worker_arrived_date: "",
-        job_order_completed_date: "",
-        worker_id: null,
-        worker_user_id: null,
-        employer_id: null,
-        employer_user_id: null,
-        employer_address: "",
-        worker_name: "",
-        employer_name: "",
-        worker_job_subtype: {
-          worker_id: null,
-          job_subtype: {
-            job_type_id: null,
-            worker_job_subtype_id: 0,
-            job_subtype_id: 0,
-            job_type: "",
-            job_name: "",
-            unit: "",
-            job_unit_price: 0,
-            active_flg: false,
-          },
-          job_unit_price: null,
-        },
-        quantity: null,
-        total: null,
-        status: "",
-        job_order_code: "",
-      },
+      order: { ...orderInitialState },
       category_rating: [
         {
           category: {
@@ -178,6 +198,7 @@ function ResponsiveAppBar() {
 
       if (response.status === 200) {
         dispatch(initializeUser(initialState));
+        dispatch(initializeOrder({ ...orderInitialState }));
         dispatch(initializeIsAuthenticated(false));
         navigate("/sign-in", { replace: true });
       }
@@ -244,7 +265,14 @@ function ResponsiveAppBar() {
                   height: "40px",
                 }}
               >
-                <Badge badgeContent={4} color="primary">
+                <Badge
+                  badgeContent={
+                    user?.notifications?.filter(
+                      (notification) => !notification?.is_read
+                    ).length ?? 0
+                  }
+                  color="primary"
+                >
                   <NotificationsIcon
                     sx={{
                       fill: "#FFFFFF",
@@ -263,10 +291,13 @@ function ResponsiveAppBar() {
                   height: "40px",
                 }}
               >
-                <AccountCircleIcon
+                <Avatar
                   sx={{
-                    fill: "#FFFFFF",
+                    width: "30px",
+                    height: "30px",
+                    alignSelf: "center",
                   }}
+                  src={user.id_photo}
                 />
               </IconButton>
             </Tooltip>

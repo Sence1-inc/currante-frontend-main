@@ -4,6 +4,11 @@ import { Order } from "../type";
 const initialState: Order = {
   id: null,
   created_at: "",
+  is_worker_identification_verified: false,
+  is_employer_identification_verified: false,
+  employer_avatar_photo: "",
+  worker_avatar_photo: "",
+  payment_approval_date: "",
   job_order_start_date: "",
   worker_arrived_date: "",
   job_order_completed_date: "",
@@ -15,6 +20,7 @@ const initialState: Order = {
   worker_name: "",
   employer_name: "",
   worker_job_subtype: {
+    total_price: null,
     worker_id: null,
     job_subtype: {
       job_type_id: null,

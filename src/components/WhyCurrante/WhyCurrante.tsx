@@ -1,4 +1,8 @@
 import { Box, Container, Typography } from "@mui/material";
+import {
+  WhyCurranteItem as WhyCurranteItemType,
+  WhyCurranteProps,
+} from "../../global";
 import WhyCurranteItem from "./WhyCurranteItem";
 
 const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
@@ -60,7 +64,7 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
           }}
         >
           {whyCurrante.map(
-            (whyCurranteItem: WhyCurranteItem, index: number) => {
+            (whyCurranteItem: WhyCurranteItemType, index: number) => {
               return (
                 <WhyCurranteItem
                   key={index}

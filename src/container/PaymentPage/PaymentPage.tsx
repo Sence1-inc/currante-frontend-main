@@ -13,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { formatISO } from "date-fns";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import axiosInstance from "../../../axiosInstance";
 import PaymentCard from "../../components/PaymentCard/PaymentCard";
 import StepperWithError from "../../components/Stepper/Stepper";
@@ -26,7 +26,6 @@ const PaymentPage = () => {
   const { id } = useParams();
   const user = useAppSelector((state) => state.user);
   const { getWorker } = useGetWorker();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [stepFailed, setStepFailed] = useState<number | null>(null);
@@ -38,11 +37,7 @@ const PaymentPage = () => {
   const [firstChoiceDate, setFirstChoiceDate] = useState<
     Date | Dayjs | string | null
   >(null);
-  const [secondChoiceDate, setSecondChoiceDate] = useState<
-    Date | Dayjs | string | null
-  >(null);
   const [total, setTotal] = useState<number | null>(null);
-  const [orderId, setOrderId] = useState<number | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -57,7 +52,7 @@ const PaymentPage = () => {
   useEffect(() => {
     if (quantity || subtypeDetails) {
       setTotal(
-        Number(subtypeDetails?.job_unit_price || 0) * Number(quantity || 1)
+        Number(subtypeDetails?.total_price || 0) * Number(quantity || 1)
       );
     }
   }, [quantity, subtypeDetails]);
@@ -76,7 +71,7 @@ const PaymentPage = () => {
     }
   }, [jobSubtype]);
 
-  const createJobOrder = async () => {
+  const handleAccept = async () => {
     const workerJobSubtype = worker?.profile.job_subtypes.find(
       (type) => type.active_flg && type.job_name === jobSubtype
     );
@@ -96,7 +91,20 @@ const PaymentPage = () => {
 
       const response = await axiosInstance.post("/api/v1/orders", data);
       if (response.data) {
-        setOrderId(response.data.order.id);
+        try {
+          const res = await axiosInstance.post("/api/v1/payment-requests", {
+            email: user.email,
+            currency: "PHP",
+            amount: total,
+            order_id: response.data.order.id,
+          });
+          if (res.data) {
+            window.location.href = res.data.url;
+          }
+        } catch (error) {
+          console.log("Accept error: ", error);
+        }
+
         dispatch(
           initializeUser({
             ...user,
@@ -109,27 +117,6 @@ const PaymentPage = () => {
       setErrorMessage("Error");
       setStepFailed(null);
       setActiveStep(0);
-    }
-  };
-
-  const handleAccept = async () => {
-    createJobOrder();
-    try {
-      const data = {
-        email: user.email,
-        currency: "PHP",
-        amount: total,
-        order_id: orderId,
-      };
-      const response = await axiosInstance.post(
-        "/api/v1/payment-requests",
-        data
-      );
-      if (response.data) {
-        window.location.href = response.data.url;
-      }
-    } catch (error) {
-      console.log("Accept error: ", error);
     }
   };
 
@@ -251,7 +238,7 @@ const PaymentPage = () => {
                 lineHeight: "1.7",
               }}
             >
-              {subtypeDetails?.job_unit_price}
+              {subtypeDetails?.total_price}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -284,7 +271,7 @@ const PaymentPage = () => {
         </Typography>
         <FormControl variant="standard" fullWidth>
           <Box sx={{ width: "100%" }}>
-            <Typography variant="body1">First choice</Typography>
+            <Typography variant="body1">Preferred Date</Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 // disabled={edittingSection !== sectionName}
@@ -297,25 +284,6 @@ const PaymentPage = () => {
                 sx={{ width: "100%" }}
                 value={dayjs(firstChoiceDate)}
                 onChange={(date) => setFirstChoiceDate(date)}
-              />
-            </LocalizationProvider>
-          </Box>
-        </FormControl>
-        <FormControl variant="standard" fullWidth>
-          <Box sx={{ width: "100%" }}>
-            <Typography variant="body1">Second choice</Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                // disabled={edittingSection !== sectionName}
-                slotProps={{
-                  textField: {
-                    // helperText: errorMessages.birthday,
-                    variant: "standard",
-                  },
-                }}
-                sx={{ width: "100%" }}
-                value={dayjs(secondChoiceDate)}
-                onChange={(date) => setSecondChoiceDate(date)}
               />
             </LocalizationProvider>
           </Box>

@@ -1,3 +1,5 @@
+import { FaqItem } from "../global";
+
 export const TEASER_GENERAL_FAQ: FaqItem[] = [
   {
     id: "panel1",

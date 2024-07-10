@@ -1,3 +1,5 @@
+import { IntroItem } from "../global";
+
 export const INTRODUCTION: IntroItem[] = [
   /* to be edited */
   {

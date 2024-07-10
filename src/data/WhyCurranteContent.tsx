@@ -1,3 +1,5 @@
+import { WhyCurranteItem } from "../global";
+
 export const WHYCURRANTE: WhyCurranteItem[] = [
   /* to be edited */
   {

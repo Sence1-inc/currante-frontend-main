@@ -1,11 +1,12 @@
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Alert, Box, Button, Snackbar } from "@mui/material";
+import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
 import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
+import ProfileIDPhotoCard from "../../components/Profile/ProfileIDPhotoCard";
 import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
@@ -18,15 +19,6 @@ import { Address, Area, JobSubType, User } from "../../redux/type";
 export interface JobSubtypeDefault {
   job_type: string;
   job_subtypes: { job_name: string; unit: string; id: number }[];
-}
-
-interface Photo {
-  profile_photo: string;
-  id_photo: string;
-}
-
-interface UserPhotos {
-  photos: string[];
 }
 
 const ProfilePage: React.FC = () => {
@@ -52,7 +44,9 @@ const ProfilePage: React.FC = () => {
   const [edittingSection, setEdittingSection] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const [idImage, setIdImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [idFile, setIdFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -74,9 +68,22 @@ const ProfilePage: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        getPresignedURL();
+        getPresignedURL(file);
         setAvatarImage(reader.result as string);
         setFile(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        getPresignedURL(file);
+        setIdImage(reader.result as string);
+        setIdFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -102,19 +109,6 @@ const ProfilePage: React.FC = () => {
       )
     )[0];
   }
-
-  const userPhotos = (photos: Photo[]): UserPhotos => {
-    const rearrangedPhotos: UserPhotos = { photos: [] };
-    if (photos && photos.length > 0) {
-      photos.forEach((photo) => {
-        if (!rearrangedPhotos.photos) {
-          rearrangedPhotos.photos = [];
-        }
-        rearrangedPhotos.photos.push(photo.profile_photo);
-      });
-    }
-    return rearrangedPhotos;
-  };
 
   useEffect(() => {
     if (edittingSection !== "servicing_areas") {
@@ -156,10 +150,7 @@ const ProfilePage: React.FC = () => {
       setServicingAreas(user.areas);
       setAddresses(user.addresses);
       setDescription(user.description);
-
-      const user_photos = userPhotos(user.user_photos);
-
-      console.log(user_photos);
+      setAvatarImage(user.id_photo);
     }
   }, [user]);
 
@@ -207,7 +198,7 @@ const ProfilePage: React.FC = () => {
       getJobSubtypes();
     }
   }, [jobType]);
-  console.log("selectedJobType", selectedJobType);
+
   const handleSave = async () => {
     const data = {
       user_id: user.id, // update this during implementation of authentication
@@ -230,40 +221,74 @@ const ProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
 
-      console.log(response);
-
-      if (response.data) {
-        setSuccessMessage("Profile details successfully saved!");
+      if (response.status === 201) {
+        setSuccessMessage(response.data.message);
+        setIsSnackbarOpen(true);
         setErrorMessage("");
         setErrorMessages({});
         dispatch(initializeUser(response.data.profile));
       }
     } catch (error: any) {
+      setIsSnackbarOpen(true);
       setErrorMessages(error.response.data.errors);
       setSuccessMessage("");
     }
   };
 
-  const getPresignedURL = async () => {
+  const getPresignedURL = async (file: File) => {
     try {
-      const response = await axiosInstance.get("/api/v1/upload");
+      const response = await axiosInstance.get("/api/v1/presigned-url", {
+        params: {
+          filename: `${file?.name}-${file?.lastModified}`,
+          filetype: file?.type,
+        },
+      });
       setPresignedUrl(response.data.url);
-    } catch (error) {
-      console.log("Error: ", error);
+    } catch (error: any) {
+      setErrorMessages(error.response.data.errors);
     }
   };
 
-  const handeUpload = async () => {
-    if (!presignedUrl || !avatarImage) return;
+  const savePhoto = async (type: string) => {
+    try {
+      const filename =
+        type === "identification"
+          ? `${idFile?.name}-${idFile?.lastModified}`
+          : `${file?.name}-${file?.lastModified}`;
+      const response = await axiosInstance.post("/api/v1/upload", {
+        id: user.id,
+        filename: filename,
+        type: type,
+      });
 
-    if (file) {
+      if (response.status === 200) {
+        const savedPhoto =
+          type === "identification"
+            ? { identification_photo: response.data.identification }
+            : { id_photo: response.data.avatar };
+        dispatch(initializeUser({ ...user, ...savedPhoto }));
+        setIsSnackbarOpen(true);
+        setSuccessMessage(response.data.message);
+        setErrorMessage("");
+      }
+    } catch (error) {
+      console.log("Error uploading", error);
+    }
+  };
+
+  const handleUpload = async (type: string) => {
+    if (!presignedUrl || !avatarImage) return;
+    const image = type === "avatar" ? file : idFile;
+    if (image) {
       try {
-        await axiosInstance.put(presignedUrl, avatarImage, {
+        await axios.put(presignedUrl, image, {
           headers: {
-            "Content-Type": file.type,
+            "Content-Type": image.type,
           },
         });
+
         console.log("File uploaded successfully!");
+        savePhoto(type);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -274,26 +299,6 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Box>
-      <Box
-        component={"section"}
-        sx={{
-          textAlign: "center",
-          padding: "0",
-        }}
-      >
-        <Box
-          padding={"20px 0"}
-          sx={{
-            background: "#A1B5DE",
-          }}
-        >
-          <CameraAltIcon
-            sx={{
-              color: "#fff",
-            }}
-          />
-        </Box>
-      </Box>
       <Box component={"section"} sx={{ padding: "0" }}>
         <Box
           sx={{
@@ -317,7 +322,7 @@ const ProfilePage: React.FC = () => {
             }
             handleCancelEdittingSection={() => setEdittingSection("")}
             handleAvatarImageChange={handleAvatarImageChange}
-            handleUpload={handeUpload}
+            handleUpload={() => handleUpload("avatar")}
             handleSetDescription={(desc) => setDescription(desc)}
             handleSave={handleSave}
           />
@@ -367,8 +372,6 @@ const ProfilePage: React.FC = () => {
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
               handleSetJobSubtypes={(types) => {
-                console.log("Wawa");
-                console.log("Types", types);
                 setJobSubtypes([...types]);
               }}
               handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
@@ -418,11 +421,20 @@ const ProfilePage: React.FC = () => {
               handleSave={handleSave}
               handleCancelEdittingSection={() => setEdittingSection("")}
               handleSetAddresses={(adds) => {
-                console.log(adds);
                 setAddresses([...adds]);
               }}
             />
           )}
+
+          <ProfileIDPhotoCard
+            idImage={idImage}
+            handleImageChange={handleImageChange}
+            edittingSection={edittingSection}
+            sectionName="philsys"
+            handleSetEdittingSection={() => setEdittingSection("philsys")}
+            handleUpload={() => handleUpload("identification")}
+            handleCancelEdittingSection={() => setEdittingSection("")}
+          />
         </Box>
       </Box>
       <Snackbar

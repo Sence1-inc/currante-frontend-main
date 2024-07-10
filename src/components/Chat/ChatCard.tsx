@@ -1,4 +1,12 @@
-import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
@@ -35,7 +43,6 @@ const ChatCard: React.FC<ChatCardProps> = ({
         const { data } = await axiosInstance.get(endpoint);
 
         if (data) {
-          console.log("Data", data);
           setParticipantUserId(
             user.logged_in_as === "worker" ? data.employer_id : data.worker_id
           );
@@ -52,13 +59,11 @@ const ChatCard: React.FC<ChatCardProps> = ({
 
   useEffect(() => {
     const getData = async () => {
-      console.log(participantUserId);
       const data =
         user.logged_in_as === "worker"
           ? await getEmployer(Number(participantUserId))
           : await getWorker(Number(participantUserId));
 
-      console.log("huhu", data);
       user.logged_in_as === "worker" ? setEmployer(data) : setWorker(data); // put this in a state
     };
 
@@ -66,6 +71,12 @@ const ChatCard: React.FC<ChatCardProps> = ({
       getData();
     }
   }, [participantUserId]);
+
+  const getAddress = (): string => {
+    return user.logged_in_as === "employer"
+      ? (user.addresses[0].city as string)
+      : (user.areas[0].area_name as string);
+  };
 
   return (
     <Card
@@ -79,10 +90,30 @@ const ChatCard: React.FC<ChatCardProps> = ({
       }}
       onClick={handleCardClick}
     >
-      <Avatar
-        sx={{ width: "40px", height: "40px", alignSelf: "center" }}
-        src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+      <Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          (user.logged_in_as === "worker" &&
+            worker?.profile.is_identification_verified) ||
+          (user.logged_in_as === "employer" &&
+            employer?.profile.is_identification_verified) ? (
+            <CheckCircle color="success" />
+          ) : (
+            <></>
+          )
+        }
+      >
+        <Avatar
+          sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+          src={
+            user.logged_in_as === "worker"
+              ? employer?.profile.id_photo
+              : worker?.profile.id_photo
+          }
+        />
+      </Badge>
+
       <CardContent>
         <Box
           sx={{
@@ -97,7 +128,7 @@ const ChatCard: React.FC<ChatCardProps> = ({
               ? `${worker?.profile.first_name} ${worker?.profile.last_name}`
               : `${employer?.profile.first_name} ${employer?.profile.last_name}`}
           </Typography>
-          <Typography variant="subtitle1">Pasig City</Typography>
+          <Typography variant="subtitle1">{getAddress()}</Typography>
         </Box>
         <Box
           sx={{

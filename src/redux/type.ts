@@ -13,20 +13,27 @@ export interface JobSubType {
   job_name: string;
   unit: string;
   job_unit_price: number;
+  total_price?: number;
   active_flg: boolean | number;
 }
 
 export interface WorkerJobSubtype {
   worker_id: number | null;
   job_subtype: JobSubType;
-  job_unit_price: number | null;
+  job_unit_price?: number | null;
+  total_price: number | null;
 }
 
 export interface Order {
   id: number | null;
+  otp?: string;
   worker_id: number | null;
   worker_user_id: number | null;
+  is_worker_identification_verified: boolean;
+  is_employer_identification_verified: boolean;
   employer_id: number | null;
+  employer_avatar_photo: string;
+  worker_avatar_photo: string;
   employer_user_id: number | null;
   employer_address: string;
   worker_name: string;
@@ -40,6 +47,7 @@ export interface Order {
   job_order_start_date: string;
   worker_arrived_date: string;
   job_order_completed_date: string;
+  payment_approval_date: string;
 }
 
 export interface Category {
@@ -82,6 +90,10 @@ export interface Address {
 export interface User {
   logged_in_as: string;
   id: number | null;
+  id_photo: string;
+  identification_photo?: string;
+  is_identification_verified?: boolean;
+  covers: string[];
   worker_id?: number | null;
   employer_id?: number | null;
   email: string;
@@ -103,8 +115,9 @@ export interface User {
   birthday: string;
   gender: string;
   phone_number: string;
-  user_photos: UserPhoto[];
+  user_photos?: UserPhoto[];
   addresses: Address[];
+  notifications: Notification[];
   reviews: Review[];
 }
 
@@ -125,4 +138,11 @@ export type JobType = {
   job_type_name: string;
   job_subtypes: { id: number; job_name: string; unit: string }[];
   image?: any;
+};
+
+export type Notification = {
+  id?: number | null;
+  user_id: number | null;
+  message: string;
+  is_read?: boolean;
 };

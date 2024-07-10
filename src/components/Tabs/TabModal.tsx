@@ -1,5 +1,6 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { addMinutes, formatISO } from "date-fns";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import ArrivedImage from "../../assets/arrived.png";
@@ -7,11 +8,12 @@ import CheckImage from "../../assets/check.png";
 import QuestionImage from "../../assets/question.png";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
 import jobListStyles from "../../styles/jobListStyles";
 import CustomModal from "./Modal";
 
 interface TabModalProps {
-  orderId: number;
+  order: Order;
   status: string;
   openModal: boolean;
   handleOpenModal: () => void;
@@ -19,19 +21,19 @@ interface TabModalProps {
 }
 
 const TabModal: React.FC<TabModalProps> = ({
-  orderId,
+  order,
   status,
   openModal,
   handleCloseModal,
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const [inputOTP, setInputOTP] = useState<string>("");
-  const [validOTP, setValidOTP] = useState<boolean>(false);
+  const [isvalidOTP, setIsValidOTP] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
 
   const handleAccept = async () => {
     try {
-      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
         status: "2",
       });
       if (response.data) {
@@ -52,7 +54,7 @@ const TabModal: React.FC<TabModalProps> = ({
 
   const handleArrived = async () => {
     try {
-      const response = await axiosInstance.patch(`/api/v1/orders/${orderId}`, {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
         status: "3",
         worker_arrived_date: getUtcNow(),
       });
@@ -66,30 +68,32 @@ const TabModal: React.FC<TabModalProps> = ({
   };
 
   const handleWorkComplete = async () => {
-    if (inputOTP === "" && inputOTP.length < 6) {
+    if (otp === "" && otp.length < 6) {
       console.log("Please input OTP");
     } else {
-      setValidOTP(true);
       try {
         const response = await axiosInstance.patch(
-          `/api/v1/orders/${orderId}`,
+          `/api/v1/orders/${order.id}`,
           {
             status: "4",
             job_order_completed_date: getUtcNow(),
+            otp: otp,
           }
         );
         if (response.data) {
+          setIsValidOTP(true);
           dispatch(initializeUser({ ...user, orders: response.data.orders }));
           handleCloseModal();
         }
       } catch (error) {
+        setIsValidOTP(false);
         console.log("Error: ", error);
       }
     }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputOTP(event.target.value);
+    setOtp(event.target.value);
   };
 
   const completedConfirm = () => {
@@ -151,7 +155,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Location:
             </Typography>{" "}
-            Quezon City
+            {order.employer_address}
           </Typography>
           <Typography
             sx={[
@@ -162,7 +166,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Time:
             </Typography>{" "}
-            Feb. 10 7am-12pm
+            {formatISO(new Date(dayjs(order.job_order_start_date).format()))}
           </Typography>
         </Box>
         <Box sx={jobListStyles.container.buttonContainer}>
@@ -258,12 +262,12 @@ const TabModal: React.FC<TabModalProps> = ({
       </CustomModal>
     );
   };
-  console.log(status);
+
   const renderModal = () => {
     if (status == "1") {
       return requestModalContent();
     } else if (status == "4" || status == "3") {
-      if (!validOTP) {
+      if (!isvalidOTP) {
         return completedModalContent();
       } else {
         return completedConfirm();

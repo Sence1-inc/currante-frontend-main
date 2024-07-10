@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
-import { useAppDispatch } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import AdminBottomNavigation from "../BottomNavigation/AdminBottomNavigation";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import TopNavigation from "../TopNavigation/TopNavigation";
 
@@ -16,6 +17,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [authenticated, setAuthenticated] = useState<boolean>(true);
+  const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -49,7 +51,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
       >
         <Component />
       </Box>
-      <BottomNavigation />
+      {user.logged_in_as !== "admin" && <BottomNavigation />}
+      {user.logged_in_as === "admin" && <AdminBottomNavigation />}
     </React.Fragment>
   ) : (
     <Navigate to="/sign-in" />
