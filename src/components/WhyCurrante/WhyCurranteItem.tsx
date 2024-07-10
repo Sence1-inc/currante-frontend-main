@@ -9,7 +9,7 @@ const WhyCurranteItem: React.FC<WhyCurranteItem> = ({ title, desc, image }) => {
           xs: "100%",
           md: "40%"
         },
-        padding: "20px",
+        padding: {xs: "0px", sm: "20px"},
         minHeight: "157px",
         display: "flex",
         flexDirection: {

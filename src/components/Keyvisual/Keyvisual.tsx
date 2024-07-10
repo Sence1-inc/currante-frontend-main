@@ -56,8 +56,8 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
 
 
   return (
-    <Box sx={{pt: '50px', px: { lg: "80px", md: "40px", xs: "20px"}, pb: '80px', 
-      backgroundColor: "primary.light" }}>
+    <Box sx={{pt: {xs: '40px', sm: '50px'}, px: { lg: "80px", md: "40px", xs: "20px"}, pb: '80px', 
+      backgroundColor: "primary.light" }}>  
       <Container
         sx={{
           py: 4,
