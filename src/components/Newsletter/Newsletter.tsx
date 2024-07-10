@@ -115,7 +115,7 @@ const Newsletter = () => {
                   }}
                   value="worker"
                   control={<Radio />}
-                  label="I am a worker"
+                  label="I’m looking for work"
                 />
                 <FormControlLabel
                   sx={{
@@ -123,7 +123,7 @@ const Newsletter = () => {
                   }}
                   value="employer"
                   control={<Radio />}
-                  label="I am an employer"
+                  label="I’m looking for a worker"
                 />
               </RadioGroup>
             </FormControl>

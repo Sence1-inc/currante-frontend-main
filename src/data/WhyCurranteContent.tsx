@@ -11,7 +11,7 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
     image: "/images/img_why_cur_2.png",
   },
   {
-    title: "Need a worker ASAP?",
+    title: "Need a house cleaner, plumber, or carpenter ASAP?",
     desc: "Our quick and secure booking process allows you to find and hire the perfect worker within minutes.",
     image: "/images/img_why_cur_3.png",
   },
