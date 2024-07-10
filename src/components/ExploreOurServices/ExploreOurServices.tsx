@@ -18,7 +18,7 @@ const ExploreOurServices = () => {
         display: "flex",
         flexDirection: { xs: "column", lg: "row" },
         gap: "40px",
-        alignItems: "center",
+        alignItems: {xs: "center", lg: "flex-start"},
         justifyContent: "center",
         padding: "80px 20px",
         flexWrap: "wrap",
@@ -27,37 +27,41 @@ const ExploreOurServices = () => {
       <Card
         sx={{
           order: { xs: 1, lg: 2 },
-          height: { xs: "250px", lg: "370px" },
           backgroundColor: "transparent",
           boxShadow: "none",
           border: "none",
           borderRadius: 0,
-          width: { lg: "600px" },
+          width: {lg: "calc((510/1200) * 100%)"},
           display: "flex",
           flexDirection: "column",
-          gap: "24px",
+          rowGap: "18px",
+          alignItems: {xs: "center", lg: "flex-start"}
         }}
       >
         <CardContent
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "24px",
-            alignItems: "center",
+            justifyContent: "flex-start",
+            rowGap: "18px",
+            alignItems: {xs: "center", lg: "flex-start"},
             padding: "0",
             margin: { lg: "auto 0 0 0" },
+            textAlign: { xs: "center", lg: "left" }
           }}
         >
           <Typography
             variant="h2"
-            sx={{ textAlign: { xs: "center", lg: "left" } }}
           >
             Explore our Services
           </Typography>
           <Typography
             variant="body2"
             color="primary.main"
-            sx={{ textAlign: { xs: "center", lg: "left" } }}
+            sx={{ 
+              textAlign: { xs: "center", md: "center", lg: "left" },
+              fontWeight: "400",
+              fontSize: "16.5px" }}
           >
             Explore our services today and experience the joy of a sparkling,
             well-maintained space. 
@@ -87,8 +91,8 @@ const ExploreOurServices = () => {
             key={index}
             sx={{
               order: { xs: index + 1, lg: service.order },
-              height: { xs: "250px", md: "374px" },
-              width: { md: "600px" },
+              height: { xs: "250px", md: "300px" },
+              width: { xs: "100%", lg: "calc((510/1200) * 100%)" },
             }}
           >
             <CardMedia
@@ -113,7 +117,8 @@ const ExploreOurServices = () => {
           </Card>
         );
       })}
-    </Box>
+      </Box>
+    
   );
 };
 
