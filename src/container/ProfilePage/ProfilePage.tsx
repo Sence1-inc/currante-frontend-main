@@ -334,8 +334,12 @@ const ProfilePage: React.FC = () => {
             middleName={middleName ?? ""}
             lastName={lastName ?? ""}
             gender={gender ?? ""}
-            sectionName={"basic_info"}
             birthday={birthday}
+            phoneNumber={phoneNumber ?? ""}
+            email={email ?? ""}
+            sectionName={"basic_info"}
+            handleSetEmail={(email) => setEmail(email)}
+            handleSetPhoneNumber={(number) => setPhoneNumber(number)}
             handleSetEdittingSection={() => setEdittingSection("basic_info")}
             handleSetFirstName={(name) => setFirstName(name)}
             handleSetMiddleName={(name) => setMiddleName(name)}
@@ -346,7 +350,7 @@ const ProfilePage: React.FC = () => {
             handleCancelEdittingSection={() => setEdittingSection("")}
           />
 
-          <ProfileContactInfoCard
+          {/* <ProfileContactInfoCard
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             phoneNumber={phoneNumber ?? ""}
@@ -357,7 +361,7 @@ const ProfilePage: React.FC = () => {
             handleSetPhoneNumber={(number) => setPhoneNumber(number)}
             handleSave={handleSave}
             handleCancelEdittingSection={() => setEdittingSection("")}
-          />
+          /> */}
 
           {user.logged_in_as === "worker" && (
             <ProfileRatesCard

@@ -19,6 +19,8 @@ interface ProfileBasicInfoCardProps {
   middleName: string;
   lastName: string;
   gender: string;
+  email: string;
+  phoneNumber: string;
   sectionName: string;
   birthday: Date | Dayjs | null | string;
   errorMessages: any;
@@ -28,6 +30,8 @@ interface ProfileBasicInfoCardProps {
   handleSetLastName: (name: string) => void;
   handleSetGender: (name: string) => void;
   handleSetBirthday: (birthday: Dayjs | null) => void;
+  handleSetEmail: (email: string) => void;
+  handleSetPhoneNumber: (number: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
 }
@@ -59,12 +63,16 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
   sectionName,
   errorMessages,
   birthday,
+  email,
+  phoneNumber,
   handleSetEdittingSection,
   handleSetFirstName,
   handleSetMiddleName,
   handleSetLastName,
   handleSetGender,
   handleSetBirthday,
+  handleSetEmail,
+  handleSetPhoneNumber,
   handleSave,
   handleCancelEdittingSection,
 }) => {
@@ -103,7 +111,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           lineHeight: "1.7",
         }}
       >
-        Basic Info
+        Basic and Contact Info
       </Typography>
 
       <Typography
@@ -224,6 +232,42 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
             handleSetGender(e.target.value)
           }
           helperText={errorMessages.gender}
+        />
+
+        <TextField
+          helperText={errorMessages.email}
+          error={isEmptyObject(errorMessages, "email")}
+          disabled={edittingSection !== sectionName}
+          id="standard-start-adornment"
+          sx={{ m: 1, width: "100%" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">Email</InputAdornment>
+            ),
+          }}
+          variant="standard"
+          value={email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleSetEmail(e.target.value)
+          }
+        />
+
+        <TextField
+          helperText={errorMessages.phone_number}
+          error={isEmptyObject(errorMessages, "phone_number")}
+          disabled={edittingSection !== sectionName}
+          id="standard-start-adornment"
+          sx={{ m: 1, width: "100%" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">Phone</InputAdornment>
+            ),
+          }}
+          variant="standard"
+          value={phoneNumber}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleSetPhoneNumber(e.target.value)
+          }
         />
 
         {edittingSection === sectionName && (
