@@ -5,7 +5,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
-import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
 import ProfileIDPhotoCard from "../../components/Profile/ProfileIDPhotoCard";
 import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
