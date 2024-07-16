@@ -12,7 +12,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
 import { db } from "../../firebase";
-import { useAppSelector } from "../../redux/store";
+import useGetUser from "../../hooks/useGetUser";
+import { initializeParticipant } from "../../redux/reducers/ParticipantReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 export interface FirebaseUser {
   user_id: number;
@@ -31,6 +33,8 @@ const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const navigate = useNavigate();
   const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const { getUser } = useGetUser();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -172,7 +176,22 @@ const ChatPage = () => {
           (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
         );
 
+        const getData = async () => {
+          const type =
+            userState.logged_in_as === "employer" ? "worker" : "employer";
+          const data = await getUser(user[0].user_id, type);
+
+          if (userState.logged_in_as === "employer") {
+            dispatch(initializeParticipant(data.worker_id));
+          } else {
+            dispatch(initializeParticipant(data.employer_id));
+          }
+        };
+
+        getData();
+
         const participant = user[0];
+
         return (
           <ChatCard
             key={index}

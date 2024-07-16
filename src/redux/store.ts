@@ -4,6 +4,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import IsAuthenticatedReducer from "./reducers/IsAuthenticatedReducer";
 import OrderReducer from "./reducers/OrderReducer";
+import ParticipantReducer from "./reducers/ParticipantReducer";
 import UserReducer from "./reducers/UserReducer";
 import WorkersReducer from "./reducers/WorkersReducer";
 import reduxPersistMiddleware from "./reduxPersistMiddleware";
@@ -11,7 +12,7 @@ import reduxPersistMiddleware from "./reduxPersistMiddleware";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user", "order", "isAuthenticated"],
+  whitelist: ["user", "order", "isAuthenticated", "participant"],
 };
 
 const persistedReducer = persistReducer(
@@ -19,6 +20,7 @@ const persistedReducer = persistReducer(
   combineReducers({
     user: UserReducer,
     workers: WorkersReducer,
+    participant: ParticipantReducer,
     isAuthenticated: IsAuthenticatedReducer,
     order: OrderReducer,
   })
