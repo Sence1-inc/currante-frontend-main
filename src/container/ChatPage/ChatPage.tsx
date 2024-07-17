@@ -12,9 +12,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
 import { db } from "../../firebase";
-import useGetUser from "../../hooks/useGetUser";
-import { initializeParticipant } from "../../redux/reducers/ParticipantReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../redux/store";
 
 export interface FirebaseUser {
   user_id: number;
@@ -33,8 +31,6 @@ const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const navigate = useNavigate();
   const userState = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
-  const { getUser } = useGetUser();
 
   useEffect(() => {
     const fetchConversations = async () => {
