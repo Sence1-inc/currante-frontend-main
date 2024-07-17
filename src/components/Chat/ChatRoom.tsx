@@ -13,7 +13,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
 import { db } from "../../firebase";
-import { useAppSelector } from "../../redux/store";
+import useGetUser from "../../hooks/useGetUser";
+import { initializeParticipant } from "../../redux/reducers/ParticipantReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import FabButton from "../FabButton/FabButton";
 import ChatBox from "./ChatBox";
 import SendChat from "./SendChat";
@@ -24,6 +26,8 @@ const ChatRoom: React.FC = () => {
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
   const participantId = useAppSelector((state) => state.participant);
+  const { getUser } = useGetUser();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (conversation_id) {
@@ -62,6 +66,20 @@ const ChatRoom: React.FC = () => {
         const user = users.filter((user) => {
           return user !== null && user.user_id !== userState.id;
         }) as FirebaseUser[];
+
+        const getData = async () => {
+          const type =
+            userState.logged_in_as === "employer" ? "worker" : "employer";
+          const data = await getUser(user[0].user_id, type);
+
+          if (userState.logged_in_as === "employer") {
+            dispatch(initializeParticipant(data.worker_id));
+          } else {
+            dispatch(initializeParticipant(data.employer_id));
+          }
+        };
+
+        getData();
 
         setParticipant(user[0]);
       };

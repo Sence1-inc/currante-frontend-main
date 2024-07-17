@@ -176,20 +176,6 @@ const ChatPage = () => {
           (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
         );
 
-        const getData = async () => {
-          const type =
-            userState.logged_in_as === "employer" ? "worker" : "employer";
-          const data = await getUser(user[0].user_id, type);
-
-          if (userState.logged_in_as === "employer") {
-            dispatch(initializeParticipant(data.worker_id));
-          } else {
-            dispatch(initializeParticipant(data.employer_id));
-          }
-        };
-
-        getData();
-
         const participant = user[0];
 
         return (
