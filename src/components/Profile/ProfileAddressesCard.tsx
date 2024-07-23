@@ -15,8 +15,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Address } from "../../redux/type";
+import { isEmptyObject } from "./ProfileBasicInfoCard";
 
 interface ProfileAddressesCardProps {
+  errorMessages: any;
   edittingSection: string;
   sectionName: string;
   addresses: Address[];
@@ -29,6 +31,7 @@ interface ProfileAddressesCardProps {
 }
 
 const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
+  errorMessages,
   edittingSection,
   addresses,
   cities,
@@ -54,7 +57,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
       setHouseBuildingUnit(addresses[0].house_building_unit);
     }
   }, [addresses]);
-
+  console.log(errorMessages);
   return (
     <Box
       sx={{
@@ -167,7 +170,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
         </FormControl>
 
         <TextField
-          // error={isEmptyObject(errorMessages, "gender")}
+          error={isEmptyObject(errorMessages, "addresses.0.street")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
@@ -185,11 +188,11 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
             ]);
             setStreet(e.target.value);
           }}
-          // helperText={errorMessages.gender}
+          helperText={errorMessages["addresses.0.street"]?.[0]}
         />
 
         <TextField
-          // error={isEmptyObject(errorMessages, "gender")}
+          error={isEmptyObject(errorMessages, "addresses.0.barangay")}
           disabled={edittingSection !== sectionName}
           InputProps={{
             startAdornment: (
@@ -207,11 +210,14 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
             ]);
             setBarangay(e.target.value);
           }}
-          // helperText={errorMessages.gender}
+          helperText={errorMessages["addresses.0.barangay"]?.[0]}
         />
 
         <TextField
-          // error={isEmptyObject(errorMessages, "gender")}
+          error={isEmptyObject(
+            errorMessages,
+            "addresses.0.house_building_unit"
+          )}
           disabled={edittingSection !== sectionName}
           InputProps={{
             startAdornment: (
@@ -229,7 +235,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
             ]);
             setHouseBuildingUnit(e.target.value);
           }}
-          // helperText={errorMessages.gender}
+          helperText={errorMessages["addresses.0.house_building_unit"]?.[0]}
         />
 
         {edittingSection === sectionName && (

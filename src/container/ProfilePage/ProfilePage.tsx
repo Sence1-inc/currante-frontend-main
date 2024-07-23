@@ -350,19 +350,6 @@ const ProfilePage: React.FC = () => {
             handleCancelEdittingSection={() => setEdittingSection("")}
           />
 
-          {/* <ProfileContactInfoCard
-            errorMessages={errorMessages}
-            edittingSection={edittingSection}
-            phoneNumber={phoneNumber ?? ""}
-            sectionName={"contact_info"}
-            email={email ?? ""}
-            handleSetEdittingSection={() => setEdittingSection("contact_info")}
-            handleSetEmail={(email) => setEmail(email)}
-            handleSetPhoneNumber={(number) => setPhoneNumber(number)}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-          /> */}
-
           {user.logged_in_as === "worker" && (
             <ProfileRatesCard
               edittingSection={edittingSection}
@@ -418,6 +405,7 @@ const ProfilePage: React.FC = () => {
 
           {user.logged_in_as === "employer" && (
             <ProfileAddressesCard
+              errorMessages={errorMessages}
               edittingSection={edittingSection}
               addresses={addresses ?? []}
               cities={CITIES}
