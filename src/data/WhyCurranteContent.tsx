@@ -8,7 +8,8 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
     image: "/images/img_why_cur_1.png",
   },
   {
-    title: "Want to schedule maintenance and cleaning services around your busy life?",
+    title:
+      "Want to schedule maintenance and cleaning services around your busy life?",
     desc: "Schedule your maintenance and cleaning services to match your availability.",
     image: "/images/img_why_cur_2.png",
   },
@@ -19,7 +20,7 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
   },
   {
     title: "Worried about trusting strangers to work in your home?",
-    desc: "Rest easy knowing that all workers on Currante undergo a thorough verification process by using Phisys ID.",
+    desc: "Rest easy knowing that all workers on Currante undergo a thorough verification process by using Philsys ID.",
     image: "/images/img_why_cur_4.png",
   },
   {
@@ -31,5 +32,5 @@ export const WHYCURRANTE: WhyCurranteItem[] = [
     title: "Want assurance that your job will be done right?",
     desc: "To ensure your satisfaction, a job will only be tagged completed, through your One-Time Password (OTP) confirmation.",
     image: "/images/img_why_cur_6.png",
-  }
+  },
 ];

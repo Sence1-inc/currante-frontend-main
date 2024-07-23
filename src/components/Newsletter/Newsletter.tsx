@@ -130,6 +130,7 @@ const Newsletter = () => {
             <TextField
               sx={{
                 "& fieldset": { border: "none" },
+                "& .MuiOutlinedInput-root": { borderRadius: "16px" },
                 borderRadius: "16px",
                 border: "1px solid #0E2F71",
               }}
