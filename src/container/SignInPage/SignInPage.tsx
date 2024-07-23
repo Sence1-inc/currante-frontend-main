@@ -1,5 +1,5 @@
 import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
@@ -20,6 +20,7 @@ type Errors = {
 
 const SignInPage: React.FC<SignInPageProps> = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [userCredentials, setUserCredentials] = useState({
     email: "",
     password: "",
@@ -30,31 +31,32 @@ const SignInPage: React.FC<SignInPageProps> = () => {
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
-  const handleSignIn = async (role: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValidEmail = emailRegex.test(userCredentials.email);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isValidEmail = emailRegex.test(userCredentials.email);
 
-    const validationConditions = [
-      {
-        condition: !isValidEmail || !userCredentials.email,
-        field: "email",
-        message: "Please provide a valid registered email address.",
-      },
-      {
-        condition: !userCredentials.password,
-        field: "password",
-        message: "Please provide a valid password.",
-      },
-    ];
+  const validationConditions = [
+    {
+      condition: !isValidEmail || !userCredentials.email,
+      field: "email",
+      message: "Please provide a valid registered email address.",
+    },
+    {
+      condition: !userCredentials.password,
+      field: "password",
+      message: "Please provide a valid password.",
+    },
+  ];
 
+  const hasErrors = (): boolean => {
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)
       .map(({ message }) => message);
-    const hasErrors = errorMessages.length > 0;
+    return errorMessages.length > 0;
+  };
 
-    if (hasErrors) {
+  const handleValidation = async (role: string) => {
+    if (hasErrors()) {
       setIsSnackbarOpen(true);
       setErrorMessage("Please fill in the required details.");
       const newErrors = validationConditions.reduce<{ [key: string]: string }>(
@@ -69,40 +71,41 @@ const SignInPage: React.FC<SignInPageProps> = () => {
 
       setErrors({ ...errors, ...newErrors });
     } else {
-      try {
-        const data = {
-          email: userCredentials.email,
-          password: userCredentials.password,
-          service_id: Number(import.meta.env.VITE_SERVICE_ID),
-          service_key: import.meta.env.VITE_SERVICE_KEY,
-          role: role,
-        };
+      handleSignIn(role);
+    }
+  };
 
-        const response = await axiosInstance.post("/api/v1/login", data);
-        // const imageResponse = await axiosInstance.get("/api/v1/images");
-        if (response.data.user) {
-          dispatch(initializeUser(response.data.user));
-          dispatch(initializeIsAuthenticated(true));
+  const handleSignIn = async (role: string) => {
+    try {
+      const data = {
+        email: userCredentials.email,
+        password: userCredentials.password,
+        service_id: Number(import.meta.env.VITE_SERVICE_ID),
+        service_key: import.meta.env.VITE_SERVICE_KEY,
+        role: role,
+      };
 
-          if (response.data.user.logged_in_as === "worker") {
-            navigate("/jobs");
-          } else if (response.data.user.logged_in_as === "employer") {
-            navigate("/services");
-            // navigate(-1) === undefined ? navigate("/services") : navigate(-1);
-          } else {
-            navigate("/");
-          }
-        }
-      } catch (error: any) {
-        setIsSnackbarOpen(true);
-        setErrorMessage(error.response.data.message);
-        if (error.response.status === 400) {
-          setErrors({
-            email: "",
-            password: "",
-          });
-        }
-        console.log("Error logging in: ", error);
+      const response = await axiosInstance.post("/api/v1/login", data);
+
+      dispatch(initializeUser(response.data.user));
+      dispatch(initializeIsAuthenticated(true));
+      if (response.data.user.logged_in_as === "worker") {
+        navigate("/jobs");
+      } else if (response.data.user.logged_in_as === "employer") {
+        navigate("/services");
+      } else {
+        navigate("/");
+      }
+    } catch (error: any) {
+      console.log("Error logging in: ", error);
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response?.data?.message || "An error occurred");
+
+      if (error.response?.status === 400) {
+        setErrors({
+          email: "",
+          password: "",
+        });
       }
     }
   };
@@ -149,7 +152,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
           />
           <Box sx={authPageStyles.container.buttonsContainer}>
             <Button
-              onClick={() => handleSignIn("worker")}
+              onClick={() => handleValidation("worker")}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}
@@ -157,7 +160,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
               Sign In as Worker
             </Button>
             <Button
-              onClick={() => handleSignIn("employer")}
+              onClick={() => handleValidation("employer")}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}

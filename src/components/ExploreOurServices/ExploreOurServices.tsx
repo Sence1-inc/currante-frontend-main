@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { SERVICES } from "../../data/ExploreOurServicesContent";
 import { ServiceItem } from "../../global";
 
@@ -18,7 +10,7 @@ const ExploreOurServices = () => {
         display: "flex",
         flexDirection: { xs: "column", lg: "row" },
         gap: "40px",
-        alignItems: {xs: "center", lg: "flex-start"},
+        alignItems: { xs: "center", lg: "flex-start" },
         justifyContent: "center",
         padding: "80px 20px",
         flexWrap: "wrap",
@@ -31,11 +23,11 @@ const ExploreOurServices = () => {
           boxShadow: "none",
           border: "none",
           borderRadius: 0,
-          width: {lg: "calc((510/1200) * 100%)"},
+          width: { lg: "calc((510/1200) * 100%)" },
           display: "flex",
           flexDirection: "column",
           rowGap: "18px",
-          alignItems: {xs: "center", lg: "flex-start"}
+          alignItems: { xs: "center", lg: "flex-start" },
         }}
       >
         <CardContent
@@ -44,30 +36,29 @@ const ExploreOurServices = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             rowGap: "18px",
-            alignItems: {xs: "center", lg: "flex-start"},
+            alignItems: { xs: "center", lg: "flex-start" },
             padding: "0",
             margin: { lg: "auto 0 0 0" },
-            textAlign: { xs: "center", lg: "left" }
+            textAlign: { xs: "center", lg: "left" },
           }}
         >
-          <Typography
-            variant="h2"
-          >
-            Explore our Services
-          </Typography>
+          <Typography variant="h2">Explore our Services</Typography>
           <Typography
             variant="body2"
             color="primary.main"
-            sx={{ 
+            sx={{
               textAlign: { xs: "center", md: "center", lg: "left" },
               fontWeight: "400",
-              fontSize: "16.5px" }}
+              fontSize: "16.5px",
+            }}
           >
             Explore our services today and experience the joy of a sparkling,
             well-maintained space. 
           </Typography>
         </CardContent>
-        <CardActions sx={{ padding: 0 }}>
+
+        {/* HIDDEN FOR NOW SINCE THERE'S NO ACTION FOR THIS */}
+        {/* <CardActions sx={{ padding: 0 }}>
           <Button
             sx={{
               margin: { xs: "auto", lg: "0" },
@@ -82,7 +73,7 @@ const ExploreOurServices = () => {
           >
             Explore Our Services
           </Button>
-        </CardActions>
+        </CardActions> */}
       </Card>
 
       {SERVICES.map((service: ServiceItem, index: number) => {
@@ -117,8 +108,7 @@ const ExploreOurServices = () => {
           </Card>
         );
       })}
-      </Box>
-    
+    </Box>
   );
 };
 

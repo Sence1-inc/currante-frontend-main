@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import { Navigate } from "react-router";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,7 +11,7 @@ const api: AxiosInstance = axios.create({
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH",
     "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Credentials": " true",
+    "Access-Control-Allow-Credentials": "true",
   },
 });
 
@@ -23,6 +22,13 @@ api.interceptors.response.use(
   async (error) => {
     const currentTime = Date.now();
     const elapsedTimeSinceLastRefresh = currentTime - lastRefreshTime;
+
+    const isLoginRequest = error.config.url.includes("/api/v1/login");
+    const isRegisterRequest = error.config.url.includes("/api/v1/register");
+
+    if (isLoginRequest || isRegisterRequest) {
+      return Promise.reject(error);
+    }
 
     if (
       elapsedTimeSinceLastRefresh >= 4 * 60 * 1000 ||
@@ -42,9 +48,12 @@ api.interceptors.response.use(
         lastRefreshTime = currentTime;
 
         return api.request(error.config);
-      } catch (refreshError) {
+      } catch (refreshError: any) {
         console.error("Failed to refresh token", refreshError);
-        Navigate({ to: "/sign-in" });
+
+        if (refreshError.response && refreshError.response.status === 498) {
+          window.location.href = "/sign-in";
+        }
       }
     }
 
