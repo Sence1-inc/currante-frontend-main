@@ -52,7 +52,9 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
           </Typography>
         </Box>
       </Box>
-      <Box
+
+      {/* HIDDEN FOR NOW */}
+      {/* <Box
         sx={{
           width: "100%",
           display: "flex",
@@ -67,7 +69,7 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
           value={Number(reviewee?.profile.overall_rating)}
           readOnly
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 };
