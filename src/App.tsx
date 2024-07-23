@@ -12,6 +12,7 @@ import ForgotPasswordVerifyPage from "./container/ForgotPasswordPage/ForgotPassw
 import NewPasswordPage from "./container/ForgotPasswordPage/NewPasswordPage";
 import HomePage from "./container/HomePage/HomePage";
 import JobListPage from "./container/JobListPage/JobListPage";
+import NewsletterPage from "./container/NewsletterPage/NewsletterPage";
 import NotificationPage from "./container/NotificationPage/NotificationPage";
 import PaymentPage from "./container/PaymentPage/PaymentPage";
 import PaymentSuccessPage from "./container/PaymentPage/PaymentSuccessPage";
@@ -141,6 +142,10 @@ const App = () => {
         <Route
           path="/privacy-policy"
           element={<PublicRoute component={PrivacyPolicyPage} />}
+        />
+        <Route
+          path="/newsletter"
+          element={<PublicRoute component={NewsletterPage} />}
         />
       </Routes>
     </>
