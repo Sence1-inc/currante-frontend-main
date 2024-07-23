@@ -139,7 +139,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
             inputType="password"
             label="Password"
             placeholder="Enter your password"
-            error={errors.email}
+            error={errors.password}
             handleSetUserCredentials={(value) =>
               setUserCredentials((prevUserCredentials) => ({
                 ...prevUserCredentials,
