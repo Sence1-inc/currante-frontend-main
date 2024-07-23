@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useAppSelector } from "../../redux/store";
 import { Address } from "../../redux/type";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
 
@@ -47,6 +48,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
   const [province, setProvince] = useState<string>("");
   const [barangay, setBarangay] = useState<string>("");
   const [houseBuildingUnit, setHouseBuildingUnit] = useState<string>("");
+  const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (addresses.length > 0) {
@@ -57,7 +59,27 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
       setHouseBuildingUnit(addresses[0].house_building_unit);
     }
   }, [addresses]);
-  console.log(errorMessages);
+
+  const handleCancel = () => {
+    setCity(user.addresses[0].city);
+    setStreet(user.addresses[0].street);
+    setProvince(user.addresses[0].province);
+    setBarangay(user.addresses[0].barangay);
+    setHouseBuildingUnit(user.addresses[0].house_building_unit);
+    handleSetAddresses([
+      {
+        ...user.addresses[0],
+        province: user.addresses[0].province,
+        city: user.addresses[0].city,
+        street: user.addresses[0].street,
+        house_building_unit: user.addresses[0].house_building_unit,
+      },
+      ...user.addresses.slice(1),
+    ]);
+
+    handleCancelEdittingSection();
+  };
+
   return (
     <Box
       sx={{
@@ -241,10 +263,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
         {edittingSection === sectionName && (
           <ButtonGroup>
             <Button
-              onClick={() => {
-                // handleSetAddresses();
-                handleCancelEdittingSection();
-              }}
+              onClick={handleCancel}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
