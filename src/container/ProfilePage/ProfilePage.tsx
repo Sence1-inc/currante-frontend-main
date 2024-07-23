@@ -277,8 +277,10 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleUpload = async (type: string) => {
-    if (!presignedUrl || !avatarImage) return;
+    if (!presignedUrl) return;
+
     const image = type === "avatar" ? file : idFile;
+
     if (image) {
       try {
         await axios.put(presignedUrl, image, {
@@ -293,6 +295,7 @@ const ProfilePage: React.FC = () => {
         console.error("Error uploading file:", error);
       }
     } else {
+      console.log("wew");
       return;
     }
   };

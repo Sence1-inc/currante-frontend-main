@@ -51,7 +51,7 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
           Philsys ID
         </Typography>
 
-        {!user.is_identification_verified && (
+        {!user.is_identification_verified && !user.identification_photo && (
           <Box
             sx={{
               position: "relative",
