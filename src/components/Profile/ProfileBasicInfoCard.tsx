@@ -3,8 +3,11 @@ import {
   Box,
   Button,
   ButtonGroup,
+  FormHelperText,
   IconButton,
   InputAdornment,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -216,23 +219,26 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           )}
         </LocalizationProvider>
 
-        <TextField
-          error={isEmptyObject(errorMessages, "gender")}
-          disabled={edittingSection !== sectionName}
-          id="standard-start-adornment"
-          sx={{ m: 1, width: "100%" }}
-          InputProps={{
-            startAdornment: (
+        <Box>
+          <Select
+            error={isEmptyObject(errorMessages, "gender")}
+            disabled={edittingSection !== sectionName}
+            sx={{ marginLeft: 1, width: "100%", textAlign: "start" }}
+            value={gender}
+            onChange={(e) => handleSetGender(e.target.value as string)}
+            startAdornment={
               <InputAdornment position="start">Gender</InputAdornment>
-            ),
-          }}
-          variant="standard"
-          value={gender}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleSetGender(e.target.value)
-          }
-          helperText={errorMessages.gender}
-        />
+            }
+            variant="standard"
+            displayEmpty
+          >
+            <MenuItem value="meow">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </Select>
+          <FormHelperText sx={{ marginLeft: 1, p: 0, color: "#d32f2f" }}>
+            {errorMessages.gender}
+          </FormHelperText>
+        </Box>
 
         <TextField
           helperText={errorMessages.email}

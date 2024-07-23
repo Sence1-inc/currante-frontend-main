@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { User } from "../../redux/type";
 import AdminBottomNavigation from "../BottomNavigation/AdminBottomNavigation";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import TopNavigation from "../TopNavigation/TopNavigation";
@@ -17,7 +18,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [authenticated, setAuthenticated] = useState<boolean>(true);
-  const user = useAppSelector((state) => state.user);
+  const user: User = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const checkAuthentication = async () => {

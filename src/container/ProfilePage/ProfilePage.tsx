@@ -1,8 +1,9 @@
-import { Alert, Box, Button, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
 import ProfileIDPhotoCard from "../../components/Profile/ProfileIDPhotoCard";
@@ -379,9 +380,11 @@ const ProfilePage: React.FC = () => {
               }}
               handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
               handleSetInfoMessage={(message) => setInfoMessage(message)}
-              handleSetSelectedJobType={(jobtype) =>
-                setSelectedJobType(jobtype)
-              }
+              handleSetSelectedJobType={(jobtype) => {
+                setSuccessMessage("");
+                setErrorMessage("");
+                setSelectedJobType(jobtype);
+              }}
             />
           )}
 
@@ -440,62 +443,21 @@ const ProfilePage: React.FC = () => {
           />
         </Box>
       </Box>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={isSnackbarOpen}
-        onClose={() => setIsSnackbarOpen(false)}
-        autoHideDuration={infoMessage ? 10000 : 4000}
-        message={
-          successMessage
-            ? successMessage
-            : errorMessage
-            ? errorMessage
-            : infoMessage
-        }
-        key="topcenter"
-        sx={{
-          color: errorMessage ? "red" : "green",
-          marginBottom: "16px",
-          width: "80%",
+      <CustomSnackbar
+        errorMessage={errorMessage}
+        successMessage={successMessage}
+        warningMessage={infoMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+        handleWarningProceed={() => {
+          const selectedJobTypeId =
+            jobTypes.find((type) => type.job_type_name === selectedJobType)
+              ?.id || null;
+          setJobType(selectedJobType);
+          setJobTypeId(selectedJobTypeId);
+          setIsSnackbarOpen(false);
         }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setIsSnackbarOpen(false)}
-          severity={
-            successMessage ? "success" : errorMessage ? "error" : "info"
-          }
-        >
-          {successMessage
-            ? successMessage
-            : errorMessage
-            ? errorMessage
-            : infoMessage}
-
-          {infoMessage && (
-            <Box>
-              <Button color="primary" onClick={() => setIsSnackbarOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  const selectedJobTypeId =
-                    jobTypes.find(
-                      (type) => type.job_type_name === selectedJobType
-                    )?.id || null;
-                  setJobType(selectedJobType);
-                  setJobTypeId(selectedJobTypeId);
-                  setIsSnackbarOpen(false);
-                }}
-              >
-                Proceed
-              </Button>
-            </Box>
-          )}
-        </Alert>
-      </Snackbar>
+      />
     </Box>
   );
 };
