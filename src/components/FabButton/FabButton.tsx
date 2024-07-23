@@ -1,4 +1,4 @@
-import { Fab, useTheme } from "@mui/material";
+import { Fab } from "@mui/material";
 import React from "react";
 import "./FabButton.css";
 
@@ -15,7 +15,6 @@ const FabButton: React.FC<FabButtonProps> = ({
   text,
   styles,
 }) => {
-  const theme = useTheme();
   return (
     <Fab
       className="fab"
@@ -36,8 +35,7 @@ const FabButton: React.FC<FabButtonProps> = ({
     >
       {icon}
       {"  "}
-      {(window.innerWidth > theme.breakpoints.values.sm || text.length < 10) &&
-        text}
+      {text}
     </Fab>
   );
 };
