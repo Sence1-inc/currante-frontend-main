@@ -21,7 +21,9 @@ import axiosInstance from "../../../axiosInstance";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch } from "../../redux/store";
 import { User } from "../../redux/type";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
+import imageCompression from "browser-image-compression";
 
 const responsive = {
   desktop: {
@@ -70,13 +72,16 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   handleSave,
   handleCancelEdittingSection,
 }) => {
-  const maxFileSizeMB = 10;
+  const maxFileSizeMB = 3;
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [files, setFiles] = useState<FileList | []>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -101,7 +106,9 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
 
       if (fileSizeExceedsLimit) {
         setIsUploading(false);
-        alert(
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(
           `One or more files exceed the maximum size of ${maxFileSizeMB} MB`
         );
         return;
@@ -155,26 +162,48 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           dispatch(initializeUser({ ...user, covers: response.data.covers }));
         })
       );
-    } catch (error) {
+
+      setSuccessMessage("Photo/s successfully uploaded");
+      setIsSnackbarOpen(true);
+      setErrorMessage("");
+    } catch (error: any) {
       console.error("Error saving photos: ", error);
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response.data.message);
     }
   };
 
   const handleUploadCoverPhotos = async () => {
     try {
+      const filesArray = Array.from(files);
+
+      const compressedFiles = await Promise.all(
+        filesArray.map((file: File) =>
+          imageCompression(file, {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          })
+        )
+      );
+
       await Promise.all(
         presignedUrls.map((presignedUrl, index) =>
-          axios.put(presignedUrl, files[index], {
+          axios.put(presignedUrl, compressedFiles[index], {
             headers: {
-              "Content-Type": files[index].type,
+              "Content-Type": compressedFiles[index].type,
             },
           })
         )
       );
 
       savePhotos();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading cover photos: ", error);
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response.message);
     }
   };
 
@@ -195,6 +224,12 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           zIndex: 20,
         }}
       >
+        <CustomSnackbar
+          errorMessage={errorMessage}
+          successMessage={successMessage}
+          isSnackbarOpen={isSnackbarOpen}
+          handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+        />
         <IconButton
           sx={{
             position: "absolute",

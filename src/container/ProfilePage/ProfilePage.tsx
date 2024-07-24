@@ -15,6 +15,7 @@ import { CITIES, PROVINCES } from "../../data/WorkerDetails";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Address, Area, JobSubType, User } from "../../redux/type";
+import imageCompression from "browser-image-compression";
 
 export interface JobSubtypeDefault {
   job_type: string;
@@ -271,8 +272,11 @@ const ProfilePage: React.FC = () => {
         setSuccessMessage(response.data.message);
         setErrorMessage("");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error uploading", error);
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response.data.message);
     }
   };
 
@@ -283,19 +287,31 @@ const ProfilePage: React.FC = () => {
 
     if (image) {
       try {
-        await axios.put(presignedUrl, image, {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        };
+
+        const compressedFile = await imageCompression(image, options);
+
+        await axios.put(presignedUrl, compressedFile, {
           headers: {
             "Content-Type": image.type,
           },
         });
 
-        console.log("File uploaded successfully!");
         savePhoto(type);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error uploading file:", error);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(error.response.message);
       }
     } else {
-      console.log("wew");
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage("Upload unsuccessful");
       return;
     }
   };
