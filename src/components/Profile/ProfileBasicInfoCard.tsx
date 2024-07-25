@@ -243,7 +243,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
         <TextField
           helperText={errorMessages?.email}
           error={isEmptyObject(errorMessages, "email")}
-          disabled={edittingSection !== sectionName}
+          disabled
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
           InputProps={{
