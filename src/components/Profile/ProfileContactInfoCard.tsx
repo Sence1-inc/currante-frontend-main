@@ -87,7 +87,7 @@ const ProfileContactInfoCard: React.FC<ProfileContactInfoCardProps> = ({
 
       <Box sx={{ textAlign: "center" }}>
         <TextField
-          helperText={errorMessages.email}
+          helperText={errorMessages?.email}
           error={isEmptyObject(errorMessages, "email")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
@@ -105,7 +105,7 @@ const ProfileContactInfoCard: React.FC<ProfileContactInfoCardProps> = ({
         />
 
         <TextField
-          helperText={errorMessages.phone_number}
+          helperText={errorMessages?.phone_number}
           error={isEmptyObject(errorMessages, "phone_number")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"

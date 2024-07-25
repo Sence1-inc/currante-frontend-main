@@ -99,7 +99,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetSchedule(e.target.value)
           }
-          helperText={errorMessages.first_name}
+          helperText={errorMessages?.first_name}
         />
         {edittingSection === sectionName && (
           <ButtonGroup>

@@ -52,7 +52,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)
       .map(({ message }) => message);
-    return errorMessages.length > 0;
+    return errorMessages?.length > 0;
   };
 
   const handleValidation = async (role: string) => {

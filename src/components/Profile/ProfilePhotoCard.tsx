@@ -552,8 +552,10 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             >
               {description}
             </Typography>
-            {errorMessages.description && (
-              <Typography color="error">{errorMessages.description}</Typography>
+            {errorMessages?.description && (
+              <Typography color="error">
+                {errorMessages?.description}
+              </Typography>
             )}
           </>
         ) : (
@@ -569,7 +571,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleSetDescription(e.target.value)
             }
-            helperText={errorMessages.description}
+            helperText={errorMessages?.description}
           />
         ))}
       {edittingSection === sectionName && (

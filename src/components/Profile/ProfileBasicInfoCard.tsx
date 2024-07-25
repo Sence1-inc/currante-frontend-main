@@ -144,7 +144,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetFirstName(e.target.value)
           }
-          helperText={errorMessages.first_name}
+          helperText={errorMessages?.first_name}
         />
         <TextField
           error={isEmptyObject(errorMessages, "middle_name")}
@@ -161,7 +161,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetMiddleName(e.target.value)
           }
-          helperText={errorMessages.middle_name}
+          helperText={errorMessages?.middle_name}
         />
         <TextField
           error={isEmptyObject(errorMessages, "last_name")}
@@ -178,7 +178,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetLastName(e.target.value)
           }
-          helperText={errorMessages.last_name}
+          helperText={errorMessages?.last_name}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           {birthday !== null ? (
@@ -186,7 +186,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
-                  helperText: errorMessages.birthday,
+                  helperText: errorMessages?.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -204,7 +204,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
-                  helperText: errorMessages.birthday,
+                  helperText: errorMessages?.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -236,12 +236,12 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
             <MenuItem value="female">Female</MenuItem>
           </Select>
           <FormHelperText sx={{ marginLeft: 1, p: 0, color: "#d32f2f" }}>
-            {errorMessages.gender}
+            {errorMessages?.gender}
           </FormHelperText>
         </Box>
 
         <TextField
-          helperText={errorMessages.email}
+          helperText={errorMessages?.email}
           error={isEmptyObject(errorMessages, "email")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
@@ -259,7 +259,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
         />
 
         <TextField
-          helperText={errorMessages.phone_number}
+          helperText={errorMessages?.phone_number}
           error={isEmptyObject(errorMessages, "phone_number")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"

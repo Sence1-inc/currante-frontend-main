@@ -103,7 +103,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)
       .map(({ message }) => message);
-    const hasErrors = errorMessages.length > 0;
+    const hasErrors = errorMessages?.length > 0;
 
     if (hasErrors) {
       setSuccessMessage("");

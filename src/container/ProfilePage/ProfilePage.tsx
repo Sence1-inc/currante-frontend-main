@@ -232,6 +232,7 @@ const ProfilePage: React.FC = () => {
     } catch (error: any) {
       setIsSnackbarOpen(true);
       setErrorMessages(error.response.data.errors);
+      setErrorMessage("Please fill in the required details");
       setSuccessMessage("");
     }
   };
