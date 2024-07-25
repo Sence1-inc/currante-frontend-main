@@ -148,7 +148,7 @@ const TabButton: React.FC<TabButtonProps> = ({
           (status == "1" ||
             status == "2" ||
             status == "3" ||
-            status == "6" ||
+            status == "5" ||
             status == "7" ||
             order.payment_approval_date !== null) &&
           true
@@ -165,7 +165,7 @@ const TabButton: React.FC<TabButtonProps> = ({
             (status == "1" ||
               status == "2" ||
               status == "3" ||
-              status == "6" ||
+              status == "5" ||
               status == "7" ||
               order.payment_approval_date !== null) &&
               jobListStyles.icon.buttonIconDisabled,
