@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -15,7 +16,9 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axiosInstance from "../../../axiosInstance";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import PaymentCard from "../../components/PaymentCard/PaymentCard";
+import { isEmptyObject } from "../../components/Profile/ProfileBasicInfoCard";
 import StepperWithError from "../../components/Stepper/Stepper";
 import useGetWorker from "../../hooks/useGetWorker";
 import { initializeUser } from "../../redux/reducers/UserReducer";
@@ -28,6 +31,7 @@ const PaymentPage = () => {
   const { getWorker } = useGetWorker();
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessages, setErrorMessages] = useState<any>({});
   const [stepFailed, setStepFailed] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [worker, setWorker] = useState<Worker | null>(null);
@@ -38,6 +42,7 @@ const PaymentPage = () => {
     Date | Dayjs | string | null
   >(null);
   const [total, setTotal] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -71,52 +76,131 @@ const PaymentPage = () => {
     }
   }, [jobSubtype]);
 
+  useEffect(() => {
+    if (jobSubtype) {
+      setErrorMessages((prevState: any) => {
+        const { ["job_subtype"]: _, ...newState } = prevState;
+
+        return newState;
+      });
+    }
+  }, [jobSubtype]);
+
+  useEffect(() => {
+    if (quantity) {
+      setErrorMessages((prevState: any) => {
+        const { ["quantity"]: _, ...newState } = prevState;
+
+        return newState;
+      });
+    }
+  }, [quantity]);
+
+  useEffect(() => {
+    if (firstChoiceDate) {
+      setErrorMessages((prevState: any) => {
+        const { ["job_order_start_date"]: _, ...newState } = prevState;
+
+        return newState;
+      });
+    }
+  }, [firstChoiceDate]);
+
+  const validationConditions = [
+    {
+      condition: !jobSubtype,
+      field: "job_subtype",
+      message: "Please select the job type.",
+    },
+    {
+      condition: !firstChoiceDate,
+      field: "job_order_start_date",
+      message: "Please select a valid date.",
+    },
+    {
+      condition:
+        !quantity &&
+        (jobSubtype == "general cleaning" ||
+          jobSubtype == "post construction cleaning"),
+      field: "quantity",
+      message: "Please input the area.",
+    },
+  ];
+
+  const hasErrors = (): boolean => {
+    const errorMessages = validationConditions
+      .filter(({ condition }) => condition)
+      .map(({ message }) => message);
+    return errorMessages?.length > 0;
+  };
+
   const handleAccept = async () => {
-    const workerJobSubtype = worker?.profile.job_subtypes.find(
-      (type) => type.active_flg && type.job_name === jobSubtype
-    );
-
-    try {
-      const data = {
-        worker_id: Number(id),
-        employer_id: user.employer_id,
-        worker_job_subtype_id: workerJobSubtype?.worker_job_subtype_id,
-        quantity: quantity,
-        total: total,
-        status: 1,
-        job_order_start_date: formatISO(
-          new Date(dayjs(firstChoiceDate).format())
-        ),
-      };
-
-      const response = await axiosInstance.post("/api/v1/orders", data);
-      if (response.data) {
-        try {
-          const res = await axiosInstance.post("/api/v1/payment-requests", {
-            email: user.email,
-            currency: "PHP",
-            amount: total,
-            order_id: response.data.order.id,
-          });
-          if (res.data) {
-            window.location.href = res.data.url;
+    if (hasErrors()) {
+      setIsSnackbarOpen(true);
+      setErrorMessage("Please fill in the required details.");
+      const newErrors = validationConditions.reduce<{ [key: string]: string }>(
+        (acc, { condition, field, message }) => {
+          if (condition) {
+            acc[field] = message;
           }
-        } catch (error) {
-          console.log("Accept error: ", error);
-        }
+          return acc;
+        },
+        {}
+      );
 
-        dispatch(
-          initializeUser({
-            ...user,
-            orders: [...user.orders, response.data.order as Order],
-          })
-        );
+      setErrorMessages({ ...errorMessages, ...newErrors });
+    } else {
+      const workerJobSubtype = worker?.profile.job_subtypes.find(
+        (type) => type.active_flg && type.job_name === jobSubtype
+      );
+
+      try {
+        const data = {
+          worker_id: Number(id),
+          employer_id: user.employer_id,
+          worker_job_subtype_id: workerJobSubtype?.worker_job_subtype_id,
+          quantity: quantity,
+          total: total,
+          status: 1,
+          job_order_start_date: formatISO(
+            new Date(dayjs(firstChoiceDate).format())
+          ),
+        };
+
+        const response = await axiosInstance.post("/api/v1/orders", data);
+        if (response.data) {
+          try {
+            const res = await axiosInstance.post("/api/v1/payment-requests", {
+              email: user.email,
+              currency: "PHP",
+              amount: total,
+              order_id: response.data.order.id,
+            });
+            if (res.data) {
+              setErrorMessage("");
+              setErrorMessages({});
+              window.location.href = res.data.url;
+            }
+          } catch (error: any) {
+            setIsSnackbarOpen(true);
+            setErrorMessage(error.response.data.message);
+            setErrorMessages(error.response.data.errors);
+          }
+
+          dispatch(
+            initializeUser({
+              ...user,
+              orders: [...user.orders, response.data.order as Order],
+            })
+          );
+        }
+      } catch (error: any) {
+        console.log(error);
+        setErrorMessage("Error");
+        setErrorMessages(error.response?.data.errors);
+        setStepFailed(null);
+        setActiveStep(0);
       }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage("Error");
-      setStepFailed(null);
-      setActiveStep(0);
     }
   };
 
@@ -131,6 +215,11 @@ const PaymentPage = () => {
         gap: "20px",
       }}
     >
+      <CustomSnackbar
+        errorMessage={errorMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+      />
       <StepperWithError
         steps={["Information", "Payment"]}
         errorMessage={errorMessage}
@@ -155,6 +244,7 @@ const PaymentPage = () => {
               Job Type
             </Typography>
             <Select
+              error={isEmptyObject(errorMessages, "job_subtype")}
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
               sx={{
@@ -175,6 +265,9 @@ const PaymentPage = () => {
                   </MenuItem>
                 ))}
             </Select>
+            <FormHelperText sx={{ p: 0, color: "#d32f2f" }}>
+              {errorMessages?.job_subtype}
+            </FormHelperText>
           </Box>
         </FormControl>
         {jobSubtype &&
@@ -193,7 +286,7 @@ const PaymentPage = () => {
                   Estimated area (sqm)
                 </Typography>
                 <TextField
-                  // error={isEmptyObject(errorMessages, "description")}
+                  error={isEmptyObject(errorMessages, "quantity")}
                   // multiline
                   // minRows={1}
                   id="standard-start-adornment"
@@ -203,7 +296,7 @@ const PaymentPage = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setQuantity(Number(e.target.value))
                   }
-                  // helperText={errorMessages.description}
+                  helperText={errorMessages?.quantity}
                 />
               </Box>
             </FormControl>
@@ -277,7 +370,7 @@ const PaymentPage = () => {
                 // disabled={edittingSection !== sectionName}
                 slotProps={{
                   textField: {
-                    // helperText: errorMessages.birthday,
+                    // helperText: errorMessages?.job_order_start_date,
                     variant: "standard",
                   },
                 }}
@@ -287,6 +380,9 @@ const PaymentPage = () => {
               />
             </LocalizationProvider>
           </Box>
+          <FormHelperText sx={{ p: 0, color: "#d32f2f" }}>
+            {errorMessages?.job_order_start_date}
+          </FormHelperText>
         </FormControl>
       </PaymentCard>
       <Box
