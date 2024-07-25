@@ -1,13 +1,14 @@
 import { addDoc, collection } from "@firebase/firestore";
 import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import CustomTextField from "../../components/CustomTextField/CustomTextField";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
 import authPageStyles from "../../styles/authPageStyles";
 
 interface SignUpPageProps {}
@@ -31,6 +32,7 @@ export type UserCredentialsType = {
 };
 
 const SignUpPage: React.FC<SignUpPageProps> = () => {
+  const navigate = useNavigate();
   const [userCredentials, setUserCredentials] = useState<UserCredentialsType>({
     email: "",
     password: "",
@@ -50,6 +52,13 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/services");
+    }
+  }, [isAuthenticated]);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValidEmail = emailRegex.test(userCredentials.email);
