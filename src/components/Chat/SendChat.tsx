@@ -3,7 +3,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { EXCLUDED_WORDS } from "../../data/ChatDetails";
+import { EXCLUDED_WORDS, hasConsecutiveNumbers } from "../../data/ChatDetails";
 import { db } from "../../firebase";
 import { useAppSelector } from "../../redux/store";
 
@@ -23,7 +23,7 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
 
   useEffect(() => {
     if (chat) {
-      setIsInvalid(hasExcludedWord());
+      setIsInvalid(hasExcludedWord() || hasConsecutiveNumbers(chat));
     }
   }, [chat]);
 

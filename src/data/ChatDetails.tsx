@@ -16,3 +16,10 @@ export const EXCLUDED_WORDS = [
   "tel",
   "tel.",
 ];
+
+export function hasConsecutiveNumbers(input: string): boolean {
+  const cleanedInput = input.replace(/\s+/g, "");
+  const regex = /\d{7,50}/;
+
+  return regex.test(cleanedInput);
+}
