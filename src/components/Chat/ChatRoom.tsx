@@ -131,17 +131,19 @@ const ChatRoom: React.FC = () => {
         </Box>
       </Box>
 
-      {userState.logged_in_as === "employer" && (
-        <FabButton
-          text="Hire"
-          icon={<PaymentIcon />}
-          handleClick={handleHire}
-          styles={{
-            bottom: "170px",
-            right: "36%",
-          }}
-        />
-      )}
+      {userState.logged_in_as === "employer" &&
+        participantId &&
+        participantId !== 0 && (
+          <FabButton
+            text="Hire"
+            icon={<PaymentIcon />}
+            handleClick={handleHire}
+            styles={{
+              bottom: "170px",
+              right: "36%",
+            }}
+          />
+        )}
 
       <ChatBox conversation_id={conversation_id} />
       <SendChat conversation_id={conversation_id} />
