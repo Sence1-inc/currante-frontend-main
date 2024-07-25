@@ -1,5 +1,5 @@
 import { CheckCircle } from "@mui/icons-material";
-import { Avatar, Badge, Box, Rating, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Typography } from "@mui/material";
 import React from "react";
 import { Employer, Worker } from "../../redux/type";
 
