@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import TabCard from "../../components/Tabs/TabCard";
 import { TabsItem } from "../../components/Tabs/Tabs";
 import { ORDER_STATUSES, Status } from "../../data/WorkerDetails";
@@ -8,6 +9,8 @@ import { useAppSelector } from "../../redux/store";
 const JobListPage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
   const [value, setValue] = useState<number>(0);
+  const [infoMessage, setInfoMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -17,7 +20,14 @@ const JobListPage: React.FC = () => {
     return (
       <TabsItem value={value} index={value}>
         {user?.orders.map((order, index) => {
-          const tabCard = <TabCard key={index} order={order} />;
+          const tabCard = (
+            <TabCard
+              setIsSnackbarOpen={setIsSnackbarOpen}
+              setInfoMessage={setInfoMessage}
+              key={index}
+              order={order}
+            />
+          );
 
           if (
             value === 0 ||
@@ -41,6 +51,18 @@ const JobListPage: React.FC = () => {
         marginBottom: "84px",
       }}
     >
+      {user.logged_in_as === "worker" && (
+        <CustomSnackbar
+          infoMessage={infoMessage}
+          isSnackbarOpen={isSnackbarOpen}
+          handleSetIsSnackbarOpen={(value) => {
+            setIsSnackbarOpen(value);
+            if (!value) {
+              setInfoMessage("");
+            }
+          }}
+        />
+      )}
       <Box
         sx={{
           backgroundColor: "#d7e3ff",

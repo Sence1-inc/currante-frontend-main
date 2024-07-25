@@ -33,7 +33,8 @@ api.interceptors.response.use(
 
     if (
       elapsedTimeSinceLastRefresh >= 4 * 60 * 1000 ||
-      (error.response && error.response.status === 498)
+      (error.response && error.response.status === 498) ||
+      (error.response && error.response.status === 401)
     ) {
       const data = {};
       try {

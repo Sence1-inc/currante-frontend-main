@@ -20,7 +20,6 @@ const OrderEventListener = ({
     } as Options);
 
     const handleNewOrderCreated = (data: any) => {
-      console.log("Data", data);
       dispatch(
         initializeUser({
           ...user,

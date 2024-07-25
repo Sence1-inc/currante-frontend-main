@@ -10,9 +10,15 @@ import TabModal from "./TabModal";
 
 interface TabCardProps {
   order: Order;
+  setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
+  setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TabCard: React.FC<TabCardProps> = ({ order }) => {
+const TabCard: React.FC<TabCardProps> = ({
+  order,
+  setInfoMessage,
+  setIsSnackbarOpen,
+}) => {
   const user = useAppSelector((state) => state.user);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [createdDate, setCreatedDate] = useState<Date | null>(null);
@@ -168,6 +174,8 @@ const TabCard: React.FC<TabCardProps> = ({ order }) => {
         handleOpenModal={handleOpenModal}
       />
       <TabModal
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        setInfoMessage={setInfoMessage}
         order={order}
         status={order.status}
         openModal={openModal}

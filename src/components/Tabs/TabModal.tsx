@@ -18,6 +18,8 @@ interface TabModalProps {
   openModal: boolean;
   handleOpenModal: () => void;
   handleCloseModal: () => void;
+  setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
+  setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TabModal: React.FC<TabModalProps> = ({
@@ -25,6 +27,8 @@ const TabModal: React.FC<TabModalProps> = ({
   status,
   openModal,
   handleCloseModal,
+  setInfoMessage,
+  setIsSnackbarOpen,
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -38,6 +42,8 @@ const TabModal: React.FC<TabModalProps> = ({
       });
       if (response.data) {
         dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        setIsSnackbarOpen(true);
+        setInfoMessage(`You have accepted order no. ${order.job_order_code}`);
         handleCloseModal();
       }
     } catch (error) {
@@ -60,6 +66,10 @@ const TabModal: React.FC<TabModalProps> = ({
       });
       if (response.data) {
         dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        setIsSnackbarOpen(true);
+        setInfoMessage(
+          `You have arrived for order no. ${order.job_order_code}`
+        );
         handleCloseModal();
       }
     } catch (error) {
@@ -83,6 +93,10 @@ const TabModal: React.FC<TabModalProps> = ({
         if (response.data) {
           setIsValidOTP(true);
           dispatch(initializeUser({ ...user, orders: response.data.orders }));
+          setIsSnackbarOpen(true);
+          setInfoMessage(
+            `Congratulations! You've completed order no. ${order.job_order_code}`
+          );
           handleCloseModal();
         }
       } catch (error) {
