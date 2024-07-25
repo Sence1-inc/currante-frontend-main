@@ -4,6 +4,7 @@ import axiosInstance from "../../../axiosInstance";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
+import { isEmptyObject } from "../Profile/ProfileBasicInfoCard";
 import CustomRating from "./CustomRating";
 
 interface WorkerReviewFormProps {
@@ -20,6 +21,7 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
   const [overallRating, setOverallRating] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbar] = useState<boolean>(false);
+  const [errorMessages, setErrorMessages] = useState<any>({});
 
   const handleSubmit = async () => {
     try {
@@ -47,6 +49,7 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
     } catch (error: any) {
       setIsSnackbar(true);
       setErrorMessage(error.response.data.message);
+      setErrorMessages(error.response.data.errors);
     }
   };
 
@@ -63,6 +66,7 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
         handleSetRating={(value) => setOverallRating(value)}
         rating={overallRating}
         title="Rate your employer"
+        error={errorMessages.overall_rating}
       />
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Typography variant="body1">Type 200 characters</Typography>
@@ -75,6 +79,14 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
           multiline
           rows={4}
           placeholder="Tell us your experience"
+          sx={{
+            "& .Mui-error": {
+              margin: "0",
+              fontSize: "12px",
+            },
+          }}
+          helperText={errorMessages.feedback}
+          error={isEmptyObject(errorMessages, "feedback")}
         />
       </Box>
       <Button

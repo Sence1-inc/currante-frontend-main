@@ -5,6 +5,7 @@ import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Category } from "../../redux/type";
 import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
+import { isEmptyObject } from "../Profile/ProfileBasicInfoCard";
 import CustomRating from "./CustomRating";
 
 interface EmployerReviewFormProps {
@@ -19,6 +20,7 @@ const EmployerReviewForm: React.FC<EmployerReviewFormProps> = ({
   const user = useAppSelector((state) => state.user);
   const [categories, setCategories] = useState<Category[]>([]);
   const [feedback, setFeedback] = useState<string>("");
+  const [errorMessages, setErrorMessages] = useState<any>({});
   const [categoriesRating, setCategoriesRating] = useState<{
     [key: number]: number;
   }>({
@@ -83,6 +85,7 @@ const EmployerReviewForm: React.FC<EmployerReviewFormProps> = ({
     } catch (error: any) {
       setIsSnackbar(true);
       setErrorMessage(error.response.data.message);
+      setErrorMessages(error.response.data.errors);
     }
   };
 
@@ -95,7 +98,7 @@ const EmployerReviewForm: React.FC<EmployerReviewFormProps> = ({
         gap: "20px",
       }}
     >
-      {categories.map((category) => (
+      {categories.map((category, index) => (
         <CustomRating
           key={category.id}
           title={category.name}
@@ -103,6 +106,7 @@ const EmployerReviewForm: React.FC<EmployerReviewFormProps> = ({
           handleSetRating={(value) =>
             handleSetRating(category?.id as number, value)
           }
+          error={errorMessages[`category_rating.${index + 1}`]}
         />
       ))}
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -116,6 +120,14 @@ const EmployerReviewForm: React.FC<EmployerReviewFormProps> = ({
           multiline
           rows={4}
           placeholder="Tell us your experience"
+          sx={{
+            "& .Mui-error": {
+              margin: "0",
+              fontSize: "12px",
+            },
+          }}
+          helperText={errorMessages.feedback}
+          error={isEmptyObject(errorMessages, "feedback")}
         />
       </Box>
       <Button

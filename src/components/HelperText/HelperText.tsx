@@ -3,9 +3,10 @@ import React from "react";
 
 interface HelperTextProps {
   error: string;
+  style?: any;
 }
 
-const HelperText: React.FC<HelperTextProps> = ({ error }) => {
+const HelperText: React.FC<HelperTextProps> = ({ error, style }) => {
   return (
     <Typography
       variant="subtitle1"
@@ -13,6 +14,7 @@ const HelperText: React.FC<HelperTextProps> = ({ error }) => {
         color: error ? "red" : "rgba(0, 0, 0, 0.54)",
         marginTop: "8px",
         fontSize: "0.75rem",
+        ...style,
       }}
     >
       {error}
