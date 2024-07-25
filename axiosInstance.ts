@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { getEmail } from "./src/utils/getEmail";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -32,29 +33,33 @@ api.interceptors.response.use(
 
     if (
       elapsedTimeSinceLastRefresh >= 4 * 60 * 1000 ||
-      (error.response && error.response.status === 401)
+      (error.response && error.response.status === 498)
     ) {
       const data = {};
       try {
-        const response = await axios.post(`${baseURL}/api/v1/refresh`, data, {
+        await axios.post(`${baseURL}/api/v1/refresh`, data, {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
           },
         });
-        console.log("Unauthorized, triggered /refresh endpoint", response.data);
 
         lastRefreshTime = currentTime;
 
         return api.request(error.config);
       } catch (refreshError: any) {
         console.error("Failed to refresh token", refreshError);
-
-        if (refreshError.response && refreshError.response.status === 498) {
-          window.location.href = "/sign-in";
-        }
       }
+    }
+
+    if (error.response && error.response.status === 403) {
+      const email = getEmail();
+
+      await api.post("/api/v1/logout", {
+        email: email,
+      });
+      window.location.href = "/sign-in";
     }
 
     return Promise.reject(error);
