@@ -67,17 +67,17 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
 
   const validationConditions = [
     {
-      condition: !isValidEmail || !userCredentials.email,
+      condition: !isValidEmail,
       field: "email",
       message: "Please provide a valid email address.",
     },
     {
-      condition: !isPasswordValid || !userCredentials.password,
+      condition: !isPasswordValid,
       field: "password",
       message: "Password must be atleast 6 characters.",
     },
     {
-      condition: !isPassword2 || !userCredentials.password2,
+      condition: !isPassword2,
       field: "password2",
       message: "Password does not match.",
     },
@@ -99,11 +99,45 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
   ];
 
   useEffect(() => {
-    if (userCredentials) {
-      validationConditions.forEach((validationCondition) => {
-        if (!validationCondition.condition) {
-          setErrors({ ...errors, [validationCondition.field]: "" });
-        }
+    if (userCredentials.email) {
+      setErrors({
+        ...errors,
+        email: "",
+      });
+    }
+
+    if (userCredentials.password) {
+      setErrors({
+        ...errors,
+        password: "",
+      });
+    }
+
+    if (userCredentials.password2) {
+      setErrors({
+        ...errors,
+        password2: "",
+      });
+    }
+
+    if (userCredentials.first_name) {
+      setErrors({
+        ...errors,
+        first_name: "",
+      });
+    }
+
+    if (userCredentials.middle_name) {
+      setErrors({
+        ...errors,
+        middle_name: "",
+      });
+    }
+
+    if (userCredentials.last_name) {
+      setErrors({
+        ...errors,
+        last_name: "",
       });
     }
   }, [userCredentials]);

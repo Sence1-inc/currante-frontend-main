@@ -56,6 +56,22 @@ const SignInPage: React.FC<SignInPageProps> = () => {
     },
   ];
 
+  useEffect(() => {
+    if (userCredentials.email) {
+      setErrors({
+        ...errors,
+        email: "",
+      });
+    }
+
+    if (userCredentials.password) {
+      setErrors({
+        ...errors,
+        password: "",
+      });
+    }
+  }, [userCredentials]);
+
   const hasErrors = (): boolean => {
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)
@@ -105,16 +121,13 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         navigate("/");
       }
     } catch (error: any) {
-      console.log("Error logging in: ", error);
       setIsSnackbarOpen(true);
       setErrorMessage(error.response?.data?.message || "An error occurred");
 
-      if (error.response?.status === 400) {
-        setErrors({
-          email: "",
-          password: "",
-        });
-      }
+      setErrors({
+        email: "",
+        password: "",
+      });
     }
   };
 
