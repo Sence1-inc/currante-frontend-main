@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -197,12 +197,35 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             sx={{
               textAlign: { md: "left", xs: "center" },
               width: { md: "100%", sm: "100%", lg: "auto", xl: "auto" },
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: "20px",
+              alignItems: "center",
+              justifyContent: { xs: "center", md: "flex-start" },
             }}
           >
             <PrimaryButton
               text="Learn More"
               handleClick={() => navigate("/services")}
             />
+            <Button
+              sx={{
+                py: 2,
+                px: 6,
+                borderRadius: 4,
+                backgroundColor: "primary.main",
+                color: "common.white",
+                variant: "h6",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "secondary.dark",
+                },
+              }}
+              onClick={() => navigate("/sign-in")}
+            >
+              Have an account?
+            </Button>
           </Box>
         </Box>
         <Box
