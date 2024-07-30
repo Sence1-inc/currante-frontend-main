@@ -60,22 +60,34 @@ const App = () => {
         <Route path="/start" element={<TestPage />} />
         <Route
           path="/admin"
-          element={<PrivateRoute component={AdminDashboard} />}
+          element={
+            <PrivateRoute component={AdminDashboard} hasBackButton={false} />
+          }
         />
-        <Route path="/users" element={<PrivateRoute component={UsersPage} />} />
+        <Route
+          path="/users"
+          element={<PrivateRoute component={UsersPage} hasBackButton={false} />}
+        />
         <Route
           path="/jobs"
-          element={<PrivateRoute component={JobListPage} />}
+          element={
+            <PrivateRoute component={JobListPage} hasBackButton={false} />
+          }
         />
         <Route
           path="/profile"
-          element={<PrivateRoute component={ProfilePage} />}
+          element={
+            <PrivateRoute component={ProfilePage} hasBackButton={false} />
+          }
         />
         <Route
           path="/services"
           element={
             isAuthenticated ? (
-              <PrivateRoute component={EmployerDashboard} />
+              <PrivateRoute
+                component={EmployerDashboard}
+                hasBackButton={false}
+              />
             ) : (
               <PublicRoute component={EmployerDashboard} />
             )
@@ -83,7 +95,9 @@ const App = () => {
         />
         <Route
           path="/notifications"
-          element={<PrivateRoute component={NotificationPage} />}
+          element={
+            <PrivateRoute component={NotificationPage} hasBackButton={false} />
+          }
         />
         <Route
           path="/services/:id/workers"
@@ -95,10 +109,13 @@ const App = () => {
             )
           }
         />
-        <Route path="/chats" element={<PrivateRoute component={ChatPage} />} />
+        <Route
+          path="/chats"
+          element={<PrivateRoute component={ChatPage} hasBackButton={false} />}
+        />
         <Route
           path="/chat/:conversation_id"
-          element={<PrivateRoute component={ChatRoom} />}
+          element={<PrivateRoute component={ChatRoom} hasBackButton={false} />}
         />
         <Route
           path="/services/:service_id/workers/:id"

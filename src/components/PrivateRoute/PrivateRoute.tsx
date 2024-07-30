@@ -5,16 +5,19 @@ import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
+import BackButton from "../BackButton/BackButton";
 import AdminBottomNavigation from "../BottomNavigation/AdminBottomNavigation";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import TopNavigation from "../TopNavigation/TopNavigation";
 
 interface PrivateRouteProps {
   component: React.ComponentType;
+  hasBackButton?: boolean;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
+  hasBackButton = true,
 }) => {
   const dispatch = useAppDispatch();
   const [authenticated, setAuthenticated] = useState<boolean>(true);
@@ -50,6 +53,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
           marginBottom: "84px",
         }}
       >
+        {hasBackButton && <BackButton />}
         <Component />
       </Box>
       {user.logged_in_as !== "admin" && <BottomNavigation />}
