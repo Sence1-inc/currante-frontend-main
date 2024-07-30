@@ -229,8 +229,8 @@ const ProfileViewPage: React.FC = () => {
           <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
           <FabButton
             styles={{
-              bottom: isAuthenticated ? "12%" : "10%",
-              right: "30%",
+              bottom: isAuthenticated ? "12%" : "4%",
+              right: "10%",
             }}
             handleClick={handleMessageClick}
             text="Message"
