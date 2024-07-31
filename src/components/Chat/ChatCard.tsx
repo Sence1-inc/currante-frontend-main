@@ -74,8 +74,8 @@ const ChatCard: React.FC<ChatCardProps> = ({
 
   const getAddress = (): string => {
     return user.logged_in_as === "worker"
-      ? (user?.addresses[0]?.city as string) ?? ""
-      : (user?.areas[0]?.area_name as string) ?? "";
+      ? (employer?.profile?.addresses[0]?.city as string) ?? ""
+      : (worker?.profile?.areas[0]?.area_name as string) ?? "";
   };
 
   return (
