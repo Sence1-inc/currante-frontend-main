@@ -195,6 +195,14 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             last_name: "",
             middle_name: "",
           });
+          setUserCredentials({
+            email: "",
+            password: "",
+            password2: "",
+            first_name: "",
+            last_name: "",
+            middle_name: "",
+          });
           setSuccessMessage(
             "Verification email has been sent. Please verify email before logging in."
           );
