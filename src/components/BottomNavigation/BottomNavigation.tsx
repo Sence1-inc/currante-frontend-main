@@ -36,13 +36,19 @@ export default function SimpleBottomNavigation() {
 
   return (
     <Box
-      sx={{ width: "100%", position: "fixed", bottom: 0, left: 0, right: 0 }}
+      sx={{
+        width: "100%",
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+      }}
     >
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => {
-          console.log(event);
+        onChange={(_event, newValue) => {
           handleNavigation(newValue);
         }}
         sx={{

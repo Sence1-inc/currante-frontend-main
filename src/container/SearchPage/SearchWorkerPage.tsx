@@ -54,6 +54,7 @@ const slideImages = [
 
 const SearchWorkerPage: React.FC = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const jobSubtypeParam = queryParams.get("jobSubtype");
@@ -179,7 +180,7 @@ const SearchWorkerPage: React.FC = () => {
     <Box
       sx={{
         marginTop: "64px",
-        padding: "20px",
+        padding: isAuthenticated ? "0 20px 20px 20px" : "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",

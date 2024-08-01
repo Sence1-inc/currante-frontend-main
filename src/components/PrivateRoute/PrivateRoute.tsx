@@ -49,7 +49,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
       <TopNavigation />
       <Box
         sx={{
-          marginTop: "64px",
+          marginTop: "0",
           marginBottom: "84px",
         }}
       >

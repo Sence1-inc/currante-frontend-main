@@ -167,7 +167,7 @@ const ProfileViewPage: React.FC = () => {
     <Box
       sx={{
         marginTop: "64px",
-        padding: "20px",
+        padding: isAuthenticated ? "0 20px 20px 20px" : "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
