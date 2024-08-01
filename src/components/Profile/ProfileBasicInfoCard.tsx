@@ -232,7 +232,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
             variant="standard"
             displayEmpty
           >
-            <MenuItem value="meow">Male</MenuItem>
+            <MenuItem value="male">Male</MenuItem>
             <MenuItem value="female">Female</MenuItem>
           </Select>
           <FormHelperText sx={{ marginLeft: 1, p: 0, color: "#d32f2f" }}>
