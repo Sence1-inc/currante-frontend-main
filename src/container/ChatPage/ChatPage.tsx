@@ -124,7 +124,8 @@ const ChatPage = () => {
         gap: "10px",
       }}
     >
-      <Box
+      {/* WILL IMPLEMENT THIS IN PHASE 3 */}
+      {/* <Box
         sx={{
           padding: "10px 0",
           display: "flex",
@@ -166,7 +167,7 @@ const ChatPage = () => {
             ),
           }}
         />
-      </Box>
+      </Box> */}
       {conversations.map((conversation: Conversation, index: number) => {
         const user = conversation.users.filter(
           (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
