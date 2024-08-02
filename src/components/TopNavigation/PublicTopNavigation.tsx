@@ -1,4 +1,5 @@
 import { AppBar, Box, Container, Link, Toolbar } from "@mui/material";
+import logo from "/images/logo.png";
 
 const PublicTopNavigation = () => {
   return (
@@ -35,7 +36,7 @@ const PublicTopNavigation = () => {
             <Link href="/" underline="none" sx={{ minHeight: "unset" }}>
               <Box
                 component="img"
-                src="/src/assets/logo.png"
+                src={logo}
                 sx={{
                   width: "151px",
                   height: "100%",
