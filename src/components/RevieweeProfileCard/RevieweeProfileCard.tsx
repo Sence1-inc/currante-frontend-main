@@ -44,7 +44,7 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
         </Badge>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="body2">
-            {reviewee?.profile.first_name} {reviewee?.profile.middle_name}
+            {reviewee?.profile.first_name} {reviewee?.profile.middle_name}{" "}
             {reviewee?.profile.last_name}
           </Typography>
           <Typography variant="body1">
