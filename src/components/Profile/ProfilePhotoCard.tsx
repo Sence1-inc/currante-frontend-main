@@ -463,7 +463,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                     borderRadius: "90px",
                     width: "90px",
                     height: "90px",
-                    padding: "10px",
                     backgroundColor: "background.default",
                     color: "primary.main",
                   }}
@@ -512,7 +511,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               borderRadius: "90px",
               width: "90px",
               height: "90px",
-              padding: "10px",
               backgroundColor: "background.default",
               color: "primary.main",
             }}
@@ -620,13 +618,20 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             size="small"
             variant="contained"
             onClick={() => {
-              if (files.length > 0) {
+              const hasFiles = files.length > 0;
+              const hasAvatarImage = Boolean(avatarImage?.trim());
+              const hasDescription = Boolean(description?.trim());
+
+              if (hasFiles && hasAvatarImage) {
                 handleUploadCoverPhotos();
-                if (description) handleSave();
-              } else if (avatarImage) {
                 handleUpload();
-                if (description) handleSave();
-              } else if (description) {
+              } else if (hasFiles) {
+                handleUploadCoverPhotos();
+              } else if (hasAvatarImage) {
+                handleUpload();
+              }
+
+              if (hasDescription) {
                 handleSave();
               }
             }}
