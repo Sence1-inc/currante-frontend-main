@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import IsAuthenticatedReducer from "./reducers/IsAuthenticatedReducer";
+import IsLoadingReducer from "./reducers/IsLoadingReducer";
 import OrderReducer from "./reducers/OrderReducer";
 import ParticipantReducer from "./reducers/ParticipantReducer";
 import UserReducer from "./reducers/UserReducer";
@@ -22,6 +23,7 @@ const persistedReducer = persistReducer(
     workers: WorkersReducer,
     participant: ParticipantReducer,
     isAuthenticated: IsAuthenticatedReducer,
+    isLoading: IsLoadingReducer,
     order: OrderReducer,
   })
 );

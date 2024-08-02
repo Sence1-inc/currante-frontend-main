@@ -6,6 +6,7 @@ import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedR
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
 import BackButton from "../BackButton/BackButton";
+import BackDrop from "../BackDrop/BackDrop";
 import AdminBottomNavigation from "../BottomNavigation/AdminBottomNavigation";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import TopNavigation from "../TopNavigation/TopNavigation";
@@ -54,6 +55,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         }}
       >
         {hasBackButton && <BackButton />}
+        <BackDrop />
         <Component />
       </Box>
       {user.logged_in_as !== "admin" && <BottomNavigation />}

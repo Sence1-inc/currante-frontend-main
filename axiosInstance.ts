@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from "axios";
+import { initializeIsLoading } from "./src/redux/reducers/IsLoadingReducer";
+import store from "./src/redux/store";
 import { getEmail } from "./src/utils/getEmail";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -17,10 +19,37 @@ const api: AxiosInstance = axios.create({
 });
 
 let lastRefreshTime = Date.now();
+var numberOfPendingRequests = 0;
+
+api.interceptors.request.use(
+  function (config) {
+    console.log("orig", numberOfPendingRequests);
+    console.log(config.baseURL);
+    numberOfPendingRequests++;
+    store.dispatch(initializeIsLoading(true));
+    console.log("after true dispatch", numberOfPendingRequests);
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    numberOfPendingRequests--;
+    console.log("after --", numberOfPendingRequests);
+    if (numberOfPendingRequests === 0) {
+      store.dispatch(initializeIsLoading(false));
+    }
+    return response;
+  },
   async (error) => {
+    numberOfPendingRequests--;
+    if (error) {
+      store.dispatch(initializeIsLoading(false));
+    }
+
     const currentTime = Date.now();
     const elapsedTimeSinceLastRefresh = currentTime - lastRefreshTime;
 
@@ -36,6 +65,7 @@ api.interceptors.response.use(
       (error.response && error.response.status === 498) ||
       (error.response && error.response.status === 401)
     ) {
+      store.dispatch(initializeIsLoading(false));
       const data = {};
       try {
         await axios.post(`${baseURL}/api/v1/refresh`, data, {
@@ -50,6 +80,7 @@ api.interceptors.response.use(
 
         return api.request(error.config);
       } catch (refreshError: any) {
+        store.dispatch(initializeIsLoading(false));
         console.error("Failed to refresh token", refreshError);
       }
     }
@@ -62,7 +93,7 @@ api.interceptors.response.use(
       });
       window.location.href = "/sign-in";
     }
-
+    store.dispatch(initializeIsLoading(false));
     return Promise.reject(error);
   }
 );
