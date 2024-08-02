@@ -1,8 +1,8 @@
 import { FormControl } from "@mui/base";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Box,
-  Button,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -139,7 +138,9 @@ const Newsletter = () => {
               value={email}
               onChange={handleEmailChange}
             />
-            <Button
+            <LoadingButton
+              loading={isLoading}
+              loadingPosition="center"
               sx={{
                 bgcolor: "#F58A47",
                 borderRadius: "16px",
@@ -152,12 +153,8 @@ const Newsletter = () => {
               onClick={handleSubscribe}
               disabled={isLoading}
             >
-              {isLoading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                "Subscribe"
-              )}
-            </Button>
+              Subscribe
+            </LoadingButton>
             <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
               By subscribing to the newsletter, I have read this form and
               understand its content and voluntarily give my consent for the

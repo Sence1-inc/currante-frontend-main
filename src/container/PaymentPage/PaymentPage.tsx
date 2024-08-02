@@ -1,6 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -43,6 +43,10 @@ const PaymentPage = () => {
   >(null);
   const [total, setTotal] = useState<number | null>(null);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    save: boolean;
+    cancel: boolean;
+  }>({ save: false, cancel: false });
 
   useEffect(() => {
     const getData = async () => {
@@ -135,6 +139,7 @@ const PaymentPage = () => {
   };
 
   const handleAccept = async () => {
+    setIsButtonLoading({ save: true, cancel: false });
     if (hasErrors()) {
       setIsSnackbarOpen(true);
       setErrorMessage("Please fill in the required details.");
@@ -147,7 +152,7 @@ const PaymentPage = () => {
         },
         {}
       );
-
+      setIsButtonLoading({ save: false, cancel: false });
       setErrorMessages({ ...errorMessages, ...newErrors });
     } else {
       const workerJobSubtype = worker?.profile.job_subtypes.find(
@@ -176,12 +181,14 @@ const PaymentPage = () => {
               amount: total,
               order_id: response.data.order.id,
             });
+            setIsButtonLoading({ save: false, cancel: false });
             if (res.data) {
               setErrorMessage("");
               setErrorMessages({});
               window.location.href = res.data.url;
             }
           } catch (error: any) {
+            setIsButtonLoading({ save: false, cancel: false });
             setIsSnackbarOpen(true);
             setErrorMessage(error.response.data.message);
             setErrorMessages(error.response.data.errors);
@@ -195,6 +202,7 @@ const PaymentPage = () => {
           );
         }
       } catch (error: any) {
+        setIsButtonLoading({ save: false, cancel: false });
         setErrorMessage("Error");
         setErrorMessages(error.response?.data.errors);
         setStepFailed(null);
@@ -393,7 +401,10 @@ const PaymentPage = () => {
           gap: "30px",
         }}
       >
-        <Button
+        <LoadingButton
+          loading={isButtonLoading.cancel}
+          disabled={isButtonLoading.save}
+          loadingPosition="center"
           variant="contained"
           sx={{
             borderRadius: "100px",
@@ -402,8 +413,11 @@ const PaymentPage = () => {
           }}
         >
           Cancel
-        </Button>
-        <Button
+        </LoadingButton>
+        <LoadingButton
+          loading={isButtonLoading.save}
+          disabled={isButtonLoading.cancel}
+          loadingPosition="center"
           variant="contained"
           sx={{
             borderRadius: "100px",
@@ -413,7 +427,7 @@ const PaymentPage = () => {
           onClick={handleAccept}
         >
           Accept
-        </Button>
+        </LoadingButton>
       </Box>
     </Box>
   );

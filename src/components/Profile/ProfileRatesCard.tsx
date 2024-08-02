@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
   FormControl,
   IconButton,
@@ -31,6 +31,10 @@ interface ProfileRatesCardProps {
   handleSetIsSnackbarOpen: (isOpen: boolean) => void;
   handleSetWarningMessage: (message: string) => void;
   handleSetSelectedJobType: (jobType: string) => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
@@ -48,6 +52,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   handleSetIsSnackbarOpen,
   handleSetWarningMessage,
   handleSetSelectedJobType,
+  isButtonLoading,
 }) => {
   useEffect(() => {
     if (jobType) {
@@ -215,15 +220,21 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
 
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -231,7 +242,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

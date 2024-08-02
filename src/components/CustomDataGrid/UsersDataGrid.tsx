@@ -26,6 +26,7 @@ const UsersDataGrid = () => {
     prevPageUrl: "",
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
 
   const columns: GridColDef[] = [
@@ -83,12 +84,13 @@ const UsersDataGrid = () => {
   ];
 
   const handleVerifyIdentification = async () => {
+    setIsButtonLoading(true);
     try {
       const response = await axiosInstance.patch(
         `/api/v1/users/${selectedRow?.id}`,
         { is_identification_verified: true }
       );
-
+      setIsButtonLoading(false);
       if (response.status === 201) {
         const updatedUser = formatUser(response.data.user);
         setUsers((prevUsers) =>
@@ -98,6 +100,7 @@ const UsersDataGrid = () => {
         );
       }
     } catch (error) {
+      setIsButtonLoading(false);
       console.log(error);
     }
   };
@@ -148,6 +151,7 @@ const UsersDataGrid = () => {
   return (
     <>
       <CustomizedDialog
+        isButtonLoading={isButtonLoading}
         handleIsOpen={(value) => setIsOpen(value)}
         handleButtonClick={handleVerifyIdentification}
         isOpen={isOpen}

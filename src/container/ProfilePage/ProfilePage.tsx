@@ -64,6 +64,10 @@ const ProfilePage: React.FC = () => {
       job_type: "",
       job_subtypes: [{ job_name: "", unit: "", id: 0 }],
     });
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    save: boolean;
+    cancel: boolean;
+  }>({ save: false, cancel: false });
 
   const handleAvatarImageChange = (item: FileList) => {
     const file = item && item[0];
@@ -202,6 +206,7 @@ const ProfilePage: React.FC = () => {
   }, [jobType]);
 
   const handleSave = async () => {
+    setIsButtonLoading({ save: true, cancel: false });
     setIsSnackbarOpen(false);
     const data = {
       user_id: user.id, // update this during implementation of authentication
@@ -223,7 +228,7 @@ const ProfilePage: React.FC = () => {
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
-
+      setIsButtonLoading({ save: false, cancel: false });
       if (response.status === 201) {
         setSuccessMessage(response.data.message);
         setIsSnackbarOpen(true);
@@ -232,6 +237,7 @@ const ProfilePage: React.FC = () => {
         dispatch(initializeUser(response.data.profile));
       }
     } catch (error: any) {
+      setIsButtonLoading({ save: false, cancel: false });
       setIsSnackbarOpen(true);
       setErrorMessages(error.response.data.errors);
       setErrorMessage("Please fill in the required details");
@@ -270,12 +276,14 @@ const ProfilePage: React.FC = () => {
           type === "identification"
             ? { identification_photo: response.data.identification }
             : { id_photo: response.data.avatar };
+        setIsButtonLoading({ save: false, cancel: false });
         dispatch(initializeUser({ ...response.data.user, ...savedPhoto }));
         setIsSnackbarOpen(true);
         setSuccessMessage(response.data.message);
         setErrorMessage("");
       }
     } catch (error: any) {
+      setIsButtonLoading({ save: false, cancel: false });
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);
@@ -283,6 +291,7 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleUpload = async (type: string) => {
+    setIsButtonLoading({ save: true, cancel: false });
     if (!presignedUrl) return;
 
     const image = type === "avatar" ? file : idFile;
@@ -330,6 +339,7 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
+            isButtonLoading={isButtonLoading}
             setSuccessMessage={setSuccessMessage}
             setErrorMessage={setErrorMessage}
             setInfoMessage={setInfoMessage}
@@ -355,6 +365,7 @@ const ProfilePage: React.FC = () => {
           />
 
           <ProfileBasicInfoCard
+            isButtonLoading={isButtonLoading}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             firstName={firstName ?? ""}
@@ -379,6 +390,7 @@ const ProfilePage: React.FC = () => {
 
           {user.logged_in_as === "worker" && (
             <ProfileRatesCard
+              isButtonLoading={isButtonLoading}
               edittingSection={edittingSection}
               jobType={jobType ?? ""}
               jobTypes={jobTypes ?? []}
@@ -404,6 +416,7 @@ const ProfilePage: React.FC = () => {
 
           {user.logged_in_as === "worker" && (
             <ProfileScheduleCard
+              isButtonLoading={isButtonLoading}
               errorMessages={errorMessages}
               edittingSection={edittingSection}
               schedule={schedule ?? ""}
@@ -417,6 +430,7 @@ const ProfilePage: React.FC = () => {
 
           {user.logged_in_as === "worker" && (
             <ProfileServicingAreasCard
+              isButtonLoading={isButtonLoading}
               edittingSection={edittingSection}
               servicingAreas={servicingAreas ?? []}
               areas={areas}
@@ -432,6 +446,7 @@ const ProfilePage: React.FC = () => {
 
           {user.logged_in_as === "employer" && (
             <ProfileAddressesCard
+              isButtonLoading={isButtonLoading}
               errorMessages={errorMessages}
               edittingSection={edittingSection}
               addresses={addresses ?? []}
@@ -448,6 +463,7 @@ const ProfilePage: React.FC = () => {
           )}
 
           <ProfileIDPhotoCard
+            isButtonLoading={isButtonLoading}
             idImage={idImage}
             handleImageChange={handleImageChange}
             edittingSection={edittingSection}

@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
   FormControl,
   IconButton,
@@ -29,6 +29,10 @@ interface ProfileAddressesCardProps {
   handleSetAddresses: (addresses: Address[]) => void;
   cities: { id: number; city_name: string }[];
   provinces: { id: number; province_name: string }[];
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
@@ -38,6 +42,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
   cities,
   provinces,
   sectionName,
+  isButtonLoading,
   handleSetEdittingSection,
   handleSave,
   handleCancelEdittingSection,
@@ -48,6 +53,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
   const [province, setProvince] = useState<string>("");
   const [barangay, setBarangay] = useState<string>("");
   const [houseBuildingUnit, setHouseBuildingUnit] = useState<string>("");
+
   const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
@@ -262,15 +268,21 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
 
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancel}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -278,7 +290,7 @@ const ProfileAddressesCard: React.FC<ProfileAddressesCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

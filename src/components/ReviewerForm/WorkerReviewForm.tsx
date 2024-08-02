@@ -1,4 +1,5 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
 import { initializeUser } from "../../redux/reducers/UserReducer";
@@ -22,8 +23,10 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbar] = useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState<any>({});
+  const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
 
   const handleSubmit = async () => {
+    setIsButtonLoading(true);
     try {
       const data = {
         feedback: feedback,
@@ -35,18 +38,26 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
       };
       const response = await axiosInstance.post("/api/v1/reviews", data);
       if (response.status === 201) {
-        const res = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
-          status: "5",
-        });
-
-        if (res.status === 201) {
-          dispatch(initializeUser({ ...user, orders: res.data.orders }));
-          handleSetIsWorkerSuccessModalOpen(true);
-          setIsSnackbar(false);
-          setErrorMessage("");
+        try {
+          const res = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
+            status: "5",
+          });
+          setIsButtonLoading(false);
+          if (res.status === 201) {
+            dispatch(initializeUser({ ...user, orders: res.data.orders }));
+            handleSetIsWorkerSuccessModalOpen(true);
+            setIsSnackbar(false);
+            setErrorMessage("");
+          }
+        } catch (error: any) {
+          setIsButtonLoading(false);
+          setIsSnackbar(true);
+          setErrorMessage(error.response.data.message);
+          setErrorMessages(error.response.data.errors);
         }
       }
     } catch (error: any) {
+      setIsButtonLoading(false);
       setIsSnackbar(true);
       setErrorMessage(error.response.data.message);
       setErrorMessages(error.response.data.errors);
@@ -89,14 +100,16 @@ const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
           error={isEmptyObject(errorMessages, "feedback")}
         />
       </Box>
-      <Button
+      <LoadingButton
+        loading={isButtonLoading}
+        loadingPosition="center"
         color="primary"
         variant="contained"
         fullWidth
         onClick={handleSubmit}
       >
         Submit
-      </Button>
+      </LoadingButton>
 
       <CustomSnackbar
         errorMessage={errorMessage}

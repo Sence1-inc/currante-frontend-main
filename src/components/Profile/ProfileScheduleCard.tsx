@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
   IconButton,
   TextField,
@@ -19,6 +19,10 @@ interface ProfileScheduleCardProps {
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
   handleSetSchedule: (schedule: string) => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
@@ -30,6 +34,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
   handleSave,
   handleCancelEdittingSection,
   handleSetSchedule,
+  isButtonLoading,
 }) => {
   return (
     <Box
@@ -103,15 +108,21 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
         />
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -119,7 +130,7 @@ const ProfileScheduleCard: React.FC<ProfileScheduleCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

@@ -1,5 +1,6 @@
 import { addDoc, collection } from "@firebase/firestore";
-import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Link as MuiLink, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
@@ -53,6 +54,13 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    worker: boolean;
+    employer: boolean;
+  }>({
+    worker: false,
+    employer: false,
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -143,6 +151,10 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
   }, [userCredentials]);
 
   const handleSignUp = async (role: string) => {
+    setIsButtonLoading({
+      worker: true,
+      employer: false,
+    });
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)
       .map(({ message }) => message);
@@ -150,6 +162,10 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
 
     if (hasErrors) {
       setSuccessMessage("");
+      setIsButtonLoading({
+        worker: false,
+        employer: false,
+      });
       setIsSnackbarOpen(true);
       setErrorMessage("Please fill in the required details.");
       const newErrors = validationConditions.reduce<{ [key: string]: string }>(
@@ -187,6 +203,10 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             uuid: response.data.user.uuid,
           });
           setIsSnackbarOpen(true);
+          setIsButtonLoading({
+            worker: false,
+            employer: false,
+          });
           setErrors({
             email: "",
             password: "",
@@ -208,6 +228,10 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
           );
         }
       } catch (error: any) {
+        setIsButtonLoading({
+          worker: false,
+          employer: false,
+        });
         setIsSnackbarOpen(true);
         setErrorMessage(error.response.data.message);
       }
@@ -310,22 +334,28 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <Box sx={authPageStyles.container.buttonsContainer}>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.employer}
+              loading={isButtonLoading.worker}
+              loadingPosition="center"
               onClick={() => handleSignUp("worker")}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}
             >
               Sign Up as Worker
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.worker}
+              loading={isButtonLoading.employer}
+              loadingPosition="center"
               onClick={() => handleSignUp("employer")}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}
             >
               Sign Up as Client
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
         <Box

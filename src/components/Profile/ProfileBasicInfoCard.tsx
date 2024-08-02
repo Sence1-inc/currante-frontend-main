@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
   FormHelperText,
   IconButton,
@@ -37,6 +37,10 @@ interface ProfileBasicInfoCardProps {
   handleSetPhoneNumber: (number: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 export const isEmptyObject = (
@@ -78,6 +82,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
   handleSetPhoneNumber,
   handleSave,
   handleCancelEdittingSection,
+  isButtonLoading,
 }) => {
   return (
     <Box
@@ -278,15 +283,21 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
 
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -294,7 +305,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

@@ -1,4 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
+import { LoadingButton } from "@mui/lab";
 import { Box, Button, IconButton, Snackbar, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 
@@ -27,6 +28,10 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [isNewLinkSent, setIsNewLinkSent] = useState<boolean>(false);
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    new: boolean;
+    verify: boolean;
+  }>({ new: false, verify: false });
 
   const { vertical, horizontal } = snackBarState;
 
@@ -34,13 +39,16 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
   const { token } = useParams();
 
   const handleSubmitVerifyCode = async () => {
+    setIsButtonLoading({ new: true, verify: false });
     try {
       const response = await axiosInstance.get(`/api/v1/verify/${token}`);
+      setIsButtonLoading({ new: false, verify: false });
       if (response.status === 201) {
         setIsVerificationLinkInvalid(false);
         navigate("/sign-in");
       }
     } catch (error: any) {
+      setIsButtonLoading({ new: false, verify: false });
       setIsSnackbarOpen(true);
       setSuccessMessage("");
       setInfoMessage("");
@@ -57,8 +65,10 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
   };
 
   const handleRequestNewLink = async () => {
+    setIsButtonLoading({ new: true, verify: false });
     try {
       const response = await axiosInstance.post(`/api/v1/resend/${token}`);
+      setIsButtonLoading({ new: false, verify: false });
       if (response.status === 201) {
         setIsSnackbarOpen(true);
         setIsVerificationLinkInvalid(false);
@@ -69,6 +79,7 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
         setErrorMessage("");
       }
     } catch (error: any) {
+      setIsButtonLoading({ new: false, verify: false });
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message ?? "An error occured");
       setSuccessMessage("");
@@ -155,14 +166,16 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
           {!isNewLinkSent && (
             <Box sx={authPageStyles.container.buttonsContainer}>
               {!isVerificationLinkInvalid && !isVerificationLinkExpired ? (
-                <Button
+                <LoadingButton
+                  loading={isButtonLoading.verify}
+                  loadingPosition="center"
                   onClick={handleSubmitVerifyCode}
                   variant="contained"
                   color="primary"
                   sx={authPageStyles.form.formButton}
                 >
                   Verify
-                </Button>
+                </LoadingButton>
               ) : isVerificationLinkInvalid ? (
                 <Button
                   onClick={() => navigate("/sign-in")}
@@ -173,14 +186,16 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
                   Sign-in
                 </Button>
               ) : (
-                <Button
+                <LoadingButton
+                  loading={isButtonLoading.new}
+                  loadingPosition="center"
                   onClick={handleRequestNewLink}
                   variant="contained"
                   color="primary"
                   sx={authPageStyles.form.formButton}
                 >
                   Request new link
-                </Button>
+                </LoadingButton>
               )}
             </Box>
           )}

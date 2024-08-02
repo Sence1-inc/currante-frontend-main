@@ -1,8 +1,9 @@
-import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 interface PrimaryButtonProps {
   text: string;
   url?: string;
+  loading?: boolean;
   fullWidth?: boolean;
   handleClick?: () => void;
 }
@@ -11,10 +12,13 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   text,
   url,
   fullWidth,
+  loading = false,
   handleClick,
 }) => {
   return (
-    <Button
+    <LoadingButton
+      loading={loading}
+      loadingPosition="center"
       sx={{
         py: 2,
         px: 6,
@@ -33,7 +37,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       onClick={handleClick}
     >
       {text}
-    </Button>
+    </LoadingButton>
   );
 };
 

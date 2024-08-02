@@ -1,11 +1,6 @@
 import { CameraAlt, Edit } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, ButtonGroup, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
@@ -18,6 +13,10 @@ interface ProfileIDPhotoCardProps {
   handleUpload: () => void;
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCancelEdittingSection: () => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
@@ -28,6 +27,7 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
   handleImageChange,
   sectionName,
   handleCancelEdittingSection,
+  isButtonLoading,
 }) => {
   const user: User = useAppSelector((state) => state.user);
   return (
@@ -124,14 +124,20 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
           </div>
           {idImage && <img src={idImage} width="100%" />}
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ color: "common.white" }}
               size="small"
@@ -139,7 +145,7 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
               onClick={handleUpload}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         </Box>
       ) : user.is_identification_verified ? (

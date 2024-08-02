@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import Button from "@mui/material/Button";
+import { LoadingButton } from "@mui/lab";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -25,6 +25,7 @@ interface CustomizedDialogProp {
   buttonTitle: string;
   children: React.ReactNode;
   isButtonDisabled?: boolean;
+  isButtonLoading?: boolean;
 }
 
 const CustomizedDialog: React.FC<CustomizedDialogProp> = ({
@@ -35,6 +36,7 @@ const CustomizedDialog: React.FC<CustomizedDialogProp> = ({
   buttonTitle,
   children,
   isButtonDisabled = false,
+  isButtonLoading = false,
 }) => {
   return (
     <BootstrapDialog
@@ -59,14 +61,16 @@ const CustomizedDialog: React.FC<CustomizedDialogProp> = ({
       </IconButton>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions sx={{ alignSelf: "center" }}>
-        <Button
+        <LoadingButton
+          loading={isButtonLoading}
+          loadingPosition="center"
           variant="contained"
           disabled={isButtonDisabled}
           autoFocus
           onClick={handleButtonClick}
         >
           {buttonTitle}
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </BootstrapDialog>
   );

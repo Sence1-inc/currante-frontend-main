@@ -1,4 +1,5 @@
-import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Link as MuiLink, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
@@ -30,6 +31,13 @@ const SignInPage: React.FC<SignInPageProps> = () => {
   const [errors, setErrors] = useState<Errors>({
     email: "",
     password: "",
+  });
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    worker: boolean;
+    employer: boolean;
+  }>({
+    worker: false,
+    employer: false,
   });
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,6 +89,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
 
   const handleValidation = async (role: string) => {
     if (hasErrors()) {
+      setIsButtonLoading({ worker: false, employer: false });
       setIsSnackbarOpen(true);
       setErrorMessage("Please fill in the required details.");
       const newErrors = validationConditions.reduce<{ [key: string]: string }>(
@@ -113,6 +122,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
 
       dispatch(initializeUser(response.data.user));
       dispatch(initializeIsAuthenticated(true));
+      setIsButtonLoading({ worker: false, employer: false });
       if (response.data.user.logged_in_as === "worker") {
         navigate("/jobs");
       } else if (response.data.user.logged_in_as === "employer") {
@@ -121,6 +131,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         navigate("/");
       }
     } catch (error: any) {
+      setIsButtonLoading({ worker: false, employer: false });
       setIsSnackbarOpen(true);
       setErrorMessage(error.response?.data?.message || "An error occurred");
 
@@ -174,22 +185,34 @@ const SignInPage: React.FC<SignInPageProps> = () => {
             }
           />
           <Box sx={authPageStyles.container.buttonsContainer}>
-            <Button
-              onClick={() => handleValidation("worker")}
+            <LoadingButton
+              disabled={isButtonLoading.employer}
+              loading={isButtonLoading.worker}
+              loadingPosition="center"
+              onClick={() => {
+                handleValidation("worker");
+                setIsButtonLoading({ ...isButtonLoading, worker: true });
+              }}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}
             >
               Sign In as Worker
-            </Button>
-            <Button
-              onClick={() => handleValidation("employer")}
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.worker}
+              loading={isButtonLoading.employer}
+              loadingPosition="center"
+              onClick={() => {
+                handleValidation("employer");
+                setIsButtonLoading({ ...isButtonLoading, employer: true });
+              }}
               variant="contained"
               color="primary"
               sx={authPageStyles.form.formButton}
             >
               Sign In as Client
-            </Button>
+            </LoadingButton>
           </Box>
           <MuiLink
             underline="none"

@@ -1,10 +1,10 @@
 import { CameraAlt, CheckCircle, Clear, FileUpload } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Avatar,
   Badge,
   Box,
-  Button,
   ButtonGroup,
   IconButton,
   ImageList,
@@ -59,6 +59,10 @@ interface ProfilePhotoCardProps {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
   setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
@@ -78,6 +82,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   handleSetDescription,
   handleSave,
   handleCancelEdittingSection,
+  isButtonLoading,
 }) => {
   const MAX_FILES = 6;
   const maxFileSizeMB = 3;
@@ -89,6 +94,13 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isCoverPhotosButtonLoading, setIsCoverPhotosButtonLoading] = useState<{
+    save: boolean;
+    cancel: boolean;
+  }>({
+    save: false,
+    cancel: false,
+  });
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -230,6 +242,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             type: "cover",
           });
           setFiles([]);
+
           dispatch(
             initializeUser({
               ...response.data.user,
@@ -238,18 +251,20 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           );
         })
       );
-
+      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
       setSuccessMessage("Photo/s successfully uploaded");
       setIsSnackbarOpen(true);
       setErrorMessage("");
     } catch (error: any) {
       setSuccessMessage("");
+      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);
     }
   };
 
   const handleUploadCoverPhotos = async () => {
+    setIsCoverPhotosButtonLoading({ save: true, cancel: false });
     try {
       const filesArray = Array.from(files);
 
@@ -642,14 +657,24 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         ))}
       {edittingSection === sectionName && (
         <ButtonGroup>
-          <Button
+          <LoadingButton
+            disabled={isButtonLoading.save || isCoverPhotosButtonLoading.save}
+            loading={
+              isButtonLoading.cancel || isCoverPhotosButtonLoading.cancel
+            }
+            loadingPosition="center"
             onClick={handleCancelEdittingSection}
             size="small"
             variant="contained"
           >
             Cancel
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
+            disabled={
+              isButtonLoading.cancel || isCoverPhotosButtonLoading.cancel
+            }
+            loading={isButtonLoading.save || isCoverPhotosButtonLoading.save}
+            loadingPosition="center"
             color="secondary"
             sx={{ color: "common.white" }}
             size="small"
@@ -682,7 +707,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               : files.length > 0 || avatarImage
               ? "Upload"
               : "Save"}
-          </Button>
+          </LoadingButton>
         </ButtonGroup>
       )}
     </Box>
