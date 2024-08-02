@@ -228,6 +228,7 @@ const ProfilePage: React.FC = () => {
         setErrorMessage("");
         setErrorMessages({});
         dispatch(initializeUser(response.data.profile));
+        setDescription(response.data.profile.description);
       }
     } catch (error: any) {
       setIsSnackbarOpen(true);
