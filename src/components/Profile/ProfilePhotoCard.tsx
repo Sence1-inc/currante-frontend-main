@@ -50,13 +50,14 @@ interface ProfilePhotoCardProps {
   user: User;
   errorMessages: any;
   handleSetEdittingSection: () => void;
-  handleAvatarImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleAvatarImageChange: (file: FileList) => void;
   handleUpload: () => void;
   handleSetDescription: (description: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
   setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
   setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -69,6 +70,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   errorMessages,
   setSuccessMessage,
   setErrorMessage,
+  setInfoMessage,
   setIsSnackbarOpen,
   handleSetEdittingSection,
   handleAvatarImageChange,
@@ -80,7 +82,9 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   const MAX_FILES = 6;
   const maxFileSizeMB = 3;
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string>("");
   const [files, setFiles] = useState<FileList | []>([]);
+  const [file, setFile] = useState<FileList | []>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
@@ -98,15 +102,37 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
     if (user.covers.length > 0) {
       setPreviewImages(user.covers);
     }
+
+    if (user.id_photo) {
+      setPreviewImage(user.id_photo);
+    }
   }, []);
 
+  useEffect(() => {
+    if (file.length > 0) {
+      handleAvatarImageChange(file as FileList);
+    }
+  }, [file]);
+
+  useEffect(() => {
+    if (isUploading) {
+      setIsSnackbarOpen(true);
+      setInfoMessage("Uploading photo/s");
+      setSuccessMessage("");
+      setErrorMessage("");
+    } else {
+      setIsSnackbarOpen(false);
+      setInfoMessage("");
+    }
+  }, [isUploading]);
+
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
     const uploadedFiles = event.target.files;
-    console.log(previewImages);
+
     if (uploadedFiles && uploadedFiles.length > 0) {
-      setIsUploading(false);
-      if (previewImages.length > MAX_FILES) {
+      setIsUploading(true);
+      if (user.covers.length + uploadedFiles.length > MAX_FILES) {
+        setIsUploading(false);
         setSuccessMessage("");
         setIsSnackbarOpen(true);
         setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
@@ -142,6 +168,14 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         previews.push(URL.createObjectURL(file));
       }
 
+      if (previews.length > MAX_FILES) {
+        setIsUploading(false);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
+        return;
+      }
+
       const fileList = new DataTransfer();
       filesArray.forEach((file) => fileList.items.add(file));
       const newFileList = fileList.files;
@@ -162,10 +196,10 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       const response = await axiosInstance.delete(`/api/v1/photo/${filename}`);
       dispatch(initializeUser({ ...user, covers: response.data.covers }));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
-  console.log(previewImages);
+
   const handleDeleteFile = async (index: number) => {
     const updatedPreviews = [...previewImages];
     updatedPreviews.splice(index, 1);
@@ -209,7 +243,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       setIsSnackbarOpen(true);
       setErrorMessage("");
     } catch (error: any) {
-      console.error("Error saving photos: ", error);
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);
@@ -242,7 +275,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
 
       savePhotos();
     } catch (error: any) {
-      console.error("Error uploading cover photos: ", error);
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);
@@ -352,7 +384,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 onChange={handleFileChange}
                 multiple
                 accept="image/*"
-                disabled={previewImages?.length >= 6 || isUploading}
+                disabled={previewImages?.length >= MAX_FILES}
               />
               {previewImages.length === 0 ? (
                 <Box
@@ -432,7 +464,11 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               style={{ display: "none" }}
               id="avatar-upload-button"
               type="file"
-              onChange={handleAvatarImageChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFile(e.target.files as FileList);
+                const filesArray = Array.from(e.target.files as FileList);
+                setPreviewImage(URL.createObjectURL(filesArray[0]) as string);
+              }}
             />
             <label
               htmlFor="avatar-upload-button"
@@ -458,7 +494,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 <Avatar
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                  src={!isHovered ? (avatarImage as string) : undefined}
+                  src={!isHovered ? previewImage : undefined}
                   sx={{
                     border: "1px solid #F58A47",
                     borderRadius: "90px",
@@ -632,11 +668,10 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               }
 
               if (hasFiles || hasAvatarImage) {
-                setTimeout(() => {
-                  if (hasDescription) {
-                    handleSave();
-                  }
-                }, 0);
+                setInfoMessage("Uploading photo/s");
+                if (hasDescription) {
+                  handleSave();
+                }
               } else if (hasDescription) {
                 handleSave();
               }

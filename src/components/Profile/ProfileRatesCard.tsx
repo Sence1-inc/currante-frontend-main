@@ -29,7 +29,7 @@ interface ProfileRatesCardProps {
   handleCancelEdittingSection: () => void;
   handleSetJobSubtypes: (types: JobSubType[]) => void;
   handleSetIsSnackbarOpen: (isOpen: boolean) => void;
-  handleSetInfoMessage: (message: string) => void;
+  handleSetWarningMessage: (message: string) => void;
   handleSetSelectedJobType: (jobType: string) => void;
 }
 
@@ -46,7 +46,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   handleCancelEdittingSection,
   handleSetJobSubtypes,
   handleSetIsSnackbarOpen,
-  handleSetInfoMessage,
+  handleSetWarningMessage,
   handleSetSelectedJobType,
 }) => {
   useEffect(() => {
@@ -132,7 +132,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
             label="Job Type"
             onChange={(e: SelectChangeEvent) => {
               handleSetIsSnackbarOpen(true);
-              handleSetInfoMessage(
+              handleSetWarningMessage(
                 `Are you sure you want to set your job type to ${e.target.value}?`
               );
               handleSetSelectedJobType(e.target.value);
