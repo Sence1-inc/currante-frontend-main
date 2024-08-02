@@ -14,7 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React, { ChangeEvent, useState } from "react";
+import imageCompression from "browser-image-compression";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import axiosInstance from "../../../axiosInstance";
@@ -23,7 +24,6 @@ import { useAppDispatch } from "../../redux/store";
 import { User } from "../../redux/type";
 import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
-import imageCompression from "browser-image-compression";
 
 const responsive = {
   desktop: {
@@ -72,6 +72,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   handleSave,
   handleCancelEdittingSection,
 }) => {
+  const MAX_FILES = 6;
   const maxFileSizeMB = 3;
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [files, setFiles] = useState<FileList | []>([]);
@@ -91,11 +92,25 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
     setIsHovered(false);
   };
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
-    const uploadedFiles = event.target.files;
+  useEffect(() => {
+    if (user.covers.length > 0) {
+      setPreviewImages(user.covers);
+    }
+  }, []);
 
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    // setIsUploading(true);
+    const uploadedFiles = event.target.files;
+    console.log(previewImages);
     if (uploadedFiles && uploadedFiles.length > 0) {
+      if (previewImages.length > MAX_FILES) {
+        setIsUploading(false);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
+        return;
+      }
+
       const filesArray = Array.from(uploadedFiles);
       const previews = [];
       const urls = [];
@@ -124,13 +139,31 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         urls.push(response.data.url);
         previews.push(URL.createObjectURL(file));
       }
+
+      const fileList = new DataTransfer();
+      filesArray.forEach((file) => fileList.items.add(file));
+      const newFileList = fileList.files;
+
       setIsUploading(false);
-      setPreviewImages(previews);
-      setFiles(uploadedFiles);
-      setPresignedUrls(urls);
+      setPreviewImages([...previewImages, ...previews]);
+      setFiles(newFileList);
+      setPresignedUrls([...presignedUrls, ...urls]);
     }
   };
 
+  const handleDeleteCoverPhoto = async (url: string) => {
+    try {
+      const parsedUrl = new URL(url);
+      const pathname = parsedUrl.pathname;
+      const filename = pathname.split("/").pop();
+
+      const response = await axiosInstance.delete(`/api/v1/photo/${filename}`);
+      dispatch(initializeUser({ ...user, covers: response.data.covers }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(previewImages);
   const handleDeleteFile = async (index: number) => {
     const updatedPreviews = [...previewImages];
     updatedPreviews.splice(index, 1);
@@ -146,6 +179,8 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
     const updatedPresignedUrls = [...presignedUrls];
     updatedPresignedUrls.splice(index, 1);
     setPresignedUrls(updatedPresignedUrls);
+
+    handleDeleteCoverPhoto(previewImages[index]);
   };
 
   const savePhotos = async () => {
@@ -203,7 +238,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       console.error("Error uploading cover photos: ", error);
       setSuccessMessage("");
       setIsSnackbarOpen(true);
-      setErrorMessage(error.response.message);
+      setErrorMessage(error.response.data.message);
     }
   };
 
@@ -275,7 +310,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </Box>
       )}
       {edittingSection === sectionName ? (
-        <>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Box
             sx={{
               display: "flex",
@@ -284,7 +319,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               width: "80vw",
             }}
           >
-            <Typography variant="body1">Upload cover photos</Typography>
             <Box
               sx={{
                 display: "flex",
@@ -317,9 +351,9 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 onChange={handleFileChange}
                 multiple
                 accept="image/*"
-                disabled={files?.length === 6 || isUploading}
+                disabled={previewImages?.length >= 6 || isUploading}
               />
-              {files.length === 0 ? (
+              {previewImages.length === 0 ? (
                 <Box
                   sx={{
                     width: "100px",
@@ -374,17 +408,14 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 }}
               >
                 <span>
-                  {files?.length === 0
+                  {previewImages?.length === 0
                     ? "Click here to upload media"
-                    : files?.length === 6
+                    : previewImages?.length === 6
                     ? "You've reached the maximum number of uploads"
                     : "Add more photos"}
                 </span>
               </Typography>
             </Box>
-            <Button variant="contained" onClick={handleUploadCoverPhotos}>
-              Upload cover photos
-            </Button>
           </Box>
           <div
             style={{
@@ -456,12 +487,12 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 </Avatar>
               </Badge>
 
-              <Button variant="contained" onClick={handleUpload}>
+              {/* <Button variant="contained" onClick={handleUpload}>
                 Upload Profile Photo
-              </Button>
+              </Button> */}
             </label>
           </div>
-        </>
+        </Box>
       ) : user.id_photo ? (
         <Badge
           overlap="circular"
@@ -588,9 +619,23 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             sx={{ color: "common.white" }}
             size="small"
             variant="contained"
-            onClick={handleSave}
+            onClick={() => {
+              if (files.length > 0) {
+                handleUploadCoverPhotos();
+                if (description) handleSave();
+              } else if (avatarImage) {
+                handleUpload();
+                if (description) handleSave();
+              } else if (description) {
+                handleSave();
+              }
+            }}
           >
-            Save
+            {description && (files.length > 0 || avatarImage)
+              ? "Save & Upload"
+              : files.length > 0 || avatarImage
+              ? "Upload"
+              : "Save"}
           </Button>
         </ButtonGroup>
       )}
