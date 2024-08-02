@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import axios from "axios";
+import imageCompression from "browser-image-compression";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -15,7 +16,6 @@ import { CITIES, PROVINCES } from "../../data/WorkerDetails";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Address, Area, JobSubType, User } from "../../redux/type";
-import imageCompression from "browser-image-compression";
 
 export interface JobSubtypeDefault {
   job_type: string;
@@ -69,7 +69,7 @@ const ProfilePage: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        getPresignedURL(file);
+        getPresignedURL(file, "avatar");
         setAvatarImage(reader.result as string);
         setFile(file);
       };
@@ -82,7 +82,7 @@ const ProfilePage: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        getPresignedURL(file);
+        getPresignedURL(file, "identification");
         setIdImage(reader.result as string);
         setIdFile(file);
       };
@@ -228,7 +228,6 @@ const ProfilePage: React.FC = () => {
         setErrorMessage("");
         setErrorMessages({});
         dispatch(initializeUser(response.data.profile));
-        setDescription(response.data.profile.description);
       }
     } catch (error: any) {
       setIsSnackbarOpen(true);
@@ -238,11 +237,11 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const getPresignedURL = async (file: File) => {
+  const getPresignedURL = async (file: File, type: string) => {
     try {
       const response = await axiosInstance.get("/api/v1/presigned-url", {
         params: {
-          filename: `${file?.name}-${file?.lastModified}`,
+          filename: `${file?.name}-${type}-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
           filetype: file?.type,
         },
       });
@@ -256,8 +255,8 @@ const ProfilePage: React.FC = () => {
     try {
       const filename =
         type === "identification"
-          ? `${idFile?.name}-${idFile?.lastModified}`
-          : `${file?.name}-${file?.lastModified}`;
+          ? `${file?.name}-identification-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`
+          : `${file?.name}-avatar-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`;
       const response = await axiosInstance.post("/api/v1/upload", {
         id: user.id,
         filename: filename,
@@ -269,7 +268,7 @@ const ProfilePage: React.FC = () => {
           type === "identification"
             ? { identification_photo: response.data.identification }
             : { id_photo: response.data.avatar };
-        dispatch(initializeUser({ ...user, ...savedPhoto }));
+        dispatch(initializeUser({ ...response.data.user, ...savedPhoto }));
         setIsSnackbarOpen(true);
         setSuccessMessage(response.data.message);
         setErrorMessage("");
@@ -330,6 +329,9 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+            setIsSnackbarOpen={setIsSnackbarOpen}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}

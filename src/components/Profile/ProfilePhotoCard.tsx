@@ -22,7 +22,6 @@ import axiosInstance from "../../../axiosInstance";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch } from "../../redux/store";
 import { User } from "../../redux/type";
-import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
 
 const responsive = {
@@ -56,6 +55,9 @@ interface ProfilePhotoCardProps {
   handleSetDescription: (description: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
+  setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
@@ -65,6 +67,9 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   sectionName,
   user,
   errorMessages,
+  setSuccessMessage,
+  setErrorMessage,
+  setIsSnackbarOpen,
   handleSetEdittingSection,
   handleAvatarImageChange,
   handleUpload,
@@ -80,9 +85,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -99,12 +101,12 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   }, []);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    // setIsUploading(true);
+    setIsUploading(true);
     const uploadedFiles = event.target.files;
     console.log(previewImages);
     if (uploadedFiles && uploadedFiles.length > 0) {
+      setIsUploading(false);
       if (previewImages.length > MAX_FILES) {
-        setIsUploading(false);
         setSuccessMessage("");
         setIsSnackbarOpen(true);
         setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
@@ -132,7 +134,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       for (const file of filesArray) {
         const response = await axiosInstance.get("/api/v1/presigned-url", {
           params: {
-            filename: `${file?.name}-${file?.lastModified}`,
+            filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
             filetype: file?.type,
           },
         });
@@ -190,11 +192,16 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         filesArray.map(async (file) => {
           const response = await axiosInstance.post("/api/v1/upload", {
             id: user.id,
-            filename: `${file?.name}-${file?.lastModified}`,
+            filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
             type: "cover",
           });
           setFiles([]);
-          dispatch(initializeUser({ ...user, covers: response.data.covers }));
+          dispatch(
+            initializeUser({
+              ...response.data.user,
+              covers: response.data.covers,
+            })
+          );
         })
       );
 
@@ -259,12 +266,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           zIndex: 20,
         }}
       >
-        <CustomSnackbar
-          errorMessage={errorMessage}
-          successMessage={successMessage}
-          isSnackbarOpen={isSnackbarOpen}
-          handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
-        />
         <IconButton
           sx={{
             position: "absolute",
@@ -622,16 +623,21 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               const hasAvatarImage = Boolean(avatarImage?.trim());
               const hasDescription = Boolean(description?.trim());
 
-              if (hasFiles && hasAvatarImage) {
+              if (hasFiles) {
                 handleUploadCoverPhotos();
-                handleUpload();
-              } else if (hasFiles) {
-                handleUploadCoverPhotos();
-              } else if (hasAvatarImage) {
+              }
+
+              if (hasAvatarImage) {
                 handleUpload();
               }
 
-              if (hasDescription) {
+              if (hasFiles || hasAvatarImage) {
+                setTimeout(() => {
+                  if (hasDescription) {
+                    handleSave();
+                  }
+                }, 0);
+              } else if (hasDescription) {
                 handleSave();
               }
             }}
