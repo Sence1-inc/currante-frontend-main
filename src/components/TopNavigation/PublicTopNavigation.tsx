@@ -5,7 +5,8 @@ const PublicTopNavigation = () => {
   return (
     <AppBar
       sx={{
-        width: "100%",
+        width: "390px",
+        margin: "0 auto",
         position: "fixed",
         top: 0,
         left: 0,

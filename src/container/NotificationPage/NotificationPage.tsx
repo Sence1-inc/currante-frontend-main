@@ -64,7 +64,13 @@ const NotificationPage = () => {
   };
 
   return (
-    <Box sx={{ margin: "20px" }}>
+    <Box
+      sx={{
+        margin: "20px",
+        height: "calc(100vh - 64px - 84px)",
+        backgroundColor: "common.white",
+      }}
+    >
       {user.notifications.length > 0 &&
         user.notifications?.map((notification: Notification, index: number) => {
           return (

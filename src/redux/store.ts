@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import IsAuthenticatedReducer from "./reducers/IsAuthenticatedReducer";
 import IsLoadingReducer from "./reducers/IsLoadingReducer";
 import OrderReducer from "./reducers/OrderReducer";
+import ParticipantDataReducer from "./reducers/ParticipantDataReducer";
 import ParticipantReducer from "./reducers/ParticipantReducer";
 import UserReducer from "./reducers/UserReducer";
 import WorkersReducer from "./reducers/WorkersReducer";
@@ -22,6 +23,7 @@ const persistedReducer = persistReducer(
     user: UserReducer,
     workers: WorkersReducer,
     participant: ParticipantReducer,
+    participantData: ParticipantDataReducer,
     isAuthenticated: IsAuthenticatedReducer,
     isLoading: IsLoadingReducer,
     order: OrderReducer,

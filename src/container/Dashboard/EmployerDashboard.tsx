@@ -60,7 +60,7 @@ const EmployerDashboard = () => {
       <Box
         sx={{
           height: "180px",
-          width: "100vw",
+          width: "100%",
           backgroundImage: `url(${image})`,
         }}
       ></Box>

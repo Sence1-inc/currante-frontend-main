@@ -121,6 +121,29 @@ export interface User {
   reviews: Review[];
 }
 
+export interface Participant {
+  id: number | null;
+  id_photo: string;
+  is_identification_verified?: boolean;
+  email: string;
+  role: {
+    role_name: string;
+    role_details: string;
+  };
+  description: string;
+  overall_rating: number | null;
+  areas: Area[] | [];
+  job_subtypes: JobSubType[];
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  suffix: string;
+  birthday: string;
+  gender: string;
+  phone_number: string;
+  addresses: Address[] | [];
+}
+
 export type Worker = {
   id: number | null;
   transportation_cost: number | null;

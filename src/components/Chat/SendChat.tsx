@@ -62,12 +62,13 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
     <Box
       sx={{
         display: "flex",
-        gap: "8px",
+        justifyContent: "space-between",
         padding: "12px",
         position: "fixed",
         bottom: "80px",
-        width: "100%",
+        width: "366px",
         backgroundColor: "primary.light",
+        zIndex: 100,
       }}
     >
       <TextField

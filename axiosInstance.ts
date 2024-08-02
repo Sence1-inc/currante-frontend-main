@@ -23,11 +23,8 @@ var numberOfPendingRequests = 0;
 
 api.interceptors.request.use(
   function (config) {
-    console.log("orig", numberOfPendingRequests);
-    console.log(config.baseURL);
     numberOfPendingRequests++;
     store.dispatch(initializeIsLoading(true));
-    console.log("after true dispatch", numberOfPendingRequests);
     return config;
   },
   function (error) {

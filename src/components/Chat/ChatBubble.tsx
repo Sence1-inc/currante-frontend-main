@@ -1,7 +1,6 @@
 import { CheckCircle } from "@mui/icons-material";
 import { Avatar, Badge, Box, Paper, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../../axiosInstance";
+import React from "react";
 import { useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
 
@@ -12,28 +11,7 @@ interface ChatBubbleProps {
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message, user_id }) => {
   const u: User = useAppSelector((state) => state.user);
-  const [otherUser, setOtherUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const endpoint =
-          user_id !== u.id
-            ? `/api/v1/users/${user_id}?type=employer`
-            : `/api/v1/users/${user_id}?type=worker`;
-
-        const { data } = await axiosInstance.get(endpoint);
-
-        if (data) {
-          setOtherUser(data);
-        }
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    };
-
-    getUser();
-  }, []);
+  const otherUser = useAppSelector((state) => state.participantData);
 
   return (
     <Box

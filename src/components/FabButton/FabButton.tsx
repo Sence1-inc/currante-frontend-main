@@ -26,7 +26,7 @@ const FabButton: React.FC<FabButtonProps> = ({
         right: "30px",
         backgroundColor: "secondary.main",
         color: "white",
-        padding: "20px",
+        padding: "14px",
         "&:hover": {
           backgroundColor: "primary.main",
         },

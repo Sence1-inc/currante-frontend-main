@@ -240,7 +240,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
           <Stack
             className="track primary"
             sx={{
-              width: "100vw",
+              width: "100%",
               display: "flex",
               flexDirection: "row",
               alignItems: "flex-end",

@@ -128,6 +128,7 @@ const ChatPage = () => {
         display: "flex",
         flexDirection: "column",
         gap: "10px",
+        height: "100%",
       }}
     >
       {/* WILL IMPLEMENT THIS IN PHASE 3 */}
@@ -193,17 +194,22 @@ const ChatPage = () => {
           );
         })
       ) : (
-        <>
+        <Box
+          sx={{
+            height: "calc(100vh - 64px - 84px)",
+            backgroundColor: "common.white",
+          }}
+        >
           <Typography variant="body1">No conversations yet</Typography>
           <Button
-            sx={{ width: "30%", color: "common.white" }}
+            sx={{ width: "50%", color: "common.white" }}
             variant="contained"
             color="secondary"
             onClick={() => navigate("/services")}
           >
             Start Hiring!
           </Button>
-        </>
+        </Box>
       )}
     </Box>
   );

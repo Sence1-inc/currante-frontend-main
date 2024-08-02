@@ -13,7 +13,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
 import { db } from "../../firebase";
+import useGetEmployer from "../../hooks/useGetEmployer";
 import useGetUser from "../../hooks/useGetUser";
+import useGetWorker from "../../hooks/useGetWorker";
+import { initializeParticipantData } from "../../redux/reducers/ParticipantDataReducer";
 import { initializeParticipant } from "../../redux/reducers/ParticipantReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import FabButton from "../FabButton/FabButton";
@@ -22,6 +25,8 @@ import SendChat from "./SendChat";
 
 const ChatRoom: React.FC = () => {
   const { conversation_id } = useParams();
+  const { getWorker } = useGetWorker();
+  const { getEmployer } = useGetEmployer();
   const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
@@ -73,9 +78,13 @@ const ChatRoom: React.FC = () => {
           const data = await getUser(user[0].user_id, type);
 
           if (userState.logged_in_as === "employer") {
+            const workerData = await getWorker(data.worker_id);
             dispatch(initializeParticipant(data.worker_id));
+            dispatch(initializeParticipantData(workerData.profile));
           } else {
+            const employerData = await getEmployer(data.employer_id);
             dispatch(initializeParticipant(data.employer_id));
+            dispatch(initializeParticipantData(employerData.profile));
           }
         };
 
@@ -97,9 +106,10 @@ const ChatRoom: React.FC = () => {
       sx={{
         marginTop: "64px",
         marginBottom: "84px",
-        width: "100vw",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <Box
@@ -140,7 +150,7 @@ const ChatRoom: React.FC = () => {
             handleClick={handleHire}
             styles={{
               bottom: "170px",
-              right: "36%",
+              right: { xs: "38%", sm: "40%", md: "45%" },
             }}
           />
         )}
