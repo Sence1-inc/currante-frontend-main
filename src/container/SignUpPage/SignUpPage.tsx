@@ -210,7 +210,6 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
       } catch (error: any) {
         setIsSnackbarOpen(true);
         setErrorMessage(error.response.data.message);
-        console.log("Registration error: ", error);
       }
     }
   };
@@ -233,6 +232,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
         <Box sx={authPageStyles.container.innerContainer}>
           <Typography sx={authPageStyles.form.heading}>Sign-up</Typography>
           <CustomTextField
+            value={userCredentials.first_name}
             inputType="text"
             label="First name"
             placeholder="Enter your first name"
@@ -245,6 +245,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.middle_name}
             inputType="text"
             label="Middle name"
             placeholder="Enter your middle name"
@@ -257,6 +258,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.last_name}
             inputType="text"
             label="Last name"
             placeholder="Enter your last name"
@@ -269,6 +271,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.email}
             inputType="email"
             label="Email"
             placeholder="Enter your valid email"
@@ -281,6 +284,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.password}
             inputType="password"
             label="Password"
             placeholder="Enter your password"
@@ -293,6 +297,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.password2}
             inputType="password"
             label="Confirm password"
             placeholder="Confirm your password"

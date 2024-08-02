@@ -148,6 +148,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
         <Box sx={authPageStyles.container.innerContainer}>
           <Typography sx={authPageStyles.form.heading}>Sign-in</Typography>
           <CustomTextField
+            value={userCredentials.email}
             inputType="email"
             label="Email address"
             placeholder="Enter your registered email"
@@ -160,6 +161,7 @@ const SignInPage: React.FC<SignInPageProps> = () => {
             }
           />
           <CustomTextField
+            value={userCredentials.password}
             inputType="password"
             label="Password"
             placeholder="Enter your password"

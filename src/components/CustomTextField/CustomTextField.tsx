@@ -8,6 +8,7 @@ interface CustomTextFieldProps {
   label: string;
   placeholder: string;
   error: string;
+  value: string;
   handleSetUserCredentials: (value: any) => void;
 }
 
@@ -15,6 +16,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   inputType,
   label,
   placeholder,
+  value,
   error,
   handleSetUserCredentials,
 }) => {
@@ -24,6 +26,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleSetUserCredentials(e.target.value)
         }
+        value={value}
         type={inputType}
         id={`${inputType}-${label}`}
         label={label}
