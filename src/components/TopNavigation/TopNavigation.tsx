@@ -17,6 +17,7 @@ import { initializeOrder } from "../../redux/reducers/OrderReducer";
 import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Order, User } from "../../redux/type";
+import logo from "/images/logo.png";
 
 const settings = ["Manage Profile", "Logout"];
 
@@ -241,7 +242,7 @@ function ResponsiveAppBar() {
             <Link href="/" underline="none" sx={{ minHeight: "unset" }}>
               <Box
                 component="img"
-                src="/src/assets/logo.png"
+                src={logo}
                 sx={{
                   width: "151px",
                   height: "100%",
