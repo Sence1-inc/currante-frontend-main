@@ -29,8 +29,7 @@ const CustomRating: React.FC<CustomRatingProps> = ({
         <Rating
           name="simple-controlled"
           value={rating}
-          onChange={(event, newValue) => {
-            console.log(event);
+          onChange={(_event, newValue) => {
             handleSetRating(newValue as number);
           }}
         />

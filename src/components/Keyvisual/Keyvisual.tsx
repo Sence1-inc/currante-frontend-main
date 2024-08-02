@@ -25,7 +25,6 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
   useEffect(() => {
     const interval = setTimeout(() => {
       setCounter(counter + 1);
-      console.log(`counter: ` + counter);
       if (counter % 5 == 0) {
         if (
           topText ===
@@ -36,7 +35,6 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             `Looking for a short part-time job as a maid, carpenter, or plumber?`
           );
         } else {
-          console.log(`changed`);
           setTopText(
             `Need a carpenter, cleaner, and plumber but with no leads?`
           );
@@ -55,7 +53,6 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
     if (counter % 5 == 0) {
       return ` slide-down`;
     } else {
-      console.log(`not yet divisible by 5`);
       return ``;
     }
   };

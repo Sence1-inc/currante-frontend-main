@@ -96,7 +96,6 @@ const AdminDashboard = () => {
         setIsReleaseModalOpen(false);
       }
     } catch (error) {
-      console.log("Error releasing: ", error);
       setErrorMessage("Something went wrong");
     }
   };
@@ -119,7 +118,7 @@ const AdminDashboard = () => {
         setTotalCount(response.data.total);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

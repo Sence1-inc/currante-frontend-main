@@ -56,7 +56,6 @@ const AdminSignInPage = () => {
           password: "",
         });
       }
-      console.log("Error logging in: ", error);
     }
   };
 

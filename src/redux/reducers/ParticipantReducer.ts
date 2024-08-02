@@ -4,8 +4,7 @@ export const participantSlice = createSlice({
   name: "participant",
   initialState: 0,
   reducers: {
-    initializeParticipant: (state, action: PayloadAction<number>) => {
-      console.log(state);
+    initializeParticipant: (_state, action: PayloadAction<number>) => {
       return action.payload;
     },
   },

@@ -195,7 +195,6 @@ const PaymentPage = () => {
           );
         }
       } catch (error: any) {
-        console.log(error);
         setErrorMessage("Error");
         setErrorMessages(error.response?.data.errors);
         setStepFailed(null);

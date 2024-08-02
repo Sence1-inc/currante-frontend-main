@@ -44,8 +44,7 @@ export const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    initializeOrder: (state, action: PayloadAction<Order>) => {
-      console.log(state);
+    initializeOrder: (_state, action: PayloadAction<Order>) => {
       return action.payload;
     },
   },

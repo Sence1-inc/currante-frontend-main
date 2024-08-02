@@ -17,7 +17,6 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({
   rating,
   isIdentificationVerified,
 }) => {
-  console.log(image);
   return (
     <Box
       sx={{

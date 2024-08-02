@@ -79,7 +79,8 @@ const TabModal: React.FC<TabModalProps> = ({
 
   const handleWorkComplete = async () => {
     if (otp === "" && otp.length < 6) {
-      console.log("Please input OTP");
+      setIsSnackbarOpen(true);
+      setInfoMessage(`Please input OTP`);
     } else {
       try {
         const response = await axiosInstance.patch(

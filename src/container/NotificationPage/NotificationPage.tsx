@@ -67,7 +67,6 @@ const NotificationPage = () => {
     <Box sx={{ margin: "20px" }}>
       {user.notifications.length > 0 &&
         user.notifications?.map((notification: Notification, index: number) => {
-          console.log(notification.message);
           return (
             <Card key={index} sx={{ margin: "20px" }}>
               <CardContent>

@@ -12,8 +12,7 @@ const FAQ: React.FC = () => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
-    (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
-      console.log(event);
+    (panel: string) => (_event: React.ChangeEvent<{}>, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
@@ -27,9 +26,9 @@ const FAQ: React.FC = () => {
               background: "#D8E5FF",
               borderRadius: "8px !important",
               marginBottom: "20px",
-              '&::before': {
-                display: "none"
-              }
+              "&::before": {
+                display: "none",
+              },
             }}
             key={item.id}
             expanded={expanded === item.id}

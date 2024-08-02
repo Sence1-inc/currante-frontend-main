@@ -7,8 +7,7 @@ export const workersSlice = createSlice({
   name: "workers",
   initialState,
   reducers: {
-    initializeWorkers: (state, action: PayloadAction<Worker[]>) => {
-      console.log(state);
+    initializeWorkers: (_state, action: PayloadAction<Worker[]>) => {
       return action.payload;
     },
   },

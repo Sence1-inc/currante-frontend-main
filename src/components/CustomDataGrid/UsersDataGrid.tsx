@@ -133,13 +133,12 @@ const UsersDataGrid = () => {
       console.log(error);
     }
   };
-  console.log(pagination);
+
   useEffect(() => {
     getUsers(pagination.currentPage);
   }, [pagination.currentPage]);
 
   const handlePageChange = (params: { page: number; pageSize: number }) => {
-    console.log(params.page);
     setPagination({
       ...pagination,
       currentPage: params.page + 1,

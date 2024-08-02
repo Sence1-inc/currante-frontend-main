@@ -29,8 +29,7 @@ const saveUserToIndexedDB = (user: User) => {
     const objectStore = transaction.objectStore("user");
     const getUserRequest = objectStore.get(1);
 
-    getUserRequest.onsuccess = (event: any) => {
-      console.log(event);
+    getUserRequest.onsuccess = (_event: any) => {
       const existingState = getUserRequest.result;
       const newState = { id: 1, user };
 

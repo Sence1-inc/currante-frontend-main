@@ -34,8 +34,7 @@ export default function AdminBottomNavigation() {
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => {
-          console.log(event);
+        onChange={(_event, newValue) => {
           handleNavigation(newValue);
         }}
         sx={{

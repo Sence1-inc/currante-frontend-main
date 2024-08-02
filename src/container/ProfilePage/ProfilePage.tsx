@@ -53,6 +53,7 @@ const ProfilePage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [errorMessages, setErrorMessages] = useState<any>({});
+  const [warningMessage, setWarningMessage] = useState<string>("");
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [jobTypes, setJobtypes] = useState<
@@ -64,8 +65,8 @@ const ProfilePage: React.FC = () => {
       job_subtypes: [{ job_name: "", unit: "", id: 0 }],
     });
 
-  const handleAvatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
+  const handleAvatarImageChange = (item: FileList) => {
+    const file = item && item[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -201,6 +202,7 @@ const ProfilePage: React.FC = () => {
   }, [jobType]);
 
   const handleSave = async () => {
+    setIsSnackbarOpen(false);
     const data = {
       user_id: user.id, // update this during implementation of authentication
       first_name: firstName,
@@ -274,7 +276,6 @@ const ProfilePage: React.FC = () => {
         setErrorMessage("");
       }
     } catch (error: any) {
-      console.log("Error uploading", error);
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);
@@ -331,6 +332,7 @@ const ProfilePage: React.FC = () => {
           <ProfilePhotoCard
             setSuccessMessage={setSuccessMessage}
             setErrorMessage={setErrorMessage}
+            setInfoMessage={setInfoMessage}
             setIsSnackbarOpen={setIsSnackbarOpen}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
@@ -344,7 +346,9 @@ const ProfilePage: React.FC = () => {
               setEdittingSection("description_photos")
             }
             handleCancelEdittingSection={() => setEdittingSection("")}
-            handleAvatarImageChange={handleAvatarImageChange}
+            handleAvatarImageChange={(file: FileList) =>
+              handleAvatarImageChange(file)
+            }
             handleUpload={() => handleUpload("avatar")}
             handleSetDescription={(desc) => setDescription(desc)}
             handleSave={handleSave}
@@ -389,7 +393,7 @@ const ProfilePage: React.FC = () => {
                 setJobSubtypes([...types]);
               }}
               handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
-              handleSetInfoMessage={(message) => setInfoMessage(message)}
+              handleSetWarningMessage={(message) => setWarningMessage(message)}
               handleSetSelectedJobType={(jobtype) => {
                 setSuccessMessage("");
                 setErrorMessage("");
@@ -457,7 +461,8 @@ const ProfilePage: React.FC = () => {
       <CustomSnackbar
         errorMessage={errorMessage}
         successMessage={successMessage}
-        warningMessage={infoMessage}
+        warningMessage={warningMessage}
+        infoMessage={infoMessage}
         isSnackbarOpen={isSnackbarOpen}
         handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
         handleWarningProceed={() => {
