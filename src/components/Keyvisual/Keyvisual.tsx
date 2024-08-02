@@ -204,7 +204,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             }}
           >
             <PrimaryButton
-              text="Learn More"
+              text="Start hiring"
               handleClick={() => navigate("/services")}
             />
             {!isAuthenticated && (
