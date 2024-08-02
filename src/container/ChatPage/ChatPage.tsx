@@ -6,12 +6,13 @@ import {
   query,
   where,
 } from "@firebase/firestore";
-import { Box } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
 import { db } from "../../firebase";
-import { useAppSelector } from "../../redux/store";
+import { initializeIsLoading } from "../../redux/reducers/IsLoadingReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 export interface FirebaseUser {
   user_id: number;
@@ -30,11 +31,13 @@ const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const navigate = useNavigate();
   const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchConversations = async () => {
       try {
         const getUser = async () => {
+          dispatch(initializeIsLoading(true));
           const userRef = query(
             collection(db, "users"),
             where("user_id", "==", userState.id) // update during authentication implementation
@@ -60,6 +63,7 @@ const ChatPage = () => {
         }[] = [];
 
         const getConversations = async (conversationId: string) => {
+          dispatch(initializeIsLoading(true));
           const conversationsRef = query(
             collection(db, "conversation_participants"),
             where("conversation_id", "==", conversationId)
@@ -71,6 +75,7 @@ const ChatPage = () => {
         };
 
         for (const doc of userConversations.docs) {
+          dispatch(initializeIsLoading(true));
           const conversationId = doc.data().conversation_id;
 
           let conversation = conversations.find(
@@ -78,6 +83,7 @@ const ChatPage = () => {
           );
 
           if (!conversation) {
+            dispatch(initializeIsLoading(true));
             const allUserConversations = await getConversations(conversationId);
 
             const usersPromises = allUserConversations.map(async (convo) => {
@@ -98,9 +104,10 @@ const ChatPage = () => {
             conversations.push(conversation as Conversation);
           }
         }
-
+        dispatch(initializeIsLoading(false));
         setConversations(conversations);
       } catch (error) {
+        dispatch(initializeIsLoading(false));
         console.error("Error fetching conversations: ", error);
       }
     };
@@ -167,23 +174,37 @@ const ChatPage = () => {
           }}
         />
       </Box> */}
-      {conversations.map((conversation: Conversation, index: number) => {
-        const user = conversation.users.filter(
-          (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
-        );
+      {conversations.length > 0 ? (
+        conversations.map((conversation: Conversation, index: number) => {
+          const user = conversation.users.filter(
+            (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
+          );
 
-        const participant = user[0];
+          const participant = user[0];
 
-        return (
-          <ChatCard
-            key={index}
-            participant={participant}
-            handleCardClick={() => {
-              handleCardClick(conversation.conversation_id);
-            }}
-          />
-        );
-      })}
+          return (
+            <ChatCard
+              key={index}
+              participant={participant}
+              handleCardClick={() => {
+                handleCardClick(conversation.conversation_id);
+              }}
+            />
+          );
+        })
+      ) : (
+        <>
+          <Typography variant="body1">No conversations yet</Typography>
+          <Button
+            sx={{ width: "30%", color: "common.white" }}
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate("/services")}
+          >
+            Start Hiring!
+          </Button>
+        </>
+      )}
     </Box>
   );
 };
