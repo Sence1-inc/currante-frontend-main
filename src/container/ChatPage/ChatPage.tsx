@@ -6,8 +6,7 @@ import {
   query,
   where,
 } from "@firebase/firestore";
-import SearchIcon from "@mui/icons-material/Search";
-import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
