@@ -16,7 +16,15 @@ type UserData = {
 };
 
 const UsersDataGrid = () => {
-  const [users, setUsers] = useState<UserData[] | []>([]);
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    perPage: 10,
+    currentPage: 1,
+    lastPage: 1,
+    nextPageUrl: "",
+    prevPageUrl: "",
+  });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
 
@@ -70,7 +78,7 @@ const UsersDataGrid = () => {
       width: 100,
       flex: 1.5,
       valueGetter: (_value, row) =>
-        row.is_identification_verified === 1 ? "Yes" : "No",
+        row.is_identification_verified ? "Yes" : "No",
     },
   ];
 
@@ -83,22 +91,18 @@ const UsersDataGrid = () => {
 
       if (response.status === 201) {
         const updatedUser = formatUser(response.data.user);
-        setUsers((prevUsers) => {
-          return prevUsers.map((user) => {
-            if (user.id === updatedUser.id) {
-              return { ...user, updatedUser };
-            } else {
-              return user;
-            }
-          });
-        });
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
+          )
+        );
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const formatUser = (user: User) => {
+  const formatUser = (user: User): UserData => {
     return {
       id: user.id as number,
       first_name: user.first_name as string,
@@ -106,40 +110,41 @@ const UsersDataGrid = () => {
       last_name: user.last_name as string,
       identification_photo: user.identification_photo as string,
       phone_number: user.phone_number as string,
+      is_identification_verified: user.is_identification_verified as boolean,
     };
   };
 
-  const formatUsers = (users: User[]) => {
-    const data = users.map((user: User) => {
-      return {
-        id: user.id as number,
-        first_name: user.first_name as string,
-        middle_name: user.middle_name as string,
-        last_name: user.last_name as string,
-        identification_photo: user.identification_photo as string,
-        phone_number: user.phone_number as string,
-        is_identification_verified: user.is_identification_verified as boolean,
-      };
-    });
-
-    return data;
-  };
-
-  const getUsers = async () => {
+  const getUsers = async (page: number = 1) => {
     try {
-      const response = await axiosInstance.get("/api/v1/users");
+      const response = await axiosInstance.get(`/api/v1/users?page=${page}`);
 
       if (response.status === 200) {
-        setUsers(formatUsers(response.data.data));
+        setUsers(response.data.data.map(formatUser));
+        setPagination({
+          total: response.data.total,
+          perPage: response.data.per_page,
+          currentPage: response.data.current_page,
+          lastPage: response.data.last_page,
+          nextPageUrl: response.data.next_page_url,
+          prevPageUrl: response.data.prev_page_url,
+        });
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(pagination);
   useEffect(() => {
-    getUsers();
-  }, []);
+    getUsers(pagination.currentPage);
+  }, [pagination.currentPage]);
+
+  const handlePageChange = (params: { page: number; pageSize: number }) => {
+    console.log(params.page);
+    setPagination({
+      ...pagination,
+      currentPage: params.page + 1,
+    });
+  };
 
   return (
     <>
@@ -171,15 +176,17 @@ const UsersDataGrid = () => {
       <DataGrid
         rows={users}
         columns={columns}
+        pagination
+        pageSizeOptions={[10]}
+        paginationMode="server"
+        onPaginationModelChange={handlePageChange}
+        rowCount={pagination.total}
+        loading={false}
         initialState={{
           pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
+            paginationModel: { page: pagination.currentPage, pageSize: 10 },
           },
         }}
-        pageSizeOptions={[10]}
-        // disableRowSelectionOnClick
       />
     </>
   );
