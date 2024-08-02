@@ -9,11 +9,13 @@ import FixturesImg from "../../assets/fixtures-and-installation-services.png";
 import HomeMaintenanceImg from "../../assets/home-maintenance.png";
 import LeakRepairImg from "../../assets/leak-and-pipe-replacement-services.png";
 import PlumbingImg from "../../assets/plumbing-services.png";
+import { useAppSelector } from "../../redux/store";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
 import "./Keyvisual.css";
 
 const Keyvisual: React.FC = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const [headingText, setHeadingText] =
     useState(`All-in-one solution for home repairs and maintenance. 
 Seek laborers for cleaning, carpentry, and plumbing services.`);
@@ -205,24 +207,26 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               text="Learn More"
               handleClick={() => navigate("/services")}
             />
-            <Button
-              sx={{
-                py: 2,
-                px: 6,
-                borderRadius: 4,
-                backgroundColor: "primary.main",
-                color: "common.white",
-                variant: "h6",
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                "&:hover": {
-                  backgroundColor: "secondary.dark",
-                },
-              }}
-              onClick={() => navigate("/sign-in")}
-            >
-              Have an account?
-            </Button>
+            {!isAuthenticated && (
+              <Button
+                sx={{
+                  py: 2,
+                  px: 6,
+                  borderRadius: 4,
+                  backgroundColor: "primary.main",
+                  color: "common.white",
+                  variant: "h6",
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "secondary.dark",
+                  },
+                }}
+                onClick={() => navigate("/sign-in")}
+              >
+                Have an account?
+              </Button>
+            )}
           </Box>
         </Box>
         <Box

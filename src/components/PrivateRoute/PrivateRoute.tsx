@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
@@ -21,8 +21,16 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   hasBackButton = true,
 }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const [authenticated, setAuthenticated] = useState<boolean>(true);
   const user: User = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/services");
+    }
+  }, []);
 
   useEffect(() => {
     const checkAuthentication = async () => {
