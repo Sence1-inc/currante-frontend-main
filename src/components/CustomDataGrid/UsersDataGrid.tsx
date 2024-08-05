@@ -11,7 +11,7 @@ type UserData = {
   first_name: string;
   middle_name: string;
   last_name: string;
-  identification_photo: any;
+  identification_photo: string;
   phone_number: string;
   is_identification_verified: boolean;
 };

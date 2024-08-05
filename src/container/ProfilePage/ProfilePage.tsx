@@ -263,7 +263,7 @@ const ProfilePage: React.FC = () => {
     try {
       const filename =
         type === "identification"
-          ? `${file?.name}-identification-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`
+          ? `${idFile?.name}-identification-${user.first_name}-${user.last_name}-${user.last_name}-${idFile?.lastModified}`
           : `${file?.name}-avatar-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`;
       const response = await axiosInstance.post("/api/v1/upload", {
         id: user.id,
