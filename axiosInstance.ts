@@ -18,7 +18,6 @@ const api: AxiosInstance = axios.create({
   },
 });
 
-let lastRefreshTime = Date.now();
 var numberOfPendingRequests = 0;
 
 api.interceptors.request.use(
@@ -47,9 +46,6 @@ api.interceptors.response.use(
       store.dispatch(initializeIsLoading(false));
     }
 
-    const currentTime = Date.now();
-    const elapsedTimeSinceLastRefresh = currentTime - lastRefreshTime;
-
     const isLoginRequest = error.config.url.includes("/api/v1/login");
     const isRegisterRequest = error.config.url.includes("/api/v1/register");
 
@@ -58,7 +54,6 @@ api.interceptors.response.use(
     }
 
     if (
-      elapsedTimeSinceLastRefresh >= 4 * 60 * 1000 ||
       (error.response && error.response.status === 498) ||
       (error.response && error.response.status === 401)
     ) {
@@ -72,8 +67,6 @@ api.interceptors.response.use(
             "Access-Control-Allow-Origin": "*",
           },
         });
-
-        lastRefreshTime = currentTime;
 
         return api.request(error.config);
       } catch (refreshError: any) {
