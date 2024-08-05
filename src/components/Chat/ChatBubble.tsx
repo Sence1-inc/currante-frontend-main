@@ -23,6 +23,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, user_id }) => {
       }}
     >
       <Badge
+        sx={{ zIndex: 0 }}
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         badgeContent={

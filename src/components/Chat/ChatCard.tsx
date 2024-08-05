@@ -91,6 +91,7 @@ const ChatCard: React.FC<ChatCardProps> = ({
       onClick={handleCardClick}
     >
       <Badge
+        sx={{ zIndex: 0 }}
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         badgeContent={

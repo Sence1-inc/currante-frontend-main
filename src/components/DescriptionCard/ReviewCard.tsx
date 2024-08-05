@@ -35,6 +35,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
           }}
         >
           <Badge
+            sx={{ zIndex: 0 }}
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             badgeContent={

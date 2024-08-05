@@ -212,15 +212,17 @@ const ProfileViewPage: React.FC = () => {
             description={worker?.profile.schedule as string}
           />
           <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
-          <FabButton
-            styles={{
-              bottom: isAuthenticated ? "12%" : "6%",
-              right: "calc(50vw - ((490px / 2)/3.8))",
-            }}
-            handleClick={handleMessageClick}
-            text="Message"
-            icon={<ChatIcon />}
-          />
+          {user.logged_in_as === "employer" && (
+            <FabButton
+              styles={{
+                bottom: isAuthenticated ? "12%" : "6%",
+                right: "calc(50vw - ((490px / 2)/3.8))",
+              }}
+              handleClick={handleMessageClick}
+              text="Message"
+              icon={<ChatIcon />}
+            />
+          )}
         </>
       )}
     </Box>

@@ -27,6 +27,7 @@ const RevieweeProfileCard: React.FC<RevieweeProfileCardProps> = ({
         }}
       >
         <Badge
+          sx={{ zIndex: 0 }}
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={

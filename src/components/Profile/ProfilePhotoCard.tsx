@@ -502,6 +502,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               }}
             >
               <Badge
+                sx={{ zIndex: 0 }}
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 badgeContent={
@@ -552,6 +553,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </Box>
       ) : user.id_photo ? (
         <Badge
+          sx={{ zIndex: 0 }}
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={
@@ -576,6 +578,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </Badge>
       ) : (
         <Badge
+          sx={{ zIndex: 0 }}
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={
