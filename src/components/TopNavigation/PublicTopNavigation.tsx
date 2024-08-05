@@ -5,7 +5,7 @@ const PublicTopNavigation = () => {
   return (
     <AppBar
       sx={{
-        width: "390px",
+        width: { xs: "100%", sm: "490px" },
         margin: "0 auto",
         position: "fixed",
         top: 0,
@@ -17,7 +17,7 @@ const PublicTopNavigation = () => {
         height: "64px",
       }}
     >
-      <Container maxWidth="xl" sx={{}}>
+      <Container maxWidth="xl" sx={{ width: "100%" }}>
         <Toolbar
           disableGutters
           sx={{

@@ -211,7 +211,7 @@ function ResponsiveAppBar() {
   return (
     <AppBar
       sx={{
-        width: "390px",
+        width: { xs: "100%", sm: "490px" },
         margin: "0 auto",
         position: "fixed",
         top: 0,

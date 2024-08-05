@@ -28,15 +28,16 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
       onClose={handleClose}
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "right",
+        horizontal: "center",
       }}
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "center",
       }}
       slotProps={{
         paper: { style: { borderRadius: "16px" } },
       }}
+      sx={{ width: { xs: "100%", sm: "490px" } }}
     >
       <Paper
         sx={{
@@ -44,7 +45,7 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: { xs: "90vw", md: "50vw" },
+          width: { xs: "100%", sm: "430px" },
           overflowY: "hidden",
           height: { xs: "90vh", sm: isLandscape ? "85vh" : "50vh" },
           border: "none",

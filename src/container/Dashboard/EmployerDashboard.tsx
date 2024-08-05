@@ -55,6 +55,7 @@ const EmployerDashboard = () => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <Box
@@ -83,7 +84,13 @@ const EmployerDashboard = () => {
           }}
         >
           <Typography variant="h6">Services</Typography>
-          <Box sx={{ display: "flex", gap: "10px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
             {jobTypes.map((service) => {
               return (
                 <ServiceCard

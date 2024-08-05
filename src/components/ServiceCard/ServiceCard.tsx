@@ -13,8 +13,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ title, image, id }) => {
   return (
     <Box
       sx={{
-        width: "80px",
-        height: "auto",
+        width: { xs: "80px", sm: "100px" },
         backgroundColor: "primary.light",
         padding: "8px",
         textAlign: "center",

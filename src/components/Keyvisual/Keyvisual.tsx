@@ -63,7 +63,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
     <Box
       sx={{
         pt: { xs: "40px", sm: "50px" },
-        px: { lg: "80px", md: "40px", xs: "20px" },
+        px: { xs: "20px" },
         pb: "80px",
         backgroundColor: "primary.light",
       }}
@@ -73,29 +73,29 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
           py: 4,
           px: "0px !important",
           display: "flex",
-          flexDirection: { md: "row", xs: "column" },
-          gap: { md: 5, xs: 4 },
+          flexDirection: { xs: "column" },
+          gap: { xs: 4 },
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
         <Box
           sx={{
-            order: { md: 1 },
-            display: { sm: "block", md: "none" },
-            width: { md: "100%" },
+            // order: { md: 1 },
+            display: { sm: "block" },
+            width: { xs: "100%" },
           }}
         >
           <Box id="Slider" className={`slide-up` + isCounterDivBy5()}>
             <Box>
               <Typography
                 sx={{
-                  textAlign: { md: "left", xs: "center" },
+                  textAlign: { xs: "center" },
                   color: "primary.main",
                   fontWeight: 600,
                   fontStyle: "italic",
                   fontSize: "18.5px !important",
-                  mb: { xs: 2, sm: 2, md: "40px", lg: "40px", xl: "32px" },
+                  mb: { xs: 2 },
                   //display: {xs: "block", lg: "none"}
                 }}
               >
@@ -106,10 +106,10 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
 
           <Box
             sx={{
-              width: { lg: "449px", sm: "100%" },
-              maxWidth: { md: "455px" },
-              minWidth: { sm: "auto", md: "400px", lg: "auto" },
-              mb: { xs: 0, sm: 0, md: 0, lg: 3, xl: "32px" },
+              width: { sm: "100%" },
+              // maxWidth: { md: "455px" },
+              // minWidth: { sm: "auto", md: "400px", lg: "auto" },
+              mb: { xs: 0 },
             }}
           >
             <img className="keyvisual__img" src={LogoLarge} alt="" />
@@ -117,56 +117,25 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
         </Box>
         <Box
           sx={{
-            order: { md: 2, xs: 2 },
-            width: { md: "100% ", lg: "50%" },
-            minWidth: { md: "50vw", lg: "auto" },
+            order: { xs: 2 },
           }}
         >
-          <Box sx={{ display: { sm: "none", md: "block", lg: "block" } }}>
-            <Box id="Slider" className={`slide-up` + isCounterDivBy5()}>
-              <Box>
-                <Typography
-                  sx={{
-                    textAlign: { md: "left", xs: "center" },
-                    color: "primary.main",
-                    fontWeight: 600,
-                    fontStyle: "italic",
-                    fontSize: { xs: "15px !important", md: "14px !important" },
-                    mb: 2,
-                    display: { xs: "none", md: "block", lg: "block" },
-                  }}
-                >
-                  {topText}
-                </Typography>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                width: { lg: "449px", sm: "100%" },
-                mb: { xs: 0, sm: 0, md: "20px", lg: 3, xl: "32px" },
-                display: { xs: "none", sm: "none", md: "block", lg: "block" },
-              }}
-            >
-              <img className="keyvisual__img" src={LogoLarge} alt="" />
-            </Box>
-          </Box>
           <Typography
             variant="h1"
             className="headingText"
             sx={{
-              textAlign: { md: "left", xs: "center" },
+              textAlign: { xs: "center" },
               color: "#263f7f",
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
-              fontSize: { xs: "24px", md: "26px", lg: "25px" },
+              fontSize: { xs: "24px" },
               fontWeight: "700",
               lineHeight: 1.5,
-              height: { xs: "30vh", md: "20vh", lg: "20vh" },
+              height: { xs: "20vh" },
+              mt: "20px",
+              mb: "30px",
               display: "flex",
               alignItems: "center",
-              maxWidth: { md: "48vw" },
-              // mt: {md: "50px", lg: "30px"},
-              // mb: {md: "50px", lg: "30px"}
             }}
           >
             <Box id="Slider" className={`slide-up` + isCounterDivBy5()}>
@@ -177,8 +146,7 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
             variant="h2"
             className="headingText"
             sx={{
-              textAlign: { md: "left", xs: "center" },
-              // color: "primary.main",
+              textAlign: { xs: "center" },
               whiteSpace: "pre-wrap",
               fontFamily: "Open Sans",
               fontWeight: "650",
@@ -186,21 +154,18 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
               color: "#335393",
               lineHeight: 1.5,
               mb: { xs: "30px" },
-              mt: { md: "10px" },
-              maxWidth: { md: "46vw" },
             }}
           >
             {`We provide reliable and trustworthy workers also rated by short-time clients.`}
           </Typography>
           <Box
             sx={{
-              textAlign: { md: "left", xs: "center" },
-              width: { md: "100%", sm: "100%", lg: "auto", xl: "auto" },
+              textAlign: { xs: "center" },
               display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
+              flexDirection: { xs: "column" },
               gap: "20px",
               alignItems: "center",
-              justifyContent: { xs: "center", md: "flex-start" },
+              justifyContent: { xs: "center" },
             }}
           >
             <PrimaryButton
@@ -232,8 +197,8 @@ Seek laborers for cleaning, carpentry, and plumbing services.`);
         <Box
           className="kv-track wrapper"
           sx={{
-            order: { md: 3, xs: 1 },
-            width: { lg: "50%", sm: "100%" },
+            order: { xs: 1 },
+            width: { sm: "100%" },
             overflowX: "scroll",
           }}
         >

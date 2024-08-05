@@ -76,8 +76,7 @@ const Newsletter = () => {
       {!successMessage ? (
         <Box
           sx={{
-            margin: { md: "auto" },
-            padding: { xs: "80px 20px 80px 20px", md: "20px" },
+            padding: { xs: "80px 20px 80px 20px" },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

@@ -23,35 +23,20 @@ import { Review, User, Worker } from "../../redux/type";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-    slidesToSlide: 3, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2,
-    slidesToSlide: 2, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    slidesToSlide: 1, // optional, default to 1.
+    slidesToSlide: 1,
   },
 };
-
-const slideImages = [
-  {
-    url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-    caption: "Slide 1",
-  },
-  {
-    url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-    caption: "Slide 2",
-  },
-  {
-    url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-    caption: "Slide 3",
-  },
-];
 
 const ProfileViewPage: React.FC = () => {
   const [worker, setWorker] = useState<Worker | null>(null);
@@ -193,7 +178,7 @@ const ProfileViewPage: React.FC = () => {
               containerClass="carousel-container"
               itemClass="carousel-item-padding-40-px"
             >
-              {slideImages.map((slideImage, index) => (
+              {worker.profile.covers.map((slideImage, index) => (
                 <Box key={index}>
                   <Box
                     sx={{
@@ -203,7 +188,7 @@ const ProfileViewPage: React.FC = () => {
                       backgroundSize: "cover",
                       height: "200px",
                       borderRadius: "4px",
-                      backgroundImage: `url(${slideImage.url})`,
+                      backgroundImage: `url(${slideImage})`,
                     }}
                   />
                 </Box>
@@ -230,7 +215,7 @@ const ProfileViewPage: React.FC = () => {
           <FabButton
             styles={{
               bottom: isAuthenticated ? "12%" : "6%",
-              right: { xs: "30%", md: "10%" },
+              right: "calc(50vw - ((490px / 2)/3.8))",
             }}
             handleClick={handleMessageClick}
             text="Message"

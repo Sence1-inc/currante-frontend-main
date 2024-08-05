@@ -8,9 +8,9 @@ const ExploreOurServices = () => {
       sx={{
         bgcolor: "rgba(255, 225, 206, 1)",
         display: "flex",
-        flexDirection: { xs: "column", lg: "row" },
+        flexDirection: { xs: "column" },
         gap: "40px",
-        alignItems: { xs: "center", lg: "flex-start" },
+        alignItems: { xs: "center" },
         justifyContent: "center",
         padding: "80px 20px",
         flexWrap: "wrap",
@@ -18,16 +18,15 @@ const ExploreOurServices = () => {
     >
       <Card
         sx={{
-          order: { xs: 1, lg: 2 },
+          order: { xs: 1 },
           backgroundColor: "transparent",
           boxShadow: "none",
           border: "none",
           borderRadius: 0,
-          width: { lg: "calc((510/1200) * 100%)" },
           display: "flex",
           flexDirection: "column",
           rowGap: "18px",
-          alignItems: { xs: "center", lg: "flex-start" },
+          alignItems: { xs: "center" },
         }}
       >
         <CardContent
@@ -36,10 +35,9 @@ const ExploreOurServices = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             rowGap: "18px",
-            alignItems: { xs: "center", lg: "flex-start" },
+            alignItems: { xs: "center" },
             padding: "0",
-            margin: { lg: "auto 0 0 0" },
-            textAlign: { xs: "center", lg: "left" },
+            textAlign: { xs: "center" },
           }}
         >
           <Typography variant="h2">Explore our Services</Typography>
@@ -47,7 +45,7 @@ const ExploreOurServices = () => {
             variant="body2"
             color="primary.main"
             sx={{
-              textAlign: { xs: "center", md: "center", lg: "left" },
+              textAlign: { xs: "center" },
               fontWeight: "400",
               fontSize: "16.5px",
             }}
@@ -81,9 +79,9 @@ const ExploreOurServices = () => {
           <Card
             key={index}
             sx={{
-              order: { xs: index + 1, lg: service.order },
-              height: { xs: "250px", md: "300px" },
-              width: { xs: "100%", lg: "calc((510/1200) * 100%)" },
+              order: { xs: index + 1 },
+              height: { xs: "250px" },
+              width: { xs: "100%" },
             }}
           >
             <CardMedia

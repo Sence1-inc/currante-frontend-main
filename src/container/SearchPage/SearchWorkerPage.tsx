@@ -22,18 +22,18 @@ import { Area, Worker } from "../../redux/type";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-    slidesToSlide: 3, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2,
-    slidesToSlide: 2, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    slidesToSlide: 1, // optional, default to 1.
+    slidesToSlide: 1,
   },
 };
 
@@ -184,6 +184,7 @@ const SearchWorkerPage: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <Box>
@@ -309,6 +310,7 @@ const SearchWorkerPage: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           gap: "20px",
+          zIndex: 0,
         }}
       >
         <FormControl fullWidth>

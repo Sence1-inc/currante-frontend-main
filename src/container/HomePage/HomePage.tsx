@@ -43,6 +43,9 @@ const HomePage: React.FC = () => {
       <FAQ />
       <Footer />
       <FabButton
+        styles={{
+          right: "calc(50vw - ((490px / 2)/1.5))",
+        }}
         icon={
           <EmailIcon
             sx={{ mr: 1, animation: `${jump} 0.5s ease-in-out infinite` }}

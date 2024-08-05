@@ -27,18 +27,18 @@ import { isEmptyObject } from "./ProfileBasicInfoCard";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-    slidesToSlide: 3, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2,
-    slidesToSlide: 2, // optional, default to 1.
+    items: 1,
+    slidesToSlide: 1,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    slidesToSlide: 1, // optional, default to 1.
+    slidesToSlide: 1,
   },
 };
 
@@ -325,7 +325,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </IconButton>
       </Box>
       {user.covers.length > 0 && edittingSection !== sectionName && (
-        <Box sx={{ width: "90vw", height: "200px" }}>
+        <Box sx={{ width: "100%", height: "200px" }}>
           <Carousel
             swipeable={true}
             draggable={true}
