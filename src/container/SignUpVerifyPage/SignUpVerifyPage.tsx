@@ -112,6 +112,7 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <Header />
@@ -201,7 +202,15 @@ const SignUpVerifyPage: React.FC<SignUpVerifyPageProps> = () => {
           )}
         </Box>
       </Box>
-      <Footer />
+      <Box
+        sx={{
+          position: "absolute",
+          width: { xs: "100%", md: "490px" },
+          bottom: 0,
+        }}
+      >
+        <Footer />
+      </Box>
     </Box>
   );
 };
