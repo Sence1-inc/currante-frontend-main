@@ -71,7 +71,9 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
           </Box>
         )}
       </Box>
-      {edittingSection === sectionName ? (
+      {edittingSection === sectionName &&
+      !user.is_identification_verified &&
+      !user.identification_photo ? (
         <Box
           sx={{
             display: "flex",
@@ -123,30 +125,32 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
             </label>
           </div>
           {idImage && <img src={idImage} width="100%" />}
-          <ButtonGroup>
-            <LoadingButton
-              disabled={isButtonLoading.save}
-              loading={isButtonLoading.cancel}
-              loadingPosition="center"
-              onClick={handleCancelEdittingSection}
-              size="small"
-              variant="contained"
-            >
-              Cancel
-            </LoadingButton>
-            <LoadingButton
-              disabled={isButtonLoading.cancel}
-              loading={isButtonLoading.save}
-              loadingPosition="center"
-              color="secondary"
-              sx={{ color: "common.white" }}
-              size="small"
-              variant="contained"
-              onClick={handleUpload}
-            >
-              Save
-            </LoadingButton>
-          </ButtonGroup>
+          {!user.is_identification_verified && !user.identification_photo && (
+            <ButtonGroup>
+              <LoadingButton
+                disabled={isButtonLoading.save}
+                loading={isButtonLoading.cancel}
+                loadingPosition="center"
+                onClick={handleCancelEdittingSection}
+                size="small"
+                variant="contained"
+              >
+                Cancel
+              </LoadingButton>
+              <LoadingButton
+                disabled={isButtonLoading.cancel}
+                loading={isButtonLoading.save}
+                loadingPosition="center"
+                color="secondary"
+                sx={{ color: "common.white" }}
+                size="small"
+                variant="contained"
+                onClick={handleUpload}
+              >
+                Save
+              </LoadingButton>
+            </ButtonGroup>
+          )}
         </Box>
       ) : user.is_identification_verified ? (
         <Typography color="success">Your ID has been verified</Typography>

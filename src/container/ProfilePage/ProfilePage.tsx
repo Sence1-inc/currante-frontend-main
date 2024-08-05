@@ -314,12 +314,14 @@ const ProfilePage: React.FC = () => {
 
         savePhoto(type);
       } catch (error: any) {
+        setIsButtonLoading({ save: false, cancel: false });
         console.error("Error uploading file:", error);
         setSuccessMessage("");
         setIsSnackbarOpen(true);
         setErrorMessage(error.response.message);
       }
     } else {
+      setIsButtonLoading({ save: false, cancel: false });
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage("Upload unsuccessful");
