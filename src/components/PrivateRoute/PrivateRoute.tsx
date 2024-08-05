@@ -27,7 +27,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const user: User = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate("/services");
     }
   }, []);
