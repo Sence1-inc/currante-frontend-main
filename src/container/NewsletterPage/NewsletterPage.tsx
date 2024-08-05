@@ -8,7 +8,7 @@ const NewsletterPage = () => {
       <Box
         sx={{
           backgroundColor: "#F5F6FA",
-          height: "calc(100vh - 64px - 84px)",
+          minHeight: "calc(100vh - 64px - 84px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

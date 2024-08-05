@@ -197,7 +197,7 @@ const ChatPage = () => {
       ) : (
         <Box
           sx={{
-            height: "calc(100vh - 64px - 84px)",
+            minHeight: "calc(100vh - 64px - 84px)",
             backgroundColor: "common.white",
           }}
         >
