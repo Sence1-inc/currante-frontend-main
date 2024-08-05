@@ -37,7 +37,7 @@ const FloatingElement: React.FC<FloatingElementProps> = ({
       slotProps={{
         paper: { style: { borderRadius: "16px" } },
       }}
-      sx={{ width: { xs: "100%", sm: "490px" } }}
+      sx={{ width: { xs: "100%", md: "490px" } }}
     >
       <Paper
         sx={{

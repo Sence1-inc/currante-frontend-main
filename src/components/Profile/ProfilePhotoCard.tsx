@@ -325,7 +325,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </IconButton>
       </Box>
       {user.covers.length > 0 && edittingSection !== sectionName && (
-        <Box sx={{ width: "100%", height: "200px" }}>
+        <Box sx={{ width: { xs: "100%", md: "490px" }, height: "200px" }}>
           <Carousel
             swipeable={true}
             draggable={true}
@@ -358,13 +358,19 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         </Box>
       )}
       {edittingSection === sectionName ? (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: { xs: "90vw", sm: "calc(440px * 90%)" },
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               gap: "10px",
-              width: "80vw",
             }}
           >
             <Box
@@ -682,7 +688,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             onClick={() => {
               const hasFiles = files.length > 0;
               const hasAvatarImage = Boolean(avatarImage?.trim());
-              const hasDescription = Boolean(description?.trim());
 
               if (hasFiles) {
                 handleUploadCoverPhotos();
@@ -694,19 +699,12 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
 
               if (hasFiles || hasAvatarImage) {
                 setInfoMessage("Uploading photo/s");
-                if (hasDescription) {
-                  handleSave();
-                }
-              } else if (hasDescription) {
-                handleSave();
               }
+
+              handleSave();
             }}
           >
-            {description && (files.length > 0 || avatarImage)
-              ? "Save & Upload"
-              : files.length > 0 || avatarImage
-              ? "Upload"
-              : "Save"}
+            Save & Upload
           </LoadingButton>
         </ButtonGroup>
       )}

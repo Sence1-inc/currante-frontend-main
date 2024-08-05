@@ -37,13 +37,12 @@ export default function SimpleBottomNavigation() {
   return (
     <Box
       sx={{
-        width: { xs: "100%", sm: "490px" },
+        width: { xs: "100%", md: "490px" },
         margin: "0 auto",
         position: "fixed",
         bottom: 0,
         left: 0,
         right: 0,
-        // zIndex: 1000,
       }}
     >
       <BottomNavigation

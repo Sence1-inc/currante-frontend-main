@@ -220,6 +220,7 @@ const PaymentPage = () => {
         padding: "20px",
         flexDirection: "column",
         gap: "20px",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <CustomSnackbar

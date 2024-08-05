@@ -129,6 +129,7 @@ const ChatPage = () => {
         flexDirection: "column",
         gap: "10px",
         height: "100%",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       {/* WILL IMPLEMENT THIS IN PHASE 3 */}

@@ -66,7 +66,7 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
         padding: "12px",
         position: "fixed",
         bottom: "80px",
-        width: "366px",
+        width: { xs: "96%", md: "466px" },
         backgroundColor: "primary.light",
         zIndex: 100,
       }}
