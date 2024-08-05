@@ -2,6 +2,7 @@ import { Box, Button, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../axiosInstance";
+import { useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
 import CustomizedDialog from "../Dialog/CustomizedDialog";
 
@@ -17,6 +18,7 @@ type UserData = {
 
 const UsersDataGrid = () => {
   const [users, setUsers] = useState<UserData[]>([]);
+  const user: User = useAppSelector((state) => state.user);
   const [pagination, setPagination] = useState({
     total: 0,
     perPage: 10,
@@ -88,7 +90,7 @@ const UsersDataGrid = () => {
     try {
       const response = await axiosInstance.patch(
         `/api/v1/users/${selectedRow?.id}`,
-        { is_identification_verified: true }
+        { is_identification_verified: true, user_id: user.id }
       );
       setIsButtonLoading(false);
       if (response.status === 201) {
