@@ -87,7 +87,9 @@ const EmployerDashboard = () => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: { sm: "space-between", xs: "center" },
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              gap: { xs: "10px" },
               width: "100%",
             }}
           >
