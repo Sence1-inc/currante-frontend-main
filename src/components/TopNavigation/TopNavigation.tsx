@@ -60,7 +60,7 @@ export const orderInitialState: Order = {
   job_order_code: "",
 };
 
-const initialState: User = {
+export const initialUserState: User = {
   logged_in_as: "",
   id_photo: "",
   covers: [],
@@ -198,7 +198,7 @@ function ResponsiveAppBar() {
       });
 
       if (response.status === 200) {
-        dispatch(initializeUser(initialState));
+        dispatch(initializeUser(initialUserState));
         dispatch(initializeOrder({ ...orderInitialState }));
         dispatch(initializeIsAuthenticated(false));
         navigate("/sign-in", { replace: true });

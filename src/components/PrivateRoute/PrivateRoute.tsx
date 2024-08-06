@@ -3,13 +3,16 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../axiosInstance";
 import { initializeIsAuthenticated } from "../../redux/reducers/IsAuthenticatedReducer";
+import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
 import BackButton from "../BackButton/BackButton";
 import BackDrop from "../BackDrop/BackDrop";
 import AdminBottomNavigation from "../BottomNavigation/AdminBottomNavigation";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
-import TopNavigation from "../TopNavigation/TopNavigation";
+import TopNavigation, {
+  initialUserState,
+} from "../TopNavigation/TopNavigation";
 
 interface PrivateRouteProps {
   component: React.ComponentType;
@@ -33,16 +36,24 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   }, []);
 
   useEffect(() => {
+    const logout = async () => {
+      await axiosInstance.post("/api/v1/logout", {
+        email: user.email,
+      });
+    };
+
     const checkAuthentication = async () => {
       try {
         const response = await axiosInstance.get("/api/v1/check");
         setAuthenticated(response.data.valid);
         dispatch(initializeIsAuthenticated(response.data.valid));
-      } catch (error) {
-        if (error) {
-          setAuthenticated(false);
-          dispatch(initializeIsAuthenticated(false));
+        if (!response.data.valid) {
+          await logout();
+          dispatch(initializeUser(initialUserState));
         }
+      } catch (error) {
+        setAuthenticated(false);
+        dispatch(initializeIsAuthenticated(false));
       }
     };
 

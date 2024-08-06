@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from "axios";
+import { initialUserState } from "./src/components/TopNavigation/TopNavigation";
 import { initializeIsLoading } from "./src/redux/reducers/IsLoadingReducer";
+import { initializeUser } from "./src/redux/reducers/UserReducer";
 import store from "./src/redux/store";
 import { getEmail } from "./src/utils/getEmail";
 
@@ -71,6 +73,7 @@ api.interceptors.response.use(
         return api.request(error.config);
       } catch (refreshError: any) {
         store.dispatch(initializeIsLoading(false));
+        store.dispatch(initializeUser(initialUserState));
         console.error("Failed to refresh token", refreshError);
       }
     }

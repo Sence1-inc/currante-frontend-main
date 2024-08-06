@@ -106,6 +106,8 @@ const authPageStyles = {
       flexDirection: "column",
       rowGap: "30px",
       padding: "40px 0",
+      width: { xs: "90%", sm: "100%" },
+      margin: { xs: "0 auto", sm: "0" },
     },
     buttonsContainer: {
       display: "flex",
