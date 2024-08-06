@@ -48,7 +48,7 @@ const ReviewPage = () => {
   }, [order]);
 
   return (
-    <Box sx={{ minHeight: "calc(100vh - 64px - 84px)" }}>
+    <Box sx={{ minHeight: "calc(100vh - 44px - 84px)" }}>
       <Box
         sx={{ display: "flex", alignItems: "center", justifyContent: "start" }}
       >
