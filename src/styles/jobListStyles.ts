@@ -62,7 +62,7 @@ const jobListStyles = {
       maxWidth: "360px",
       margin: "0 auto",
       "@media (max-width:768px)": {
-        maxWidth: "300px",
+        maxWidth: "90%",
       },
     },
     buttonsContainer: {
