@@ -49,6 +49,7 @@ const JobListPage: React.FC = () => {
       sx={{
         marginTop: "64px",
         marginBottom: "84px",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       {user.logged_in_as === "worker" && (
