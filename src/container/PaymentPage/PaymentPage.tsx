@@ -203,7 +203,8 @@ const PaymentPage = () => {
         }
       } catch (error: any) {
         setIsButtonLoading({ save: false, cancel: false });
-        setErrorMessage("Error");
+        setIsSnackbarOpen(true);
+        setErrorMessage(error.response.data.message);
         setErrorMessages(error.response?.data.errors);
         setStepFailed(null);
         setActiveStep(0);
