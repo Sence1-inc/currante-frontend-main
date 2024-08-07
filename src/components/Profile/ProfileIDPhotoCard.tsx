@@ -93,7 +93,7 @@ const ProfileIDPhotoCard: React.FC<ProfileIDPhotoCardProps> = ({
             }}
           >
             <input
-              accept="image/*"
+              accept="image/png, image/jpg, image/jpeg"
               style={{ display: "none" }}
               id="avatar-upload-button"
               type="file"

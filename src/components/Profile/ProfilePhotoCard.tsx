@@ -376,6 +376,8 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           >
             <Box
               sx={{
+                width: { xs: "90%", md: "440px" },
+                margin: "auto",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -405,7 +407,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
                 type="file"
                 onChange={handleFileChange}
                 multiple
-                accept="image/*"
+                accept="image/png, image/jpg, image/jpeg"
                 disabled={previewImages?.length >= MAX_FILES}
               />
               {previewImages.length === 0 ? (
@@ -482,7 +484,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             }}
           >
             <input
-              accept="image/*"
+              accept="image/png, image/jpg, image/jpeg"
               style={{ display: "none" }}
               id="avatar-upload-button"
               type="file"
