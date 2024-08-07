@@ -107,48 +107,58 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
   ];
 
   useEffect(() => {
-    if (userCredentials.email) {
-      setErrors({
-        ...errors,
+    if (userCredentials.email && isValidEmail) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         email: "",
-      });
+      }));
     }
+  }, [userCredentials.email, isValidEmail]);
 
-    if (userCredentials.password) {
-      setErrors({
-        ...errors,
+  useEffect(() => {
+    if (userCredentials.password.length > 6) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         password: "",
-      });
+      }));
     }
+  }, [userCredentials.password]);
 
-    if (userCredentials.password2) {
-      setErrors({
-        ...errors,
+  useEffect(() => {
+    if (userCredentials.password === userCredentials.password2) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         password2: "",
-      });
+      }));
     }
+  }, [userCredentials.password, userCredentials.password2]);
 
+  useEffect(() => {
     if (userCredentials.first_name) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         first_name: "",
-      });
+      }));
     }
+  }, [userCredentials.first_name]);
 
+  useEffect(() => {
     if (userCredentials.middle_name) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         middle_name: "",
-      });
+      }));
     }
+  }, [userCredentials.middle_name]);
 
+  useEffect(() => {
     if (userCredentials.last_name) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         last_name: "",
-      });
+      }));
     }
-  }, [userCredentials]);
+  }, [userCredentials.last_name]);
 
   const handleSignUp = async (role: string) => {
     setIsButtonLoading({
@@ -234,6 +244,7 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
         });
         setIsSnackbarOpen(true);
         setErrorMessage(error.response.data.message);
+        setSuccessMessage("");
       }
     }
   };
