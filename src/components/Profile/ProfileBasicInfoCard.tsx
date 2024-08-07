@@ -200,7 +200,13 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
                   },
                 },
               }}
-              sx={{ m: 1, width: "100%" }}
+              sx={{
+                m: 1,
+                width: "100%",
+                "& .MuiFormHelperText-root": {
+                  color: "#d32f2f",
+                },
+              }}
               value={dayjs(birthday)}
               onChange={(date) => handleSetBirthday(date)}
             />
@@ -218,7 +224,13 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
                   },
                 },
               }}
-              sx={{ m: 1, width: "100%" }}
+              sx={{
+                m: 1,
+                width: "100%",
+                "& .MuiFormHelperText-root": {
+                  color: "#d32f2f",
+                },
+              }}
               onChange={(date) => handleSetBirthday(date)}
             />
           )}
