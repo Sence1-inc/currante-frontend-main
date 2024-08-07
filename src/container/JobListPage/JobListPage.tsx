@@ -17,6 +17,7 @@ const JobListPage: React.FC = () => {
   };
 
   const showList = () => {
+    console.log(value);
     return (
       <TabsItem value={value} index={value}>
         {user?.orders.map((order, index) => {
@@ -32,8 +33,8 @@ const JobListPage: React.FC = () => {
           if (
             value === 0 ||
             (Number(order.status) === value && value >= 1 && value <= 7) ||
-            value === 5 ||
-            value === 6
+            (user.logged_in_as === "worker" && value === 5) ||
+            (user.logged_in_as === "employer" && value === 6)
           ) {
             return tabCard;
           } else {
@@ -121,8 +122,8 @@ const JobListPage: React.FC = () => {
                   marginRight: "10px",
                   color: "primary.main",
                   display:
-                    (user.logged_in_as === "worker" && status.id === 5) ||
-                    (user.logged_in_as === "employer" && status.id === 6)
+                    (user.logged_in_as === "worker" && status.id === 6) ||
+                    (user.logged_in_as === "employer" && status.id === 5)
                       ? "none"
                       : "flex",
                   "&.Mui-selected": {
@@ -132,11 +133,7 @@ const JobListPage: React.FC = () => {
                     backgroundColor: "rgba(100, 95, 228, 0.32)",
                   },
                 }}
-                label={
-                  status.id === 6 || status.id === 5
-                    ? "Reviewed"
-                    : status.status_name
-                }
+                label={status.status_name}
               />
             );
           })}

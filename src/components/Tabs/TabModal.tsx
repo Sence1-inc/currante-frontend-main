@@ -10,6 +10,7 @@ import { initializeUser } from "../../redux/reducers/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { Order } from "../../redux/type";
 import jobListStyles from "../../styles/jobListStyles";
+import { isEmptyObject } from "../Profile/ProfileBasicInfoCard";
 import CustomModal from "./Modal";
 
 interface TabModalProps {
@@ -34,6 +35,9 @@ const TabModal: React.FC<TabModalProps> = ({
   const user = useAppSelector((state) => state.user);
   const [isvalidOTP, setIsValidOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
+  const [errors, setErrors] = useState<{
+    job_completed: string;
+  }>({ job_completed: "" });
 
   const handleAccept = async () => {
     try {
@@ -46,7 +50,7 @@ const TabModal: React.FC<TabModalProps> = ({
         setInfoMessage(`You have accepted order no. ${order.job_order_code}`);
         handleCloseModal();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error: ", error);
     }
   };
@@ -100,9 +104,9 @@ const TabModal: React.FC<TabModalProps> = ({
           );
           handleCloseModal();
         }
-      } catch (error) {
+      } catch (error: any) {
         setIsValidOTP(false);
-        console.log("Error: ", error);
+        setErrors({ job_completed: error.response.data.error });
       }
     }
   };
@@ -218,11 +222,13 @@ const TabModal: React.FC<TabModalProps> = ({
             By completing the job, you agree that the work is done.
           </Typography>
           <TextField
+            error={isEmptyObject(errors, "job_completed")}
             sx={{ width: "100%" }}
             label="Enter OTP sent to your phone number"
             id="outlined-size-normal"
             defaultValue=""
             onChange={handleInputChange}
+            helperText={errors?.job_completed}
           />
         </Box>
         <Box sx={jobListStyles.container.buttonContainer}>
