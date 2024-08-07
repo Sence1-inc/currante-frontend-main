@@ -32,6 +32,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const userState = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.isLoading);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -202,14 +203,16 @@ const ChatPage = () => {
           }}
         >
           <Typography variant="body1">No conversations yet</Typography>
-          <Button
-            sx={{ width: "50%", color: "common.white" }}
-            variant="contained"
-            color="secondary"
-            onClick={() => navigate("/services")}
-          >
-            Start Hiring!
-          </Button>
+          {userState.logged_in_as === "employer" && !isLoading && (
+            <Button
+              sx={{ width: "50%", color: "common.white" }}
+              variant="contained"
+              color="secondary"
+              onClick={() => navigate("/services")}
+            >
+              Start Hiring!
+            </Button>
+          )}
         </Box>
       )}
     </Box>
