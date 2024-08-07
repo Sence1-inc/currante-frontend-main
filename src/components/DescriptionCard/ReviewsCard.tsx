@@ -7,9 +7,13 @@ import ReviewCard from "./ReviewCard";
 
 interface ReviewsCardProps {
   reviews: Review[];
+  isProfilePage: boolean;
 }
 
-const ReviewsCard: React.FC<ReviewsCardProps> = ({ reviews }) => {
+const ReviewsCard: React.FC<ReviewsCardProps> = ({
+  reviews,
+  isProfilePage = false,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 3;
 
@@ -33,9 +37,15 @@ const ReviewsCard: React.FC<ReviewsCardProps> = ({ reviews }) => {
         gap: "10px",
       }}
     >
-      <Typography variant="h6">Reviews</Typography>
+      <Typography variant="h6">
+        Feedback {isProfilePage && `for worker`}
+      </Typography>
       {currentReviews.map((review: Review) => (
-        <ReviewCard key={review.id} review={review} />
+        <ReviewCard
+          key={review.id}
+          review={review}
+          isProfilePage={isProfilePage}
+        />
       ))}
       {currentReviews.length > 0 ? (
         <Box

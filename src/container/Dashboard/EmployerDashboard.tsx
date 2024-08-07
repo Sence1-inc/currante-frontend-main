@@ -38,10 +38,7 @@ const EmployerDashboard = () => {
       try {
         const response = await axiosInstance.get("/api/v1/reviews");
         setReviews(response.data);
-      } catch (error) {
-        if (error) {
-        }
-      }
+      } catch (error) {}
     };
 
     getReviews();
@@ -105,7 +102,7 @@ const EmployerDashboard = () => {
             })}
           </Box>
         </Box>
-        <ReviewsCard reviews={reviews as Review[]} />
+        <ReviewsCard reviews={reviews as Review[]} isProfilePage={false} />
       </Box>
     </Box>
   );

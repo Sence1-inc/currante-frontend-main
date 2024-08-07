@@ -295,9 +295,11 @@ const PaymentPage = () => {
                 </Typography>
                 <TextField
                   error={isEmptyObject(errorMessages, "quantity")}
-                  // multiline
-                  // minRows={1}
-                  id="standard-start-adornment"
+                  id="outlined-number"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   sx={{ width: "100%" }}
                   variant="standard"
                   value={quantity?.toString()}

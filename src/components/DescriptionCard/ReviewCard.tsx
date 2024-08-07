@@ -10,12 +10,18 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Review } from "../../redux/type";
+import { maskName } from "../../utils/maskName";
 
 interface ReviewCardProps {
   review: Review;
+  isProfilePage: boolean;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({
+  review,
+  isProfilePage = false,
+}) => {
+  console.log(review);
   return (
     <Card
       sx={{
@@ -60,7 +66,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             }}
           >
             <Typography variant="body2">
-              {review.order.employer_name}
+              {maskName(review.order.employer_name)}
             </Typography>
             <Rating
               size="small"
@@ -76,6 +82,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             alignSelf: "flex-start",
           }}
         >
+          {!isProfilePage && (
+            <Typography variant="subtitle1">
+              {review.review_for === "worker"
+                ? `Client review for ${review.order.worker_job_subtype_name} worker`
+                : "Worker review for a client"}
+            </Typography>
+          )}
+
           <Typography variant="body1">{review.feedback}</Typography>
         </Box>
       </CardContent>

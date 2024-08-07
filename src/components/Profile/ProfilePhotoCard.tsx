@@ -290,6 +290,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
 
       savePhotos();
     } catch (error: any) {
+      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
       setSuccessMessage("");
       setIsSnackbarOpen(true);
       setErrorMessage(error.response.data.message);

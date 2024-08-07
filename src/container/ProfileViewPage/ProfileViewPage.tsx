@@ -211,7 +211,10 @@ const ProfileViewPage: React.FC = () => {
             title="Business Hours"
             description={worker?.profile.schedule as string}
           />
-          <ReviewsCard reviews={worker?.profile.reviews as Review[]} />
+          <ReviewsCard
+            reviews={worker?.profile.reviews as Review[]}
+            isProfilePage={true}
+          />
           {user.logged_in_as === "employer" && (
             <FabButton
               styles={{

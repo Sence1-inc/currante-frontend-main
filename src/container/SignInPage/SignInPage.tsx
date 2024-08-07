@@ -104,6 +104,10 @@ const SignInPage: React.FC<SignInPageProps> = () => {
 
       setErrors({ ...errors, ...newErrors });
     } else {
+      setErrors({
+        email: "",
+        password: "",
+      });
       handleSignIn(role);
     }
   };
@@ -190,8 +194,8 @@ const SignInPage: React.FC<SignInPageProps> = () => {
               loading={isButtonLoading.worker}
               loadingPosition="center"
               onClick={() => {
-                handleValidation("worker");
                 setIsButtonLoading({ ...isButtonLoading, worker: true });
+                handleValidation("worker");
               }}
               variant="contained"
               color="primary"
@@ -204,8 +208,8 @@ const SignInPage: React.FC<SignInPageProps> = () => {
               loading={isButtonLoading.employer}
               loadingPosition="center"
               onClick={() => {
-                handleValidation("employer");
                 setIsButtonLoading({ ...isButtonLoading, employer: true });
+                handleValidation("employer");
               }}
               variant="contained"
               color="primary"
