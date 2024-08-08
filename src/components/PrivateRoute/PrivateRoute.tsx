@@ -46,11 +46,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
       try {
         const response = await axiosInstance.get("/api/v1/check");
         setAuthenticated(response.data.valid);
-        dispatch(initializeIsAuthenticated(response.data.valid));
+
         if (!response.data.valid) {
           await logout();
           dispatch(initializeUser(initialUserState));
         }
+
+        dispatch(initializeIsAuthenticated(response.data.valid));
       } catch (error) {
         setAuthenticated(false);
         dispatch(initializeIsAuthenticated(false));

@@ -44,6 +44,8 @@ const ProfileViewPage: React.FC = () => {
   const isAuthenticated = useAppSelector((state) => state.isAuthenticated);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isMessageButtonDisabled, setIsMessageButtonDisabled] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getWorker = async () => {
@@ -67,6 +69,7 @@ const ProfileViewPage: React.FC = () => {
   };
 
   const handleMessageClick = async () => {
+    setIsMessageButtonDisabled(true);
     if (!isAuthenticated) {
       navigate("/sign-in");
     } else {
@@ -145,6 +148,8 @@ const ProfileViewPage: React.FC = () => {
         const conversationDocRef = conversations.docs[0].ref;
         navigate(`/chat/${conversationDocRef.id}`);
       }
+
+      setIsMessageButtonDisabled(false);
     }
   };
 
@@ -217,6 +222,7 @@ const ProfileViewPage: React.FC = () => {
           />
           {user.logged_in_as === "employer" && (
             <FabButton
+              isDisabled={isMessageButtonDisabled}
               styles={{
                 bottom: isAuthenticated ? "12%" : "6%",
                 right: "calc(50vw - ((490px / 2)/3.8))",

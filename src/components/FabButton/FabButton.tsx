@@ -1,4 +1,4 @@
-import { Fab } from "@mui/material";
+import { CircularProgress, Fab } from "@mui/material";
 import React from "react";
 import "./FabButton.css";
 
@@ -7,6 +7,7 @@ interface FabButtonProps {
   icon: React.ReactNode;
   text: string;
   styles?: any;
+  isDisabled?: boolean;
 }
 
 const FabButton: React.FC<FabButtonProps> = ({
@@ -14,9 +15,11 @@ const FabButton: React.FC<FabButtonProps> = ({
   icon,
   text,
   styles,
+  isDisabled = false,
 }) => {
   return (
     <Fab
+      disabled={isDisabled}
       className="fab"
       onClick={handleClick}
       variant="extended"
@@ -29,12 +32,19 @@ const FabButton: React.FC<FabButtonProps> = ({
         padding: "14px",
         "&:hover": {
           backgroundColor: "primary.main",
+          color: "common.white",
         },
         ...styles,
       }}
     >
-      {icon}
-      {"  "}
+      {isDisabled ? (
+        <CircularProgress
+          size={20}
+          sx={{ color: "common.white", marginRight: "6px" }}
+        />
+      ) : (
+        icon
+      )}{" "}
       {text}
     </Fab>
   );

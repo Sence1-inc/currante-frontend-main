@@ -32,9 +32,17 @@ const JobListPage: React.FC = () => {
 
           if (
             value === 0 ||
-            (Number(order.status) === value && value >= 1 && value <= 7) ||
-            (user.logged_in_as === "worker" && value === 5) ||
-            (user.logged_in_as === "employer" && value === 6)
+            (value === 1 && Number(order.status) === 1) ||
+            (value === 2 && Number(order.status) === 2) ||
+            (value === 3 && Number(order.status) === 3) ||
+            (value === 4 && Number(order.status) === 4) ||
+            (value === 7 && Number(order.status) === 7) ||
+            (user.logged_in_as === "worker" &&
+              value === 5 &&
+              Number(order.status) === 5) ||
+            (user.logged_in_as === "employer" &&
+              value === 6 &&
+              Number(order.status) === 6)
           ) {
             return tabCard;
           } else {
