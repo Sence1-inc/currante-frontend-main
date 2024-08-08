@@ -379,19 +379,14 @@ const PaymentPage = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 minDate={dayjs().add(1, "day")}
-                // disabled={edittingSection !== sectionName}
                 slotProps={{
                   textField: {
-                    // helperText: errorMessages?.job_order_start_date,
                     variant: "standard",
                   },
                 }}
                 sx={{ width: "100%" }}
                 value={dayjs(firstChoiceDate)}
-                onChange={(date) => {
-                  console.log(date);
-                  // setFirstChoiceDate(date)
-                }}
+                onChange={(date) => setFirstChoiceDate(date)}
               />
             </LocalizationProvider>
           </Box>
