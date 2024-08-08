@@ -39,6 +39,8 @@ const OrderEventListener = ({
     };
 
     const handleOrderUpdated = (data: any) => {
+      const hasOrder = user.orders.find((order) => order.id === data.order.id);
+
       const updatedOrders = user.orders.map((order: any) =>
         order.id === data.order.id ? data.order : order
       );
@@ -46,7 +48,7 @@ const OrderEventListener = ({
       dispatch(
         initializeUser({
           ...user,
-          orders: updatedOrders,
+          orders: hasOrder ? updatedOrders : [...user.orders, data.order],
           notifications: [
             ...user.notifications,
             {
@@ -90,13 +92,14 @@ const OrderEventListener = ({
     }
 
     if (user.logged_in_as === "employer") {
-      const channel = pusher.subscribe(`orders.employer.${user.employer_id}`);
+      const employerChannel = `orders.employer.${user.employer_id}`;
+      const channel = pusher.subscribe(employerChannel);
       channel.bind("App\\Events\\OrderUpdated", handleOrderUpdated);
 
       // Cleanup function to unsubscribe when component unmounts
       return () => {
         channel.unbind();
-        pusher.unsubscribe(`orders.employer.${user.employer_id}`);
+        pusher.unsubscribe(employerChannel);
       };
     }
   }, [user, dispatch]);

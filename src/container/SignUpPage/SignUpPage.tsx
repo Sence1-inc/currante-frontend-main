@@ -162,8 +162,8 @@ const SignUpPage: React.FC<SignUpPageProps> = () => {
 
   const handleSignUp = async (role: string) => {
     setIsButtonLoading({
-      worker: true,
-      employer: false,
+      worker: role === "worker" ? true : false,
+      employer: role === "employer" ? true : false,
     });
     const errorMessages = validationConditions
       .filter(({ condition }) => condition)

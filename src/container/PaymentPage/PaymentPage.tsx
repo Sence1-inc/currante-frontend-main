@@ -21,15 +21,13 @@ import PaymentCard from "../../components/PaymentCard/PaymentCard";
 import { isEmptyObject } from "../../components/Profile/ProfileBasicInfoCard";
 import StepperWithError from "../../components/Stepper/Stepper";
 import useGetWorker from "../../hooks/useGetWorker";
-import { initializeUser } from "../../redux/reducers/UserReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { JobSubType, Order, Worker } from "../../redux/type";
+import { useAppSelector } from "../../redux/store";
+import { JobSubType, Worker } from "../../redux/type";
 
 const PaymentPage = () => {
   const { id } = useParams();
   const user = useAppSelector((state) => state.user);
   const { getWorker } = useGetWorker();
-  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [errorMessages, setErrorMessages] = useState<{
     job_order_start_date: string;
@@ -193,13 +191,6 @@ const PaymentPage = () => {
             setErrorMessage(error.response.data.message);
             setErrorMessages(error.response.data.errors);
           }
-
-          dispatch(
-            initializeUser({
-              ...user,
-              orders: [...user.orders, response.data.order as Order],
-            })
-          );
         }
       } catch (error: any) {
         setIsButtonLoading({ save: false, cancel: false });
