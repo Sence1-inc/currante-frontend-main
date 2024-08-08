@@ -31,7 +31,15 @@ const PaymentPage = () => {
   const { getWorker } = useGetWorker();
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [errorMessages, setErrorMessages] = useState<any>({});
+  const [errorMessages, setErrorMessages] = useState<{
+    job_order_start_date: string;
+    job_subtype: string;
+    quantity: string;
+  }>({
+    job_order_start_date: "",
+    job_subtype: "",
+    quantity: "",
+  });
   const [stepFailed, setStepFailed] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [worker, setWorker] = useState<Worker | null>(null);
@@ -82,31 +90,19 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (jobSubtype) {
-      setErrorMessages((prevState: any) => {
-        const { ["job_subtype"]: _, ...newState } = prevState;
-
-        return newState;
-      });
+      setErrorMessages({ ...errorMessages, job_subtype: "" });
     }
   }, [jobSubtype]);
 
   useEffect(() => {
     if (quantity) {
-      setErrorMessages((prevState: any) => {
-        const { ["quantity"]: _, ...newState } = prevState;
-
-        return newState;
-      });
+      setErrorMessages({ ...errorMessages, quantity: "" });
     }
   }, [quantity]);
 
   useEffect(() => {
     if (firstChoiceDate) {
-      setErrorMessages((prevState: any) => {
-        const { ["job_order_start_date"]: _, ...newState } = prevState;
-
-        return newState;
-      });
+      setErrorMessages({ ...errorMessages, job_order_start_date: "" });
     }
   }, [firstChoiceDate]);
 
@@ -184,7 +180,11 @@ const PaymentPage = () => {
             setIsButtonLoading({ save: false, cancel: false });
             if (res.data) {
               setErrorMessage("");
-              setErrorMessages({});
+              setErrorMessages({
+                job_order_start_date: "",
+                job_subtype: "",
+                quantity: "",
+              });
               window.location.href = res.data.url;
             }
           } catch (error: any) {
@@ -378,6 +378,7 @@ const PaymentPage = () => {
             <Typography variant="body1">Preferred Date</Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                minDate={dayjs().add(1, "day")}
                 // disabled={edittingSection !== sectionName}
                 slotProps={{
                   textField: {
@@ -387,7 +388,10 @@ const PaymentPage = () => {
                 }}
                 sx={{ width: "100%" }}
                 value={dayjs(firstChoiceDate)}
-                onChange={(date) => setFirstChoiceDate(date)}
+                onChange={(date) => {
+                  console.log(date);
+                  // setFirstChoiceDate(date)
+                }}
               />
             </LocalizationProvider>
           </Box>
