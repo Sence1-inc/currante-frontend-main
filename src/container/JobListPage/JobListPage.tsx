@@ -1,10 +1,11 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import TabCard from "../../components/Tabs/TabCard";
 import { TabsItem } from "../../components/Tabs/Tabs";
 import { ORDER_STATUSES, Status } from "../../data/WorkerDetails";
 import { useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
 
 const JobListPage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
@@ -16,42 +17,40 @@ const JobListPage: React.FC = () => {
     setValue(newValue);
   };
 
-  const showList = () => {
-    console.log(value);
+  const shouldDisplayOrder = (order: Order): boolean => {
+    const status = Number(order.status);
+
+    return (
+      value === 0 ||
+      (value === 1 && status === 1) ||
+      (value === 2 && status === 2) ||
+      (value === 3 && status === 3) ||
+      (value === 4 && status === 4) ||
+      (value === 7 && status === 7) ||
+      (value === 5 && (status === 5 || status === 6 || status === 7)) ||
+      (value === 6 && (status === 5 || status === 6 || status === 7))
+    );
+  };
+
+  const showList = useCallback(() => {
     return (
       <TabsItem value={value} index={value}>
-        {user?.orders.map((order, index) => {
-          const tabCard = (
-            <TabCard
-              setIsSnackbarOpen={setIsSnackbarOpen}
-              setInfoMessage={setInfoMessage}
-              key={index}
-              order={order}
-            />
-          );
-
-          if (
-            value === 0 ||
-            (value === 1 && Number(order.status) === 1) ||
-            (value === 2 && Number(order.status) === 2) ||
-            (value === 3 && Number(order.status) === 3) ||
-            (value === 4 && Number(order.status) === 4) ||
-            (value === 7 && Number(order.status) === 7) ||
-            (user.logged_in_as === "worker" &&
-              value === 5 &&
-              Number(order.status) === 5) ||
-            (user.logged_in_as === "employer" &&
-              value === 6 &&
-              Number(order.status) === 6)
-          ) {
-            return tabCard;
-          } else {
-            return null;
+        {user?.orders.map((order: Order, index: number) => {
+          if (shouldDisplayOrder(order)) {
+            return (
+              <TabCard
+                setIsSnackbarOpen={setIsSnackbarOpen}
+                setInfoMessage={setInfoMessage}
+                key={index}
+                order={order}
+              />
+            );
           }
+          return null;
         })}
       </TabsItem>
     );
-  };
+  }, [user?.orders, value, user.logged_in_as]);
 
   return (
     <Box
@@ -120,6 +119,10 @@ const JobListPage: React.FC = () => {
             label="All"
           />
           {ORDER_STATUSES.map((status: Status) => {
+            const isHidden =
+              (user.logged_in_as === "worker" && status.id === 6) ||
+              (user.logged_in_as === "employer" && status.id === 5);
+
             return (
               <Tab
                 key={status.id}
@@ -129,11 +132,7 @@ const JobListPage: React.FC = () => {
                   fontSize: "16px",
                   marginRight: "10px",
                   color: "primary.main",
-                  display:
-                    (user.logged_in_as === "worker" && status.id === 6) ||
-                    (user.logged_in_as === "employer" && status.id === 5)
-                      ? "none"
-                      : "flex",
+                  display: isHidden ? "none" : "flex",
                   "&.Mui-selected": {
                     color: "primary.main",
                   },

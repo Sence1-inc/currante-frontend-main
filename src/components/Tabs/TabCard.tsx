@@ -60,32 +60,6 @@ const TabCard: React.FC<TabCardProps> = ({
     }
   };
 
-  // const renderStatus = () => {
-  //   if (Number(order.status) === 1) {
-  //     return "request";
-  //   } else if (Number(order.status) === 2) {
-  //     return "incoming";
-  //   } else if (Number(order.status) === 3) {
-  //     return "arrived";
-  //   } else if (Number(order.status) === 4) {
-  //     return "completed";
-  //   } else if (
-  //     (Number(order.status) === 5 && user.logged_in_as == "worker") ||
-  //     order.payment_approval_date !== null
-  //   ) {
-  //     return "reviewed";
-  //   } else if (
-  //     (Number(order.status) === 6 && user.logged_in_as == "employer") ||
-  //     order.payment_approval_date !== null
-  //   ) {
-  //     return "reviewed";
-  //   } else if (Number(order.status) === 7) {
-  //     return "released";
-  //   } else {
-  //     return "all";
-  //   }
-  // };
-
   useEffect(() => {
     if (order.job_order_start_date) {
       setStartDate(parseISO(order.job_order_start_date));

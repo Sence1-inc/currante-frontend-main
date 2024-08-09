@@ -36,7 +36,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     numberOfPendingRequests--;
-    console.log("after --", numberOfPendingRequests);
     if (numberOfPendingRequests === 0) {
       store.dispatch(initializeIsLoading(false));
     }
