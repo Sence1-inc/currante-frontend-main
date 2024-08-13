@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import encryptedStorage from "../utils/encryptedStorage";
 import IsAuthenticatedReducer from "./reducers/IsAuthenticatedReducer";
 import IsLoadingReducer from "./reducers/IsLoadingReducer";
 import OrderReducer from "./reducers/OrderReducer";
@@ -9,11 +9,10 @@ import ParticipantDataReducer from "./reducers/ParticipantDataReducer";
 import ParticipantReducer from "./reducers/ParticipantReducer";
 import UserReducer from "./reducers/UserReducer";
 import WorkersReducer from "./reducers/WorkersReducer";
-import reduxPersistMiddleware from "./reduxPersistMiddleware";
 
 const persistConfig = {
   key: "root",
-  storage,
+  storage: encryptedStorage,
   whitelist: ["user", "order", "isAuthenticated", "participant"],
 };
 
@@ -32,8 +31,6 @@ const persistedReducer = persistReducer(
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(reduxPersistMiddleware),
 });
 
 export const persistor = persistStore(store);
