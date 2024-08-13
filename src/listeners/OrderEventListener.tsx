@@ -39,8 +39,6 @@ const OrderEventListener = ({
     };
 
     const handleOrderUpdated = (data: any) => {
-      const hasOrder = user.orders.find((order) => order.id === data.order.id);
-
       const updatedOrders = user.orders.map((order: any) =>
         order.id === data.order.id ? data.order : order
       );
@@ -48,7 +46,7 @@ const OrderEventListener = ({
       dispatch(
         initializeUser({
           ...user,
-          orders: hasOrder ? updatedOrders : [...user.orders, data.order],
+          orders: updatedOrders,
           notifications: [
             ...user.notifications,
             {
@@ -98,7 +96,7 @@ const OrderEventListener = ({
 
       // Cleanup function to unsubscribe when component unmounts
       return () => {
-        channel.unbind();
+        channel.unbind("App\\Events\\OrderUpdated", handleOrderUpdated);
         pusher.unsubscribe(employerChannel);
       };
     }

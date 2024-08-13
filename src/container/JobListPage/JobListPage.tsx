@@ -1,9 +1,10 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import TabCard from "../../components/Tabs/TabCard";
 import { TabsItem } from "../../components/Tabs/Tabs";
 import { ORDER_STATUSES, Status } from "../../data/WorkerDetails";
+import useGetOrders from "../../hooks/useGetOrders";
 import { useAppSelector } from "../../redux/store";
 import { Order } from "../../redux/type";
 
@@ -12,6 +13,15 @@ const JobListPage: React.FC = () => {
   const [value, setValue] = useState<number>(0);
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const { getOrders } = useGetOrders();
+  const hasFetched = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (user.logged_in_as === "employer" && !hasFetched.current) {
+      getOrders();
+      hasFetched.current = true;
+    }
+  }, [user.logged_in_as, hasFetched]);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

@@ -21,7 +21,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   review,
   isProfilePage = false,
 }) => {
-  console.log(review);
   return (
     <Card
       sx={{
