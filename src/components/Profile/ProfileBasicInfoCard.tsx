@@ -212,6 +212,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
             />
           ) : (
             <DatePicker
+              value={birthday ? dayjs(birthday) : null}
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {

@@ -61,13 +61,15 @@ api.interceptors.response.use(
       store.dispatch(initializeIsLoading(false));
       const data = {};
       try {
-        await axios.post(`${baseURL}/api/v1/refresh`, data, {
+        const response = await axios.post(`${baseURL}/api/v1/refresh`, data, {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
           },
         });
+
+        store.dispatch(initializeUser(response.data.user));
 
         return api.request(error.config);
       } catch (refreshError: any) {

@@ -78,7 +78,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       open={isSnackbarOpen}
       onClose={() => handleSetIsSnackbarOpen(false)}
-      autoHideDuration={warningMessage ? 8000 : 5000}
+      autoHideDuration={warningMessage ? 8000 : infoMessage ? 3000 : 5000}
       key="topcenter"
       sx={{ width: { xs: "80%", sm: "390px" }, margin: "0 auto" }}
     >

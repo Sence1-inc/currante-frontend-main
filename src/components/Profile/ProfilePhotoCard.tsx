@@ -132,9 +132,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       setInfoMessage("Uploading photo/s");
       setSuccessMessage("");
       setErrorMessage("");
-    } else {
-      setIsSnackbarOpen(false);
-      setInfoMessage("");
     }
   }, [isUploading]);
 
@@ -179,8 +176,8 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         urls.push(response.data.url);
         previews.push(URL.createObjectURL(file));
       }
-
-      if (previews.length > MAX_FILES) {
+      setIsSnackbarOpen(true);
+      if (previewImages.length + previews.length > MAX_FILES) {
         setIsUploading(false);
         setSuccessMessage("");
         setIsSnackbarOpen(true);
@@ -201,10 +198,10 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
 
   const handleDeleteCoverPhoto = async (url: string) => {
     try {
-      const parsedUrl = new URL(url);
-      const pathname = parsedUrl.pathname;
-      const filename = pathname.split("/").pop();
-
+      const regex = /\/([^\/?]+)\?/;
+      const match = url.match(regex);
+      const filename = match ? match[1] : null;
+      console.log(match);
       const response = await axiosInstance.delete(`/api/v1/photo/${filename}`);
       dispatch(initializeUser({ ...user, covers: response.data.covers }));
     } catch (error) {
@@ -242,10 +239,10 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
             type: "cover",
           });
           setFiles([]);
-
+          setPreviewImages(response.data.covers);
           dispatch(
             initializeUser({
-              ...response.data.user,
+              ...user,
               covers: response.data.covers,
             })
           );
