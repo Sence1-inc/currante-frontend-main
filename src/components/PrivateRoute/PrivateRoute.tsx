@@ -53,6 +53,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         }
 
         dispatch(initializeIsAuthenticated(response.data.valid));
+        dispatch(initializeUser(response.data.user));
       } catch (error) {
         setAuthenticated(false);
         dispatch(initializeIsAuthenticated(false));
