@@ -91,7 +91,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   const [files, setFiles] = useState<FileList | []>([]);
   const [file, setFile] = useState<FileList | []>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [presignedUrls, setPresignedUrls] = useState<string[] | []>([]);
   const dispatch = useAppDispatch();
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isCoverPhotosButtonLoading, setIsCoverPhotosButtonLoading] = useState<{
@@ -192,7 +191,6 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       setIsUploading(false);
       setPreviewImages([...previewImages, ...previews]);
       setFiles(newFileList);
-      setPresignedUrls([...presignedUrls, ...urls]);
     }
   };
 
@@ -205,7 +203,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       const response = await axiosInstance.delete(`/api/v1/photo/${filename}`);
       dispatch(initializeUser({ ...user, covers: response.data.covers }));
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   };
 
@@ -221,76 +219,82 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
     updatedFiles.forEach((file) => fileList.items.add(file));
     setFiles(fileList.files);
 
-    const updatedPresignedUrls = [...presignedUrls];
-    updatedPresignedUrls.splice(index, 1);
-    setPresignedUrls(updatedPresignedUrls);
-
     handleDeleteCoverPhoto(previewImages[index]);
   };
 
-  const savePhotos = async () => {
+  const savePhotoResponse = async (file: File, responseData: any) => {
+    try {
+      console.log("Saving photo for:", file.name);
+      setFiles([]);
+      setPreviewImages(responseData.covers);
+      dispatch(
+        initializeUser({
+          ...responseData.user,
+          covers: responseData.covers,
+        })
+      );
+    } catch (error) {
+      console.error("Error saving photo:", error);
+    }
+  };
+
+  const handleUploadCoverPhotos = async () => {
+    console.log("triggered handleUploadCoverPhotos");
+    setIsCoverPhotosButtonLoading({ save: true, cancel: false });
+
     try {
       const filesArray = Array.from(files);
-      await Promise.all(
-        filesArray.map(async (file) => {
+
+      for (let index = 0; index < filesArray.length; index++) {
+        const file = filesArray[index];
+        try {
+          const compressedFile = await imageCompression(file, {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          });
+
+          console.log(compressedFile.type);
+
+          const resp = await axiosInstance.get("/api/v1/presigned-url", {
+            params: {
+              filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
+              filetype: file?.type,
+            },
+          });
+
+          const presignedUrl = resp.data.url;
+          await axios.put(presignedUrl, compressedFile, {
+            headers: {
+              "Content-Type": compressedFile.type,
+            },
+          });
+
+          console.log(
+            `Successfully uploaded ${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`
+          );
+
           const response = await axiosInstance.post("/api/v1/upload", {
             id: user.id,
             filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
             type: "cover",
           });
-          setFiles([]);
-          setPreviewImages(response.data.covers);
-          dispatch(
-            initializeUser({
-              ...user,
-              covers: response.data.covers,
-            })
-          );
-        })
-      );
+
+          savePhotoResponse(file, response.data);
+        } catch (fileError) {
+          console.error(`Error processing ${file.name}:`, fileError);
+        }
+      }
+
       setIsCoverPhotosButtonLoading({ save: false, cancel: false });
       setSuccessMessage("Photo/s successfully uploaded");
       setIsSnackbarOpen(true);
       setErrorMessage("");
     } catch (error: any) {
-      setSuccessMessage("");
-      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
-      setIsSnackbarOpen(true);
-      setErrorMessage(error.response.data.message);
-    }
-  };
-
-  const handleUploadCoverPhotos = async () => {
-    setIsCoverPhotosButtonLoading({ save: true, cancel: false });
-    try {
-      const filesArray = Array.from(files);
-
-      const compressedFiles = await Promise.all(
-        filesArray.map((file: File) =>
-          imageCompression(file, {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1920,
-            useWebWorker: true,
-          })
-        )
-      );
-
-      await Promise.all(
-        presignedUrls.map((presignedUrl, index) =>
-          axios.put(presignedUrl, compressedFiles[index], {
-            headers: {
-              "Content-Type": compressedFiles[index].type,
-            },
-          })
-        )
-      );
-
-      savePhotos();
-    } catch (error: any) {
       setIsCoverPhotosButtonLoading({ save: false, cancel: false });
       setSuccessMessage("");
       setIsSnackbarOpen(true);
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -692,11 +696,16 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
               const hasFiles = files.length > 0;
               const hasAvatarImage = Boolean(avatarImage?.trim());
 
-              if (hasFiles) {
+              if (hasFiles && !hasAvatarImage) {
                 handleUploadCoverPhotos();
               }
 
-              if (hasAvatarImage) {
+              if (hasAvatarImage && !hasFiles) {
+                handleUpload();
+              }
+
+              if (hasFiles && hasAvatarImage) {
+                handleUploadCoverPhotos();
                 handleUpload();
               }
 
