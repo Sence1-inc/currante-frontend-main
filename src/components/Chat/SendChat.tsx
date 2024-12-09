@@ -3,9 +3,9 @@ import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { EXCLUDED_WORDS } from "../../data/ChatDetails";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
+import { EXCLUDED_WORDS, hasConsecutiveNumbers } from "../../data/ChatDetails";
 import { db } from "../../firebase";
+import { useAppSelector } from "../../redux/store";
 
 interface SendChatProps {
   conversation_id?: string;
@@ -14,6 +14,7 @@ interface SendChatProps {
 const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
   const [chat, setChat] = useState<string>("");
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
+  const userState = useAppSelector((state) => state.user);
 
   const hasExcludedWord = (): boolean => {
     const words = chat.toLowerCase().split(/\s+/);
@@ -22,7 +23,7 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
 
   useEffect(() => {
     if (chat) {
-      setIsInvalid(hasExcludedWord());
+      setIsInvalid(hasExcludedWord() || hasConsecutiveNumbers(chat));
     }
   }, [chat]);
 
@@ -35,7 +36,7 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
       try {
         const userRef = query(
           collection(db, "users"),
-          where("user_id", "==", LOGGED_IN_USER) // update during authentication implementation
+          where("user_id", "==", userState.id) // update during authentication implementation
         );
         const users = await getDocs(userRef);
         const docRef = users.docs[0].ref;
@@ -44,7 +45,7 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
 
         await addDoc(collection(db, "messages"), {
           body: chat,
-          user_id: LOGGED_IN_USER, // update this during implementation of authentication
+          user_id: userState.id, // update this during implementation of authentication
           conversation_id: conversation_id,
           created_at: serverTimestamp(),
           sender_id: userDoc.id,
@@ -61,12 +62,13 @@ const SendChat: React.FC<SendChatProps> = ({ conversation_id }) => {
     <Box
       sx={{
         display: "flex",
-        gap: "8px",
+        justifyContent: "space-between",
         padding: "12px",
         position: "fixed",
         bottom: "80px",
-        width: "100%",
+        width: { xs: "96%", md: "466px" },
         backgroundColor: "primary.light",
+        zIndex: 100,
       }}
     >
       <TextField

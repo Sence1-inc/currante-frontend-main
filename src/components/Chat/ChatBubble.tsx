@@ -1,4 +1,5 @@
-import { Avatar, Box, Paper, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import { Avatar, Badge, Box, Paper, Typography } from "@mui/material";
 import React from "react";
 import { useAppSelector } from "../../redux/store";
 import { User } from "../../redux/type";
@@ -10,6 +11,8 @@ interface ChatBubbleProps {
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message, user_id }) => {
   const u: User = useAppSelector((state) => state.user);
+  const otherUser = useAppSelector((state) => state.participantData);
+
   return (
     <Box
       sx={{
@@ -19,14 +22,29 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, user_id }) => {
         flexDirection: user_id !== u.id ? "row" : "row-reverse",
       }}
     >
-      <Avatar
-        sx={{
-          width: "40px",
-          height: "40px",
-          alignSelf: "center",
-        }}
-        src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+      <Badge
+        sx={{ zIndex: 0 }}
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          (user_id !== u.id && otherUser?.is_identification_verified) ||
+          (user_id === u.id && u?.is_identification_verified) ? (
+            <CheckCircle color="success" />
+          ) : (
+            <></>
+          )
+        }
+      >
+        <Avatar
+          sx={{
+            width: "40px",
+            height: "40px",
+            alignSelf: "center",
+          }}
+          src={user_id !== u.id ? otherUser?.id_photo : u.id_photo}
+        />
+      </Badge>
+
       <Paper
         sx={{
           display: "inline-block",

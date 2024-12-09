@@ -1,23 +1,44 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import api from "../../../axiosInstance";
+import { useNavigate } from "react-router";
+import axiosInstance from "../../../axiosInstance";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch } from "../../redux/store";
 
 const TestPage = () => {
-  const [name, setName] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
-  const handleClick = () => {
-    api
-      .post("/api/tests", { name: name })
-      .then((response) => {
-        setSuccessMessage(response.data.message);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  const navigate = useNavigate();
+  const [loggedInUserId, setLoggedInUserId] = useState<number>(1);
+  const dispatch = useAppDispatch();
+
+  const handleLogin = async (type: string) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/api/v1/users/${loggedInUserId}`,
+        { logged_in_as: type }
+      );
+
+      const { data } = await axiosInstance.get(
+        `/api/v1/users/${loggedInUserId}?type=${type}`
+      );
+      if (data && response.data) {
+        dispatch(initializeUser(data));
+        if (type === "worker") {
+          navigate("/jobs");
+        } else if (type === "employer") {
+          navigate("/services");
+        } else {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
+
   return (
     <Box
       sx={{
+        margin: "100px 0",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
@@ -26,18 +47,29 @@ const TestPage = () => {
         width: "100%",
       }}
     >
-      <Typography variant="h1">TEST CONNECTION</Typography>
+      <Typography variant="body1">User Id</Typography>
       <TextField
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-        id="outlined-basic"
-        label="Enter test name"
         variant="outlined"
+        // label="user id"
+        value={loggedInUserId}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setLoggedInUserId(Number(e.target.value))
+        }
       />
-      <Button onClick={handleClick} variant="outlined">
-        Submit
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleLogin("worker")}
+      >
+        Log in as worker
       </Button>
-      {successMessage && <Typography>{successMessage}</Typography>}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleLogin("employer")}
+      >
+        Log in as employer
+      </Button>
     </Box>
   );
 };

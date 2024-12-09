@@ -1,29 +1,30 @@
-import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Container,
-  Typography,
+  Link,
   List,
   ListItem,
-  Link,
+  Typography,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import "./Footer.css";
 
 const Footer: React.FC = () => {
   return (
-    <>
+    <Box>
       <Box
         sx={{
-          py: 2,
-          px: { md: 0, xs: 3 },
+          p: 2,
           backgroundColor: "background.paper",
+          textAlign: "center",
         }}
       >
-        <Container sx={{ p: 0 }}>
-          <Typography variant="body1" sx={{ color: "common.white" }}>
+        <Container sx={{ p: "0 !important" }}>
+          <Typography variant="body1" sx={{ color: "primary.main" }}>
             <strong>DISCLAIMER:</strong> Currante solely serves as a third-party
-            IT intermediary connecting potential employers with potential
-            workers and does not engage in hiring or managing any personnel.
+            IT intermediary connecting potential short-time clients with
+            potential workers and does not engage in hiring or managing any
+            personnel.
           </Typography>
         </Container>
       </Box>
@@ -34,8 +35,8 @@ const Footer: React.FC = () => {
           sx={{
             p: 0,
             display: "flex",
-            flexDirection: { md: "row", xs: "column" },
-            gap: { md: "auto", xs: 4 },
+            flexDirection: "column",
+            gap: 4,
             justifyContent: "space-between",
             alignItems: "center",
           }}
@@ -43,14 +44,15 @@ const Footer: React.FC = () => {
           <List
             sx={{
               display: "flex",
-              flexDirection: { md: "row", xs: "column" },
-              alignItems: { md: "flex-start", xs: "center" },
-              gap: 3,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 4,
               minWidth: 0,
             }}
           >
             <ListItem sx={{ width: "auto", p: 0 }}>
               <Link
+                sx={{ textAlign: "center" }}
                 width="auto"
                 variant="body1"
                 color="common.white"
@@ -62,6 +64,7 @@ const Footer: React.FC = () => {
             </ListItem>
             <ListItem sx={{ width: "auto", p: 0 }}>
               <Link
+                sx={{ textAlign: "center" }}
                 width="auto"
                 variant="body1"
                 color="common.white"
@@ -73,6 +76,7 @@ const Footer: React.FC = () => {
             </ListItem>
             <ListItem sx={{ width: "auto", p: 0 }}>
               <Link
+                sx={{ textAlign: "center" }}
                 width="auto"
                 variant="body1"
                 color="common.white"
@@ -88,7 +92,7 @@ const Footer: React.FC = () => {
           </Typography>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
 

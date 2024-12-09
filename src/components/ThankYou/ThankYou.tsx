@@ -10,6 +10,7 @@ const ThankYou = () => {
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
+        padding: "20px",
       }}
     >
       <Typography variant="h5" sx={{ textAlign: "center" }}>

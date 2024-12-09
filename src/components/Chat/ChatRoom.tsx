@@ -7,60 +7,109 @@ import {
   where,
 } from "@firebase/firestore";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import PaymentIcon from "@mui/icons-material/Payment";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FirebaseUser } from "../../container/ChatPage/ChatPage";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { db } from "../../firebase";
+import useGetEmployer from "../../hooks/useGetEmployer";
+import useGetUser from "../../hooks/useGetUser";
+import useGetWorker from "../../hooks/useGetWorker";
+import { initializeParticipantData } from "../../redux/reducers/ParticipantDataReducer";
+import { initializeParticipant } from "../../redux/reducers/ParticipantReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import FabButton from "../FabButton/FabButton";
 import ChatBox from "./ChatBox";
 import SendChat from "./SendChat";
 
 const ChatRoom: React.FC = () => {
   const { conversation_id } = useParams();
+  const { getWorker } = useGetWorker();
+  const { getEmployer } = useGetEmployer();
+  const userState = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [participant, setParticipant] = useState<FirebaseUser | null>(null);
+  const participantId = useAppSelector((state) => state.participant);
+  const { getUser } = useGetUser();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const getConversations = async (conversationId: string) => {
-      const conversationsRef = query(
-        collection(db, "conversation_participants"),
-        where("conversation_id", "==", conversationId)
-      );
+    if (conversation_id) {
+      const getConversations = async (conversationId: string) => {
+        const conversationsRef = query(
+          collection(db, "conversation_participants"),
+          where("conversation_id", "==", conversationId)
+        );
 
-      const conversationsSnapshot = await getDocs(conversationsRef);
+        const conversationsSnapshot = await getDocs(conversationsRef);
 
-      return conversationsSnapshot.docs.map((doc) => doc.data());
-    };
+        return conversationsSnapshot.docs.map((doc) => doc.data());
+      };
 
-    const getParticipant = async () => {
-      const allUserConversations = await getConversations(
-        conversation_id as string
-      );
+      const getParticipant = async () => {
+        const allUserConversations = await getConversations(
+          conversation_id as string
+        );
+        const usersPromises = allUserConversations.map(async (convo) => {
+          const userRef = document(db, "users", convo.user_id);
+          const userDoc = await getDoc(userRef);
+          return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
+        });
 
-      const usersPromises = allUserConversations.map(async (convo) => {
-        const userRef = document(db, "users", convo.user_id);
-        const userDoc = await getDoc(userRef);
-        return userDoc.exists() ? (userDoc.data() as FirebaseUser) : null;
-      });
+        const users = await Promise.all(usersPromises);
 
-      const user = (await Promise.all(usersPromises)).filter((user) => {
-        return user !== null && user.user_id !== LOGGED_IN_USER;
-      }) as FirebaseUser[];
+        const userIds: number[] = [];
+        users.map((user: FirebaseUser | null) => {
+          userIds.push(Number(user?.user_id));
+        });
 
-      setParticipant(user[0]);
-    };
+        if (!userIds.includes(Number(userState.id))) {
+          navigate("/chats");
+        }
 
-    getParticipant();
-  }, []);
+        const user = users.filter((user) => {
+          return user !== null && user.user_id !== userState.id;
+        }) as FirebaseUser[];
+
+        const getData = async () => {
+          const type =
+            userState.logged_in_as === "employer" ? "worker" : "employer";
+          const data = await getUser(user[0].user_id, type);
+
+          if (userState.logged_in_as === "employer") {
+            const workerData = await getWorker(data.worker_id);
+            dispatch(initializeParticipant(data.worker_id));
+            dispatch(initializeParticipantData(workerData.profile));
+          } else {
+            const employerData = await getEmployer(data.employer_id);
+            dispatch(initializeParticipant(data.employer_id));
+            dispatch(initializeParticipantData(employerData.profile));
+          }
+        };
+
+        getData();
+
+        setParticipant(user[0]);
+      };
+
+      getParticipant();
+    }
+  }, [conversation_id]);
+
+  const handleHire = () => {
+    navigate(`/workers/${participantId}/payment`);
+  };
 
   return (
     <Box
       sx={{
-        margin: "64px 0",
-        width: "100vw",
+        marginTop: "64px",
+        marginBottom: "84px",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
       <Box
@@ -91,6 +140,20 @@ const ChatRoom: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+
+      {userState.logged_in_as === "employer" &&
+        participantId &&
+        participantId !== 0 && (
+          <FabButton
+            text="Hire"
+            icon={<PaymentIcon />}
+            handleClick={handleHire}
+            styles={{
+              bottom: "170px",
+              right: { xs: "38%", sm: "40%", md: "45%" },
+            }}
+          />
+        )}
 
       <ChatBox conversation_id={conversation_id} />
       <SendChat conversation_id={conversation_id} />

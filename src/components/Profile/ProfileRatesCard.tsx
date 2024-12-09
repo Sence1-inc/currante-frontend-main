@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
   FormControl,
   IconButton,
@@ -22,32 +22,37 @@ interface ProfileRatesCardProps {
   jobTypes: { id: number; job_type_name: string }[] | [];
   jobSubtypesDefault: JobSubtypeDefault;
   jobSubtypes: JobSubType[];
-  jobTypeId: number | null;
+  jobTypeId?: number | null;
   sectionName: string;
   handleSetEdittingSection: () => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
   handleSetJobSubtypes: (types: JobSubType[]) => void;
   handleSetIsSnackbarOpen: (isOpen: boolean) => void;
-  handleSetInfoMessage: (message: string) => void;
+  handleSetWarningMessage: (message: string) => void;
   handleSetSelectedJobType: (jobType: string) => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
   edittingSection,
   jobType,
   jobTypes,
+  jobTypeId,
   jobSubtypesDefault,
   jobSubtypes,
-  jobTypeId,
   sectionName,
   handleSetEdittingSection,
   handleSave,
   handleCancelEdittingSection,
   handleSetJobSubtypes,
   handleSetIsSnackbarOpen,
-  handleSetInfoMessage,
+  handleSetWarningMessage,
   handleSetSelectedJobType,
+  isButtonLoading,
 }) => {
   useEffect(() => {
     if (jobType) {
@@ -67,7 +72,6 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
         ...subtype,
         active_flg: 1,
       }));
-
       handleSetJobSubtypes([...inactiveJobSubtypes, ...activeJobSubtypes]);
     }
   }, [jobType]);
@@ -133,7 +137,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
             label="Job Type"
             onChange={(e: SelectChangeEvent) => {
               handleSetIsSnackbarOpen(true);
-              handleSetInfoMessage(
+              handleSetWarningMessage(
                 `Are you sure you want to set your job type to ${e.target.value}?`
               );
               handleSetSelectedJobType(e.target.value);
@@ -154,13 +158,13 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
             return (
               <TextField
                 disabled={edittingSection !== sectionName}
-                key={item.name}
+                key={item.job_name}
                 id="standard-start-adornment"
                 sx={{ m: 1, width: "100%" }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      {item.name} ({item.unit})
+                      {item.job_name} ({item.unit})
                     </InputAdornment>
                   ),
                 }}
@@ -170,28 +174,28 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                   (Array.isArray(jobSubtypes) &&
                     jobSubtypes.find((type) => {
                       return (
-                        type.job_name === item.name && type.job_type === jobType
+                        type.job_name === item.job_name &&
+                        type.job_type === jobType
                       );
                     })?.job_unit_price) ??
                   null
                 }
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const subtype =
-                    Array.isArray(jobSubtypes) &&
-                    jobSubtypes.find(
-                      (type) =>
-                        type.job_type === jobType &&
-                        type.job_name === item.name &&
-                        type.active_flg
-                    );
+                  const subtype = jobSubtypes.find(
+                    (type) =>
+                      type.job_type === jobType &&
+                      type.job_name === item.job_name &&
+                      type.active_flg
+                  );
                   if (subtype) {
                     const subtypeData = {
                       job_unit_price: Number(e.target.value),
                       unit: item.unit,
                     };
+
                     handleSetJobSubtypes([
                       ...jobSubtypes.filter(
-                        (type) => type.job_name !== item.name
+                        (type) => type.job_name !== item.job_name
                       ),
                       { ...subtype, ...subtypeData },
                     ]);
@@ -200,14 +204,13 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
                       {
                         job_subtype_id: item.id,
                         job_type: jobType,
-                        job_type_id: jobTypeId,
-                        job_name: item.name,
+                        job_type_id: jobTypeId as number,
+                        job_name: item.job_name,
                         job_unit_price: Number(e.target.value),
                         unit: item.unit,
                         active_flg: true,
                       },
                     ];
-
                     handleSetJobSubtypes([...jobSubtypes, ...newJobSubtype]);
                   }
                 }}
@@ -217,15 +220,21 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
 
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -233,7 +242,7 @@ const ProfileRatesCard: React.FC<ProfileRatesCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

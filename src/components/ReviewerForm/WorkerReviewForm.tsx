@@ -1,0 +1,123 @@
+import { LoadingButton } from "@mui/lab";
+import { Box, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import axiosInstance from "../../../axiosInstance";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
+import { isEmptyObject } from "../Profile/ProfileBasicInfoCard";
+import CustomRating from "./CustomRating";
+
+interface WorkerReviewFormProps {
+  handleSetIsWorkerSuccessModalOpen: (value: boolean) => void;
+}
+
+const WorkerReviewForm: React.FC<WorkerReviewFormProps> = ({
+  handleSetIsWorkerSuccessModalOpen,
+}) => {
+  const order = useAppSelector((state) => state.order);
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const [feedback, setFeedback] = useState<string>("");
+  const [overallRating, setOverallRating] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isSnackbarOpen, setIsSnackbar] = useState<boolean>(false);
+  const [errorMessages, setErrorMessages] = useState<any>({});
+  const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
+
+  const handleSubmit = async () => {
+    setIsButtonLoading(true);
+    try {
+      const data = {
+        feedback: feedback,
+        overall_rating: overallRating,
+        order_id: order.id,
+        user_id: user.id,
+        review_for: "employer",
+        reviewee_id: order.employer_user_id,
+      };
+      const response = await axiosInstance.post("/api/v1/reviews", data);
+      if (response.status === 201) {
+        try {
+          const res = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
+            status: "5",
+          });
+          setIsButtonLoading(false);
+          if (res.status === 201) {
+            dispatch(initializeUser({ ...user, orders: res.data.orders }));
+            handleSetIsWorkerSuccessModalOpen(true);
+            setIsSnackbar(false);
+            setErrorMessage("");
+          }
+        } catch (error: any) {
+          setIsButtonLoading(false);
+          setIsSnackbar(true);
+          setErrorMessage(error.response.data.message);
+          setErrorMessages(error.response.data.errors);
+        }
+      }
+    } catch (error: any) {
+      setIsButtonLoading(false);
+      setIsSnackbar(true);
+      setErrorMessage(error.response.data.message);
+      setErrorMessages(error.response.data.errors);
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        padding: "0 20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+      }}
+    >
+      <CustomRating
+        handleSetRating={(value) => setOverallRating(value)}
+        rating={overallRating}
+        title="Rate your employer"
+        error={errorMessages.overall_rating}
+      />
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Typography variant="body1">Type 200 characters</Typography>
+        <TextField
+          value={feedback}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFeedback(e.target.value)
+          }
+          fullWidth
+          multiline
+          rows={4}
+          placeholder="Tell us your experience"
+          sx={{
+            "& .Mui-error": {
+              margin: "0",
+              fontSize: "12px",
+            },
+          }}
+          helperText={errorMessages.feedback}
+          error={isEmptyObject(errorMessages, "feedback")}
+        />
+      </Box>
+      <LoadingButton
+        loading={isButtonLoading}
+        loadingPosition="center"
+        color="primary"
+        variant="contained"
+        fullWidth
+        onClick={handleSubmit}
+      >
+        Submit
+      </LoadingButton>
+
+      <CustomSnackbar
+        errorMessage={errorMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbar(value)}
+      />
+    </Box>
+  );
+};
+
+export default WorkerReviewForm;

@@ -1,8 +1,8 @@
 import { FormControl } from "@mui/base";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Box,
-  Button,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { useState } from "react";
 import axiosInstance from "../../../axiosInstance";
@@ -77,8 +76,7 @@ const Newsletter = () => {
       {!successMessage ? (
         <Box
           sx={{
-            margin: { md: "auto" },
-            padding: { xs: "80px 20px 80px 20px", md: "20px" },
+            padding: { xs: "80px 20px 80px 20px" },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -115,7 +113,7 @@ const Newsletter = () => {
                   }}
                   value="worker"
                   control={<Radio />}
-                  label="I am a worker"
+                  label="I’m looking for work"
                 />
                 <FormControlLabel
                   sx={{
@@ -123,13 +121,14 @@ const Newsletter = () => {
                   }}
                   value="employer"
                   control={<Radio />}
-                  label="I am an employer"
+                  label="I’m looking for a worker"
                 />
               </RadioGroup>
             </FormControl>
             <TextField
               sx={{
                 "& fieldset": { border: "none" },
+                "& .MuiOutlinedInput-root": { borderRadius: "16px" },
                 borderRadius: "16px",
                 border: "1px solid #0E2F71",
               }}
@@ -138,7 +137,9 @@ const Newsletter = () => {
               value={email}
               onChange={handleEmailChange}
             />
-            <Button
+            <LoadingButton
+              loading={isLoading}
+              loadingPosition="center"
               sx={{
                 bgcolor: "#F58A47",
                 borderRadius: "16px",
@@ -151,12 +152,8 @@ const Newsletter = () => {
               onClick={handleSubscribe}
               disabled={isLoading}
             >
-              {isLoading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                "Subscribe"
-              )}
-            </Button>
+              Subscribe
+            </LoadingButton>
             <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
               By subscribing to the newsletter, I have read this form and
               understand its content and voluntarily give my consent for the

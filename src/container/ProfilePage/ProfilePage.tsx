@@ -1,37 +1,31 @@
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import { Alert, Box, Button, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
+import axios from "axios";
+import imageCompression from "browser-image-compression";
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import axiosInstance from "../../../axiosInstance";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
+import ProfileAddressesCard from "../../components/Profile/ProfileAddressesCard";
 import ProfileBasicInfoCard from "../../components/Profile/ProfileBasicInfoCard";
-import ProfileContactInfoCard from "../../components/Profile/ProfileContactInfoCard";
+import ProfileIDPhotoCard from "../../components/Profile/ProfileIDPhotoCard";
 import ProfilePhotoCard from "../../components/Profile/ProfilePhotoCard";
 import ProfileRatesCard from "../../components/Profile/ProfileRatesCard";
 import ProfileScheduleCard from "../../components/Profile/ProfileScheduleCard";
 import ProfileServicingAreasCard from "../../components/Profile/ProfileServicingAreasCard";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
-import { useAppSelector } from "../../redux/store";
-import { Area, JobSubType, User } from "../../redux/type";
+import { CITIES, PROVINCES } from "../../data/WorkerDetails";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Address, Area, JobSubType, User } from "../../redux/type";
 
 export interface JobSubtypeDefault {
   job_type: string;
-  job_subtypes: { name: string; unit: string; id: number }[];
-}
-
-interface Photo {
-  profile_photo: string;
-  id_photo: string;
-}
-
-interface UserPhotos {
-  photos: string[];
+  job_subtypes: { job_name: string; unit: string; id: number }[];
 }
 
 const ProfilePage: React.FC = () => {
-  const navigate = useNavigate();
   const userSelector = useMemo(() => (state: any) => state.user, []);
   const user: User = useAppSelector(userSelector);
+  const dispatch = useAppDispatch();
   const [firstName, setFirstName] = useState<string>("");
   const [middleName, setMiddleName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -47,17 +41,19 @@ const ProfilePage: React.FC = () => {
   const [servicingAreas, setServicingAreas] = useState<Area[]>([
     { id: null, area_name: "" },
   ]);
+  const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [edittingSection, setEdittingSection] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  // const [coverPhotos, setCoverPhotos] = useState<File[] | null>(null);
-  // const { image, uploader } = useDisplayImage();
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const [idImage, setIdImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [idFile, setIdFile] = useState<File | null>(null);
   const [presignedUrl, setPresignedUrl] = useState<string>("");
   const [areas, setAreas] = useState<{ id: number; area_name: string }[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [errorMessages, setErrorMessages] = useState<any>({});
+  const [warningMessage, setWarningMessage] = useState<string>("");
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [jobTypes, setJobtypes] = useState<
@@ -66,15 +62,19 @@ const ProfilePage: React.FC = () => {
   const [jobSubtypesDefault, setJobSubtypesDefault] =
     useState<JobSubtypeDefault>({
       job_type: "",
-      job_subtypes: [{ name: "", unit: "", id: 0 }],
+      job_subtypes: [{ job_name: "", unit: "", id: 0 }],
     });
+  const [isButtonLoading, setIsButtonLoading] = useState<{
+    save: boolean;
+    cancel: boolean;
+  }>({ save: false, cancel: false });
 
-  const handleAvatarImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
+  const handleAvatarImageChange = (item: FileList) => {
+    const file = item && item[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        getPresignedURL();
+        getPresignedURL(file, "avatar");
         setAvatarImage(reader.result as string);
         setFile(file);
       };
@@ -82,34 +82,39 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const uniqueJobType: string = Array.from(
-    new Set(
-      user?.job_subtypes
-        .filter((job) => job.active_flg === 1)
-        .map((job) => job.job_type)
-    )
-  )[0];
-
-  const uniqueJobTypeId = Array.from(
-    new Set(
-      user?.job_subtypes
-        .filter((job) => job.active_flg === 1)
-        .map((job) => job.job_type_id)
-    )
-  )[0];
-
-  const userPhotos = (photos: Photo[]): UserPhotos => {
-    const rearrangedPhotos: UserPhotos = { photos: [] };
-
-    photos.forEach((photo) => {
-      if (!rearrangedPhotos.photos) {
-        rearrangedPhotos.photos = [];
-      }
-      rearrangedPhotos.photos.push(photo.profile_photo);
-    });
-
-    return rearrangedPhotos;
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        getPresignedURL(file, "identification");
+        setIdImage(reader.result as string);
+        setIdFile(file);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
+  let uniqueJobType: string;
+  let uniqueJobTypeId: number | null;
+
+  if (user?.job_subtypes) {
+    uniqueJobType = Array.from(
+      new Set(
+        user.job_subtypes
+          .filter((job) => job.active_flg === 1)
+          .map((job) => job.job_type)
+      )
+    )[0];
+
+    uniqueJobTypeId = Array.from(
+      new Set(
+        user.job_subtypes
+          .filter((job) => job.active_flg === 1)
+          .map((job) => job.job_type_id)
+      )
+    )[0];
+  }
 
   useEffect(() => {
     if (edittingSection !== "servicing_areas") {
@@ -123,6 +128,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (
+      jobSubtypes &&
       jobSubtypes.length > 0 &&
       jobSubtypes.find((type) => type.job_name === "")
     ) {
@@ -148,11 +154,9 @@ const ProfilePage: React.FC = () => {
       setJobSubtypes(user.job_subtypes);
       setSchedule(user.schedule);
       setServicingAreas(user.areas);
+      setAddresses(user.addresses);
       setDescription(user.description);
-
-      const user_photos = userPhotos(user.user_photos);
-
-      console.log(user_photos);
+      setAvatarImage(user.id_photo);
     }
   }, [user]);
 
@@ -202,8 +206,10 @@ const ProfilePage: React.FC = () => {
   }, [jobType]);
 
   const handleSave = async () => {
+    setIsButtonLoading({ save: true, cancel: false });
+    setIsSnackbarOpen(false);
     const data = {
-      user_id: LOGGED_IN_USER, // update this during implementation of authentication
+      user_id: user.id, // update this during implementation of authentication
       first_name: firstName,
       middle_name: middleName,
       last_name: lastName,
@@ -215,74 +221,115 @@ const ProfilePage: React.FC = () => {
       job_subtypes: jobSubtypes,
       schedule: schedule,
       servicing_areas: servicingAreas,
+      addresses: addresses,
       description: description,
       verified: 1,
     };
 
     try {
       const response = await axiosInstance.post("/api/v1/profiles", data);
-      console.log("THIS", response);
-      if (response.data) {
-        setSuccessMessage("Profile details successfully saved!");
+      setIsButtonLoading({ save: false, cancel: false });
+      if (response.status === 201) {
+        setSuccessMessage(response.data.message);
+        setIsSnackbarOpen(true);
         setErrorMessage("");
         setErrorMessages({});
+        dispatch(initializeUser(response.data.profile));
       }
     } catch (error: any) {
+      setIsButtonLoading({ save: false, cancel: false });
+      setIsSnackbarOpen(true);
       setErrorMessages(error.response.data.errors);
+      setErrorMessage("Please fill in the required details");
       setSuccessMessage("");
     }
   };
 
-  const getPresignedURL = async () => {
+  const getPresignedURL = async (file: File, type: string) => {
     try {
-      const response = await axiosInstance.get("/api/v1/upload");
+      const response = await axiosInstance.get("/api/v1/presigned-url", {
+        params: {
+          filename: `${file?.name}-${type}-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
+          filetype: file?.type,
+        },
+      });
       setPresignedUrl(response.data.url);
-    } catch (error) {
-      console.log("Error: ", error);
+    } catch (error: any) {
+      setErrorMessages(error.response.data.errors);
     }
   };
 
-  const handeUpload = async () => {
-    if (!presignedUrl || !avatarImage) return;
+  const savePhoto = async (type: string) => {
+    try {
+      const filename =
+        type === "identification"
+          ? `${idFile?.name}-identification-${user.first_name}-${user.last_name}-${user.last_name}-${idFile?.lastModified}`
+          : `${file?.name}-avatar-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`;
+      const response = await axiosInstance.post("/api/v1/upload", {
+        id: user.id,
+        filename: filename,
+        type: type,
+      });
 
-    if (file) {
+      if (response.status === 200) {
+        const savedPhoto =
+          type === "identification"
+            ? { identification_photo: response.data.identification }
+            : { id_photo: response.data.avatar };
+        setIsButtonLoading({ save: false, cancel: false });
+        dispatch(initializeUser({ ...response.data.user, ...savedPhoto }));
+        setIsSnackbarOpen(true);
+        setSuccessMessage(response.data.message);
+        setErrorMessage("");
+      }
+    } catch (error: any) {
+      setIsButtonLoading({ save: false, cancel: false });
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response.data.message);
+    }
+  };
+
+  const handleUpload = async (type: string) => {
+    setIsButtonLoading({ save: true, cancel: false });
+    if (!presignedUrl) return;
+
+    const image = type === "avatar" ? file : idFile;
+
+    if (image) {
       try {
-        await axiosInstance.put(presignedUrl, avatarImage, {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        };
+
+        const compressedFile = await imageCompression(image, options);
+
+        await axios.put(presignedUrl, compressedFile, {
           headers: {
-            "Content-Type": file.type,
+            "Content-Type": image.type,
           },
         });
-        console.log("File uploaded successfully!");
-      } catch (error) {
-        console.error("Error uploading file:", error);
+
+        savePhoto(type);
+      } catch (error: any) {
+        setIsButtonLoading({ save: false, cancel: false });
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(error.response.message);
       }
     } else {
+      setIsButtonLoading({ save: false, cancel: false });
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage("Upload unsuccessful");
       return;
     }
   };
 
   return (
     <Box>
-      <Box
-        component={"section"}
-        sx={{
-          textAlign: "center",
-          padding: "0",
-        }}
-      >
-        <Box
-          padding={"20px 0"}
-          sx={{
-            background: "#A1B5DE",
-          }}
-        >
-          <CameraAltIcon
-            sx={{
-              color: "#fff",
-            }}
-          />
-        </Box>
-      </Box>
       <Box component={"section"} sx={{ padding: "0" }}>
         <Box
           sx={{
@@ -293,31 +340,45 @@ const ProfilePage: React.FC = () => {
           }}
         >
           <ProfilePhotoCard
+            isButtonLoading={isButtonLoading}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+            setInfoMessage={setInfoMessage}
+            setIsSnackbarOpen={setIsSnackbarOpen}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
             avatarImage={avatarImage}
-            description={description}
+            description={
+              description && user.logged_in_as === "worker" ? description : ""
+            }
             user={user}
             sectionName="description_photos"
             handleSetEdittingSection={() =>
               setEdittingSection("description_photos")
             }
             handleCancelEdittingSection={() => setEdittingSection("")}
-            handleAvatarImageChange={handleAvatarImageChange}
-            handleUpload={handeUpload}
+            handleAvatarImageChange={(file: FileList) =>
+              handleAvatarImageChange(file)
+            }
+            handleUpload={() => handleUpload("avatar")}
             handleSetDescription={(desc) => setDescription(desc)}
             handleSave={handleSave}
           />
 
           <ProfileBasicInfoCard
+            isButtonLoading={isButtonLoading}
             errorMessages={errorMessages}
             edittingSection={edittingSection}
-            firstName={firstName}
-            middleName={middleName}
-            lastName={lastName}
-            gender={gender}
-            sectionName={"basic_info"}
+            firstName={firstName ?? ""}
+            middleName={middleName ?? ""}
+            lastName={lastName ?? ""}
+            gender={gender ?? ""}
             birthday={birthday}
+            phoneNumber={phoneNumber ?? ""}
+            email={email ?? ""}
+            sectionName={"basic_info"}
+            handleSetEmail={(email) => setEmail(email)}
+            handleSetPhoneNumber={(number) => setPhoneNumber(number)}
             handleSetEdittingSection={() => setEdittingSection("basic_info")}
             handleSetFirstName={(name) => setFirstName(name)}
             handleSetMiddleName={(name) => setMiddleName(name)}
@@ -328,117 +389,108 @@ const ProfilePage: React.FC = () => {
             handleCancelEdittingSection={() => setEdittingSection("")}
           />
 
-          <ProfileContactInfoCard
-            errorMessages={errorMessages}
-            edittingSection={edittingSection}
-            phoneNumber={phoneNumber}
-            sectionName={"contact_info"}
-            email={email}
-            handleSetEdittingSection={() => setEdittingSection("contact_info")}
-            handleSetEmail={(email) => setEmail(email)}
-            handleSetPhoneNumber={(number) => setPhoneNumber(number)}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileRatesCard
+              isButtonLoading={isButtonLoading}
+              edittingSection={edittingSection}
+              jobType={jobType ?? ""}
+              jobTypes={jobTypes ?? []}
+              jobSubtypesDefault={jobSubtypesDefault}
+              jobSubtypes={jobSubtypes}
+              jobTypeId={jobTypeId}
+              sectionName="rates"
+              handleSetEdittingSection={() => setEdittingSection("rates")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetJobSubtypes={(types) => {
+                setJobSubtypes([...types]);
+              }}
+              handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
+              handleSetWarningMessage={(message) => setWarningMessage(message)}
+              handleSetSelectedJobType={(jobtype) => {
+                setSuccessMessage("");
+                setErrorMessage("");
+                setSelectedJobType(jobtype);
+              }}
+            />
+          )}
 
-          <ProfileRatesCard
-            edittingSection={edittingSection}
-            jobType={jobType}
-            jobTypes={jobTypes}
-            jobSubtypesDefault={jobSubtypesDefault}
-            jobSubtypes={jobSubtypes}
-            jobTypeId={jobTypeId}
-            sectionName="rates"
-            handleSetEdittingSection={() => setEdittingSection("rates")}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetJobSubtypes={(types) => setJobSubtypes([...types])}
-            handleSetIsSnackbarOpen={(isOpen) => setIsSnackbarOpen(isOpen)}
-            handleSetInfoMessage={(message) => setInfoMessage(message)}
-            handleSetSelectedJobType={(jobtype) => setSelectedJobType(jobtype)}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileScheduleCard
+              isButtonLoading={isButtonLoading}
+              errorMessages={errorMessages}
+              edittingSection={edittingSection}
+              schedule={schedule ?? ""}
+              sectionName="schedule"
+              handleSetEdittingSection={() => setEdittingSection("schedule")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetSchedule={(sched) => setSchedule(sched)}
+            />
+          )}
 
-          <ProfileScheduleCard
-            errorMessages={errorMessages}
-            edittingSection={edittingSection}
-            schedule={schedule}
-            sectionName="schedule"
-            handleSetEdittingSection={() => setEdittingSection("schedule")}
-            handleSave={handleSave}
-            handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetSchedule={(sched) => setSchedule(sched)}
-          />
+          {user.logged_in_as === "worker" && (
+            <ProfileServicingAreasCard
+              isButtonLoading={isButtonLoading}
+              edittingSection={edittingSection}
+              servicingAreas={servicingAreas ?? []}
+              areas={areas}
+              sectionName="servicing_area"
+              handleSetEdittingSection={() =>
+                setEdittingSection("servicing_area")
+              }
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetServicingAreas={(areas) => setServicingAreas([...areas])}
+            />
+          )}
 
-          <ProfileServicingAreasCard
+          {user.logged_in_as === "employer" && (
+            <ProfileAddressesCard
+              isButtonLoading={isButtonLoading}
+              errorMessages={errorMessages}
+              edittingSection={edittingSection}
+              addresses={addresses ?? []}
+              cities={CITIES}
+              provinces={PROVINCES}
+              sectionName="addresses"
+              handleSetEdittingSection={() => setEdittingSection("addresses")}
+              handleSave={handleSave}
+              handleCancelEdittingSection={() => setEdittingSection("")}
+              handleSetAddresses={(adds) => {
+                setAddresses([...adds]);
+              }}
+            />
+          )}
+
+          <ProfileIDPhotoCard
+            isButtonLoading={isButtonLoading}
+            idImage={idImage}
+            handleImageChange={handleImageChange}
             edittingSection={edittingSection}
-            servicingAreas={servicingAreas}
-            areas={areas}
-            sectionName="servicing_area"
-            handleSetEdittingSection={() =>
-              setEdittingSection("servicing_area")
-            }
-            handleSave={handleSave}
+            sectionName="philsys"
+            handleSetEdittingSection={() => setEdittingSection("philsys")}
+            handleUpload={() => handleUpload("identification")}
             handleCancelEdittingSection={() => setEdittingSection("")}
-            handleSetServicingAreas={(areas) => setServicingAreas([...areas])}
           />
         </Box>
       </Box>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={isSnackbarOpen}
-        onClose={() => setIsSnackbarOpen(false)}
-        autoHideDuration={infoMessage ? 10000 : 4000}
-        message={
-          successMessage
-            ? successMessage
-            : errorMessage
-            ? errorMessage
-            : infoMessage
-        }
-        key="topcenter"
-        sx={{
-          color: errorMessage ? "red" : "green",
-          marginBottom: "16px",
-          width: "80%",
+      <CustomSnackbar
+        errorMessage={errorMessage}
+        successMessage={successMessage}
+        warningMessage={warningMessage}
+        infoMessage={infoMessage}
+        isSnackbarOpen={isSnackbarOpen}
+        handleSetIsSnackbarOpen={(value) => setIsSnackbarOpen(value)}
+        handleWarningProceed={() => {
+          const selectedJobTypeId =
+            jobTypes.find((type) => type.job_type_name === selectedJobType)
+              ?.id || null;
+          setJobType(selectedJobType);
+          setJobTypeId(selectedJobTypeId);
+          setIsSnackbarOpen(false);
         }}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setIsSnackbarOpen(false)}
-          severity={
-            successMessage ? "success" : errorMessage ? "error" : "info"
-          }
-        >
-          {successMessage
-            ? successMessage
-            : errorMessage
-            ? errorMessage
-            : infoMessage}
-
-          {infoMessage && (
-            <Box>
-              <Button color="primary" onClick={() => setIsSnackbarOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  const selectedJobTypeId =
-                    jobTypes.find(
-                      (type) => type.job_type_name === selectedJobType
-                    )?.id || null;
-                  setJobType(selectedJobType);
-                  setJobTypeId(selectedJobTypeId);
-                  setIsSnackbarOpen(false);
-                }}
-              >
-                Proceed
-              </Button>
-            </Box>
-          )}
-        </Alert>
-      </Snackbar>
+      />
     </Box>
   );
 };

@@ -1,13 +1,17 @@
 import { Box, Container, Typography } from "@mui/material";
+import {
+  WhyCurranteItem as WhyCurranteItemType,
+  WhyCurranteProps,
+} from "../../global";
 import WhyCurranteItem from "./WhyCurranteItem";
 
 const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
   return (
     <Box
       sx={{
-        padding: { xs: "62px 0", lg: "62px 97px" },
+        padding: { xs: "62px 20px" },
         backgroundColor: "#FFFFFF",
-        textAlign: { xs: "center", lg: "left" },
+        textAlign: { xs: "center" },
       }}
     >
       <Container
@@ -16,6 +20,8 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          margin: "0",
+          padding: "0 !important",
         }}
       >
         <Typography
@@ -25,11 +31,7 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
             fontWeight: 700,
             fontSize: "48px",
             color: "#0e2f71",
-            marginBottom: {
-              xs: "40px",
-              lg: "75px",
-            },
-            alignSelf: { md: "start" },
+            mb: { xs: "40px" },
           }}
         >
           Why Choose
@@ -49,19 +51,18 @@ const WhyCurrante: React.FC<WhyCurranteProps> = ({ whyCurrante }) => {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "flex-start",
+            justifyContent: "space-evenly",
             flexWrap: "wrap",
             width: "100%",
             gap: {
               xs: "20px",
-              lg: "40px",
             },
-            margin: { xs: "0 0 75px 0", md: "0 auto 75px auto" },
+            margin: { xs: "0 0 75px 0" },
           }}
         >
           {whyCurrante.map(
-            (whyCurranteItem: WhyCurranteItem, index: number) => {
+            (whyCurranteItem: WhyCurranteItemType, index: number) => {
               return (
                 <WhyCurranteItem
                   key={index}

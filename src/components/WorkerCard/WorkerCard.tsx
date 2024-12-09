@@ -1,11 +1,31 @@
-import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import React from "react";
 
 interface WorkerCardProps {
   handleCardClick: () => void;
+  name: string;
+  types: string[];
+  price: string;
+  isIdentificationVerified: boolean;
+  avatar: string;
 }
 
-const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
+const WorkerCard: React.FC<WorkerCardProps> = ({
+  handleCardClick,
+  name,
+  types,
+  price,
+  isIdentificationVerified,
+  avatar,
+}) => {
   return (
     <Card
       sx={{
@@ -19,10 +39,19 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
       }}
       onClick={handleCardClick}
     >
-      <Avatar
-        sx={{ width: "40px", height: "40px", alignSelf: "center" }}
-        src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+      <Badge
+        sx={{ zIndex: 0 }}
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          isIdentificationVerified ? <CheckCircle color="success" /> : <></>
+        }
+      >
+        <Avatar
+          sx={{ width: "40px", height: "40px", alignSelf: "center" }}
+          src={avatar}
+        />
+      </Badge>
       <CardContent>
         <Box
           sx={{
@@ -32,8 +61,8 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="h6">Header</Typography>
-          <Typography variant="subtitle1">#123456</Typography>
+          <Typography variant="h6">{name}</Typography>
+          {/* <Typography variant="subtitle1">#123456</Typography> */}
         </Box>
         <Box
           sx={{
@@ -43,12 +72,16 @@ const WorkerCard: React.FC<WorkerCardProps> = ({ handleCardClick }) => {
             justifyContent: "flex-start",
           }}
         >
-          <Typography variant="body2">Jane Doe Smith</Typography>
-          <Typography variant="body2">&#x2022;</Typography>
-          <Typography variant="body2">Pasig City</Typography>
+          {/* <Typography variant="body1">{name}</Typography> */}
+          {types.length > 0 && (
+            <>
+              {/* <Typography variant="body1">&#x2022;</Typography> */}
+              <Typography variant="body1">starts at P {price}</Typography>
+            </>
+          )}
         </Box>
         <Box>
-          <Typography variant="subtitle1">starts at P 500</Typography>
+          <Typography variant="subtitle1">{types.join(", ")}</Typography>
         </Box>
       </CardContent>
     </Card>

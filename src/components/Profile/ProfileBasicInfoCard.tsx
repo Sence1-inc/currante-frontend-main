@@ -1,10 +1,13 @@
 import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   ButtonGroup,
+  FormHelperText,
   IconButton,
   InputAdornment,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -19,6 +22,8 @@ interface ProfileBasicInfoCardProps {
   middleName: string;
   lastName: string;
   gender: string;
+  email: string;
+  phoneNumber: string;
   sectionName: string;
   birthday: Date | Dayjs | null | string;
   errorMessages: any;
@@ -28,18 +33,32 @@ interface ProfileBasicInfoCardProps {
   handleSetLastName: (name: string) => void;
   handleSetGender: (name: string) => void;
   handleSetBirthday: (birthday: Dayjs | null) => void;
+  handleSetEmail: (email: string) => void;
+  handleSetPhoneNumber: (number: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 export const isEmptyObject = (
   errorMessages: Record<string, string>,
   key: string
 ): boolean => {
-  const keys = Object.keys(errorMessages).filter((messageKey: string) => {
-    return errorMessages[messageKey] !== "";
-  });
-  return keys.includes(key);
+  const keys =
+    errorMessages &&
+    typeof errorMessages === "object" &&
+    Object.keys(errorMessages).filter((messageKey: string) => {
+      return errorMessages[messageKey] !== "";
+    });
+
+  if (keys === false) {
+    return false;
+  }
+
+  return keys?.includes(key);
 };
 
 const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
@@ -51,14 +70,19 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
   sectionName,
   errorMessages,
   birthday,
+  email,
+  phoneNumber,
   handleSetEdittingSection,
   handleSetFirstName,
   handleSetMiddleName,
   handleSetLastName,
   handleSetGender,
   handleSetBirthday,
+  handleSetEmail,
+  handleSetPhoneNumber,
   handleSave,
   handleCancelEdittingSection,
+  isButtonLoading,
 }) => {
   return (
     <Box
@@ -95,7 +119,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           lineHeight: "1.7",
         }}
       >
-        Basic Info
+        Basic and Contact Info
       </Typography>
 
       <Typography
@@ -125,7 +149,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetFirstName(e.target.value)
           }
-          helperText={errorMessages.first_name}
+          helperText={errorMessages?.first_name}
         />
         <TextField
           error={isEmptyObject(errorMessages, "middle_name")}
@@ -142,7 +166,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetMiddleName(e.target.value)
           }
-          helperText={errorMessages.middle_name}
+          helperText={errorMessages?.middle_name}
         />
         <TextField
           error={isEmptyObject(errorMessages, "last_name")}
@@ -159,7 +183,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleSetLastName(e.target.value)
           }
-          helperText={errorMessages.last_name}
+          helperText={errorMessages?.last_name}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           {birthday !== null ? (
@@ -167,7 +191,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
-                  helperText: errorMessages.birthday,
+                  helperText: errorMessages?.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -176,16 +200,23 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
                   },
                 },
               }}
-              sx={{ m: 1, width: "100%" }}
+              sx={{
+                m: 1,
+                width: "100%",
+                "& .MuiFormHelperText-root": {
+                  color: "#d32f2f",
+                },
+              }}
               value={dayjs(birthday)}
               onChange={(date) => handleSetBirthday(date)}
             />
           ) : (
             <DatePicker
+              value={birthday ? dayjs(birthday) : null}
               disabled={edittingSection !== sectionName}
               slotProps={{
                 textField: {
-                  helperText: errorMessages.birthday,
+                  helperText: errorMessages?.birthday,
                   variant: "standard",
                   InputProps: {
                     startAdornment: (
@@ -194,41 +225,92 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
                   },
                 },
               }}
-              sx={{ m: 1, width: "100%" }}
+              sx={{
+                m: 1,
+                width: "100%",
+                "& .MuiFormHelperText-root": {
+                  color: "#d32f2f",
+                },
+              }}
               onChange={(date) => handleSetBirthday(date)}
             />
           )}
         </LocalizationProvider>
 
+        <Box>
+          <Select
+            error={isEmptyObject(errorMessages, "gender")}
+            disabled={edittingSection !== sectionName}
+            sx={{ marginLeft: 1, width: "100%", textAlign: "start" }}
+            value={gender}
+            onChange={(e) => handleSetGender(e.target.value as string)}
+            startAdornment={
+              <InputAdornment position="start">Gender</InputAdornment>
+            }
+            variant="standard"
+            displayEmpty
+          >
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </Select>
+          <FormHelperText sx={{ marginLeft: 1, p: 0, color: "#d32f2f" }}>
+            {errorMessages?.gender}
+          </FormHelperText>
+        </Box>
+
         <TextField
-          error={isEmptyObject(errorMessages, "gender")}
+          helperText={errorMessages?.email}
+          error={isEmptyObject(errorMessages, "email")}
+          disabled
+          id="standard-start-adornment"
+          sx={{ m: 1, width: "100%" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">Email</InputAdornment>
+            ),
+          }}
+          variant="standard"
+          value={email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleSetEmail(e.target.value)
+          }
+        />
+
+        <TextField
+          helperText={errorMessages?.phone_number}
+          error={isEmptyObject(errorMessages, "phone_number")}
           disabled={edittingSection !== sectionName}
           id="standard-start-adornment"
           sx={{ m: 1, width: "100%" }}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">Gender</InputAdornment>
+              <InputAdornment position="start">Phone</InputAdornment>
             ),
           }}
           variant="standard"
-          value={gender}
+          value={phoneNumber}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleSetGender(e.target.value)
+            handleSetPhoneNumber(e.target.value)
           }
-          helperText={errorMessages.gender}
         />
 
         {edittingSection === sectionName && (
           <ButtonGroup>
-            <Button
+            <LoadingButton
+              disabled={isButtonLoading.save}
+              loading={isButtonLoading.cancel}
+              loadingPosition="center"
               onClick={handleCancelEdittingSection}
               sx={{ marginTop: "20px" }}
               size="small"
               variant="contained"
             >
               Cancel
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
+              disabled={isButtonLoading.cancel}
+              loading={isButtonLoading.save}
+              loadingPosition="center"
               color="secondary"
               sx={{ marginTop: "20px", color: "common.white" }}
               size="small"
@@ -236,7 +318,7 @@ const ProfileBasicInfoCard: React.FC<ProfileBasicInfoCardProps> = ({
               onClick={handleSave}
             >
               Save
-            </Button>
+            </LoadingButton>
           </ButtonGroup>
         )}
       </Box>

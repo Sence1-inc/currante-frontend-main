@@ -1,3 +1,5 @@
+import { IntroItem } from "../global";
+
 export const INTRODUCTION: IntroItem[] = [
   /* to be edited */
   {
@@ -28,6 +30,6 @@ export const INTRODUCTION: IntroItem[] = [
   {
     title: "Currante is here to help",
     desc: "Bogged down by overwhelming maintenance work? Currante is your friend.",
-    image: "/images/img_intro_5.png",
+    image: "/images/img_intro_6.png",
   },
 ];

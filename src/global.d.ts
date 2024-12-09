@@ -1,3 +1,5 @@
+import Pusher from "pusher-js";
+
 interface IntroProps {
   introduction: IntroItem[];
 }
@@ -29,4 +31,10 @@ interface ServiceItem {
   service: string;
   description: string;
   image: string;
+}
+
+declare global {
+  interface Window {
+    Pusher: any;
+  }
 }

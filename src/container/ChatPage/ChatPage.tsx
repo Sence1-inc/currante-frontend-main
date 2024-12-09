@@ -6,13 +6,13 @@ import {
   query,
   where,
 } from "@firebase/firestore";
-import SearchIcon from "@mui/icons-material/Search";
-import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ChatCard from "../../components/Chat/ChatCard";
-import { LOGGED_IN_USER } from "../../data/WorkerDetails";
 import { db } from "../../firebase";
+import { initializeIsLoading } from "../../redux/reducers/IsLoadingReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 export interface FirebaseUser {
   user_id: number;
@@ -30,14 +30,18 @@ export interface Conversation {
 const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const navigate = useNavigate();
+  const userState = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.isLoading);
 
   useEffect(() => {
     const fetchConversations = async () => {
       try {
         const getUser = async () => {
+          dispatch(initializeIsLoading(true));
           const userRef = query(
             collection(db, "users"),
-            where("user_id", "==", LOGGED_IN_USER) // update during authentication implementation
+            where("user_id", "==", userState.id) // update during authentication implementation
           );
           const users = await getDocs(userRef);
           const docRef = users.docs[0].ref;
@@ -60,6 +64,7 @@ const ChatPage = () => {
         }[] = [];
 
         const getConversations = async (conversationId: string) => {
+          dispatch(initializeIsLoading(true));
           const conversationsRef = query(
             collection(db, "conversation_participants"),
             where("conversation_id", "==", conversationId)
@@ -71,6 +76,7 @@ const ChatPage = () => {
         };
 
         for (const doc of userConversations.docs) {
+          dispatch(initializeIsLoading(true));
           const conversationId = doc.data().conversation_id;
 
           let conversation = conversations.find(
@@ -78,6 +84,7 @@ const ChatPage = () => {
           );
 
           if (!conversation) {
+            dispatch(initializeIsLoading(true));
             const allUserConversations = await getConversations(conversationId);
 
             const usersPromises = allUserConversations.map(async (convo) => {
@@ -98,9 +105,10 @@ const ChatPage = () => {
             conversations.push(conversation as Conversation);
           }
         }
-
+        dispatch(initializeIsLoading(false));
         setConversations(conversations);
       } catch (error) {
+        dispatch(initializeIsLoading(false));
         console.error("Error fetching conversations: ", error);
       }
     };
@@ -115,14 +123,18 @@ const ChatPage = () => {
   return (
     <Box
       sx={{
-        margin: "64px 0",
+        marginTop: "64px",
+        marginBottom: "84px",
         padding: "20px 10px 30px 10px",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
+        height: "100%",
+        minHeight: "calc(100vh - 64px - 84px)",
       }}
     >
-      <Box
+      {/* WILL IMPLEMENT THIS IN PHASE 3 */}
+      {/* <Box
         sx={{
           padding: "10px 0",
           display: "flex",
@@ -164,23 +176,45 @@ const ChatPage = () => {
             ),
           }}
         />
-      </Box>
-      {conversations.map((conversation: Conversation) => {
-        const user = conversation.users.filter(
-          (user) => user.user_id !== LOGGED_IN_USER // update during implementation of authentication
-        );
+      </Box> */}
+      {conversations.length > 0 ? (
+        conversations.map((conversation: Conversation, index: number) => {
+          const user = conversation.users.filter(
+            (item) => Number(item.user_id) != Number(userState.id) // update during implementation of authentication
+          );
 
-        const participant = user[0];
-        return (
-          <ChatCard
-            key={participant.user_id}
-            user={participant}
-            handleCardClick={() => {
-              handleCardClick(conversation.conversation_id);
-            }}
-          />
-        );
-      })}
+          const participant = user[0];
+
+          return (
+            <ChatCard
+              key={index}
+              participant={participant}
+              handleCardClick={() => {
+                handleCardClick(conversation.conversation_id);
+              }}
+            />
+          );
+        })
+      ) : (
+        <Box
+          sx={{
+            minHeight: "calc(100vh - 64px - 84px)",
+            backgroundColor: "common.white",
+          }}
+        >
+          <Typography variant="body1">No conversations yet</Typography>
+          {userState.logged_in_as === "employer" && !isLoading && (
+            <Button
+              sx={{ width: "50%", color: "common.white" }}
+              variant="contained"
+              color="secondary"
+              onClick={() => navigate("/services")}
+            >
+              Start Hiring!
+            </Button>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -7,7 +7,6 @@ import FabButton from "../../components/FabButton/FabButton";
 import FAQ from "../../components/FAQ/FAQ";
 import FloatingElement from "../../components/FloatingElement/FloatingElement";
 import Footer from "../../components/Footer/Footer";
-import Header from "../../components/Header/Header";
 import Introduction from "../../components/Introduction/Introduction";
 import Keyvisual from "../../components/Keyvisual/Keyvisual";
 import Newsletter from "../../components/Newsletter/Newsletter";
@@ -34,7 +33,6 @@ const HomePage: React.FC = () => {
 
   return (
     <Box>
-      <Header />
       <Keyvisual />
       <FloatingElement anchorEl={anchorEl} handleClose={handleClose}>
         <Newsletter />
@@ -45,6 +43,9 @@ const HomePage: React.FC = () => {
       <FAQ />
       <Footer />
       <FabButton
+        styles={{
+          right: "calc(50vw - ((490px / 2)/1.5))",
+        }}
         icon={
           <EmailIcon
             sx={{ mr: 1, animation: `${jump} 0.5s ease-in-out infinite` }}

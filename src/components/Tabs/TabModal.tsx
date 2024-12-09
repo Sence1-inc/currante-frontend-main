@@ -1,40 +1,118 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { addMinutes, formatISO } from "date-fns";
+import dayjs from "dayjs";
 import React, { useState } from "react";
+import axiosInstance from "../../../axiosInstance";
 import ArrivedImage from "../../assets/arrived.png";
 import CheckImage from "../../assets/check.png";
 import QuestionImage from "../../assets/question.png";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Order } from "../../redux/type";
 import jobListStyles from "../../styles/jobListStyles";
+import { isEmptyObject } from "../Profile/ProfileBasicInfoCard";
 import CustomModal from "./Modal";
 
 interface TabModalProps {
+  order: Order;
   status: string;
   openModal: boolean;
   handleOpenModal: () => void;
   handleCloseModal: () => void;
+  setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
+  setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TabModal: React.FC<TabModalProps> = ({
+  order,
   status,
   openModal,
   handleCloseModal,
+  setInfoMessage,
+  setIsSnackbarOpen,
 }) => {
-  const [inputOTP, setInputOTP] = useState<string>("");
-  const [validOTP, setValidOTP] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  const [isvalidOTP, setIsValidOTP] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
+  const [errors, setErrors] = useState<{
+    job_completed: string;
+  }>({ job_completed: "" });
 
-  const handleClick = () => {
-    console.log("clicked");
+  const handleAccept = async () => {
+    try {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
+        status: "2",
+      });
+      if (response.data) {
+        dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        setIsSnackbarOpen(true);
+        setInfoMessage(`You have accepted order no. ${order.job_order_code}`);
+        handleCloseModal();
+      }
+    } catch (error: any) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const getUtcNow = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const utcNow = addMinutes(now, offset);
+    return formatISO(utcNow);
+  };
+
+  const handleArrived = async () => {
+    try {
+      const response = await axiosInstance.patch(`/api/v1/orders/${order.id}`, {
+        status: "3",
+        worker_arrived_date: getUtcNow(),
+      });
+      if (response.data) {
+        dispatch(initializeUser({ ...user, orders: response.data.orders }));
+        setIsSnackbarOpen(true);
+        setInfoMessage(
+          `You have arrived for order no. ${order.job_order_code}`
+        );
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const handleWorkComplete = async () => {
+    if (otp === "" && otp.length < 6) {
+      setIsSnackbarOpen(true);
+      setInfoMessage(`Please input OTP`);
+    } else {
+      try {
+        const response = await axiosInstance.patch(
+          `/api/v1/orders/${order.id}`,
+          {
+            status: "4",
+            job_order_completed_date: getUtcNow(),
+            otp: otp,
+          }
+        );
+        if (response.data) {
+          setIsValidOTP(true);
+          dispatch(initializeUser({ ...user, orders: response.data.orders }));
+          setIsSnackbarOpen(true);
+          setInfoMessage(
+            `Congratulations! You've completed order no. ${order.job_order_code}`
+          );
+          handleCloseModal();
+        }
+      } catch (error: any) {
+        setIsValidOTP(false);
+        setErrors({ job_completed: error.response.data.error });
+      }
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputOTP(event.target.value);
-  };
-
-  const handleOTPInput = () => {
-    if (inputOTP.length < 6) {
-      console.log("Invalid OTP");
-    }
-
-    setValidOTP(true);
+    setOtp(event.target.value);
   };
 
   const completedConfirm = () => {
@@ -63,7 +141,7 @@ const TabModal: React.FC<TabModalProps> = ({
     );
   };
 
-  const incomingModalContent = () => {
+  const requestModalContent = () => {
     return (
       <CustomModal isModalOpen={openModal} handleCloseModal={handleCloseModal}>
         <Box sx={{ padding: "24px", paddingBottom: 0 }}>
@@ -96,7 +174,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Location:
             </Typography>{" "}
-            Quezon City
+            {order.employer_address}
           </Typography>
           <Typography
             sx={[
@@ -107,7 +185,7 @@ const TabModal: React.FC<TabModalProps> = ({
             <Typography sx={{ fontWeight: 600, display: "inline" }}>
               Time:
             </Typography>{" "}
-            Feb. 10 7am-12pm
+            {formatISO(new Date(dayjs(order.job_order_start_date).format()))}
           </Typography>
         </Box>
         <Box sx={jobListStyles.container.buttonContainer}>
@@ -117,7 +195,7 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Rethink
           </Button>
-          <Button onClick={handleClick} sx={jobListStyles.button.primary}>
+          <Button onClick={handleAccept} sx={jobListStyles.button.primary}>
             Accept
           </Button>
         </Box>
@@ -144,11 +222,13 @@ const TabModal: React.FC<TabModalProps> = ({
             By completing the job, you agree that the work is done.
           </Typography>
           <TextField
+            error={isEmptyObject(errors, "job_completed")}
             sx={{ width: "100%" }}
             label="Enter OTP sent to your phone number"
             id="outlined-size-normal"
             defaultValue=""
             onChange={handleInputChange}
+            helperText={errors?.job_completed}
           />
         </Box>
         <Box sx={jobListStyles.container.buttonContainer}>
@@ -158,7 +238,10 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Back
           </Button>
-          <Button onClick={handleOTPInput} sx={jobListStyles.button.primary}>
+          <Button
+            onClick={handleWorkComplete}
+            sx={jobListStyles.button.primary}
+          >
             Complete
           </Button>
         </Box>
@@ -166,7 +249,7 @@ const TabModal: React.FC<TabModalProps> = ({
     );
   };
 
-  const currentModalContent = () => {
+  const incomingModalContent = () => {
     return (
       <CustomModal isModalOpen={openModal} handleCloseModal={handleCloseModal}>
         <Box sx={{ padding: "24px", paddingBottom: 0 }}>
@@ -193,7 +276,7 @@ const TabModal: React.FC<TabModalProps> = ({
           >
             Not Yet
           </Button>
-          <Button onClick={handleClick} sx={jobListStyles.button.primary}>
+          <Button onClick={handleArrived} sx={jobListStyles.button.primary}>
             Start
           </Button>
         </Box>
@@ -202,16 +285,16 @@ const TabModal: React.FC<TabModalProps> = ({
   };
 
   const renderModal = () => {
-    if (status === "incoming") {
-      return incomingModalContent();
-    } else if (status === "completed") {
-      if (!validOTP) {
+    if (status == "1") {
+      return requestModalContent();
+    } else if (status == "4" || status == "3") {
+      if (!isvalidOTP) {
         return completedModalContent();
       } else {
         return completedConfirm();
       }
     } else {
-      return currentModalContent();
+      return incomingModalContent();
     }
   };
 

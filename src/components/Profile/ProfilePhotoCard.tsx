@@ -1,18 +1,46 @@
+import { CameraAlt, CheckCircle, Clear, FileUpload } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import StarIcon from "@mui/icons-material/Star";
+import { LoadingButton } from "@mui/lab";
 import {
   Avatar,
+  Badge,
   Box,
-  Button,
   ButtonGroup,
   IconButton,
+  ImageList,
+  ImageListItem,
+  Rating,
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import imageCompression from "browser-image-compression";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import axiosInstance from "../../../axiosInstance";
+import { initializeUser } from "../../redux/reducers/UserReducer";
+import { useAppDispatch } from "../../redux/store";
 import { User } from "../../redux/type";
 import { isEmptyObject } from "./ProfileBasicInfoCard";
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+    slidesToSlide: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+    slidesToSlide: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1,
+  },
+};
 
 interface ProfilePhotoCardProps {
   edittingSection: string;
@@ -22,11 +50,19 @@ interface ProfilePhotoCardProps {
   user: User;
   errorMessages: any;
   handleSetEdittingSection: () => void;
-  handleAvatarImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleAvatarImageChange: (file: FileList) => void;
   handleUpload: () => void;
   handleSetDescription: (description: string) => void;
   handleSave: () => void;
   handleCancelEdittingSection: () => void;
+  setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setInfoMessage: React.Dispatch<React.SetStateAction<string>>;
+  setIsSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isButtonLoading: {
+    save: boolean;
+    cancel: boolean;
+  };
 }
 
 const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
@@ -36,13 +72,232 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
   sectionName,
   user,
   errorMessages,
+  setSuccessMessage,
+  setErrorMessage,
+  setInfoMessage,
+  setIsSnackbarOpen,
   handleSetEdittingSection,
   handleAvatarImageChange,
   handleUpload,
   handleSetDescription,
   handleSave,
   handleCancelEdittingSection,
+  isButtonLoading,
 }) => {
+  const MAX_FILES = 6;
+  const maxFileSizeMB = 3;
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [files, setFiles] = useState<FileList | []>([]);
+  const [file, setFile] = useState<FileList | []>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isCoverPhotosButtonLoading, setIsCoverPhotosButtonLoading] = useState<{
+    save: boolean;
+    cancel: boolean;
+  }>({
+    save: false,
+    cancel: false,
+  });
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  useEffect(() => {
+    if (user.covers.length > 0) {
+      setPreviewImages(user.covers);
+    }
+
+    if (user.id_photo) {
+      setPreviewImage(user.id_photo);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (file.length > 0) {
+      handleAvatarImageChange(file as FileList);
+    }
+  }, [file]);
+
+  useEffect(() => {
+    if (isUploading) {
+      setIsSnackbarOpen(true);
+      setInfoMessage("Uploading photo/s");
+      setSuccessMessage("");
+      setErrorMessage("");
+    }
+  }, [isUploading]);
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const uploadedFiles = event.target.files;
+
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      setIsUploading(true);
+      if (user.covers.length + uploadedFiles.length > MAX_FILES) {
+        setIsUploading(false);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
+        return;
+      }
+
+      const filesArray = Array.from(uploadedFiles);
+      const previews = [];
+      const urls = [];
+
+      const fileSizeExceedsLimit = filesArray.some(
+        (file) => file.size > maxFileSizeMB * 1024 * 1024
+      );
+
+      if (fileSizeExceedsLimit) {
+        setIsUploading(false);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(
+          `One or more files exceed the maximum size of ${maxFileSizeMB} MB`
+        );
+        return;
+      }
+
+      for (const file of filesArray) {
+        const response = await axiosInstance.get("/api/v1/presigned-url", {
+          params: {
+            filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
+            filetype: file?.type,
+          },
+        });
+        urls.push(response.data.url);
+        previews.push(URL.createObjectURL(file));
+      }
+      setIsSnackbarOpen(true);
+      if (previewImages.length + previews.length > MAX_FILES) {
+        setIsUploading(false);
+        setSuccessMessage("");
+        setIsSnackbarOpen(true);
+        setErrorMessage(`You can only upload up to ${MAX_FILES} files.`);
+        return;
+      }
+
+      const fileList = new DataTransfer();
+      filesArray.forEach((file) => fileList.items.add(file));
+      const newFileList = fileList.files;
+
+      setIsUploading(false);
+      setPreviewImages([...previewImages, ...previews]);
+      setFiles(newFileList);
+    }
+  };
+
+  const handleDeleteCoverPhoto = async (url: string) => {
+    try {
+      const regex = /\/([^\/?]+)\?/;
+      const match = url.match(regex);
+      const filename = match ? match[1] : null;
+      console.log(match);
+      const response = await axiosInstance.delete(`/api/v1/photo/${filename}`);
+      dispatch(initializeUser({ ...user, covers: response.data.covers }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteFile = async (index: number) => {
+    const updatedPreviews = [...previewImages];
+    updatedPreviews.splice(index, 1);
+    setPreviewImages(updatedPreviews);
+
+    const updatedFiles = [...files];
+    updatedFiles.splice(index, 1);
+
+    const fileList = new DataTransfer();
+    updatedFiles.forEach((file) => fileList.items.add(file));
+    setFiles(fileList.files);
+
+    handleDeleteCoverPhoto(previewImages[index]);
+  };
+
+  const savePhotoResponse = async (file: File, responseData: any) => {
+    try {
+      console.log("Saving photo for:", file.name);
+      setFiles([]);
+      setPreviewImages(responseData.covers);
+      dispatch(
+        initializeUser({
+          ...responseData.user,
+          covers: responseData.covers,
+        })
+      );
+    } catch (error) {
+      console.error("Error saving photo:", error);
+    }
+  };
+
+  const handleUploadCoverPhotos = async () => {
+    console.log("triggered handleUploadCoverPhotos");
+    setIsCoverPhotosButtonLoading({ save: true, cancel: false });
+
+    try {
+      const filesArray = Array.from(files);
+
+      for (let index = 0; index < filesArray.length; index++) {
+        const file = filesArray[index];
+        try {
+          const compressedFile = await imageCompression(file, {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          });
+
+          console.log(compressedFile.type);
+
+          const resp = await axiosInstance.get("/api/v1/presigned-url", {
+            params: {
+              filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
+              filetype: file?.type,
+            },
+          });
+
+          const presignedUrl = resp.data.url;
+          await axios.put(presignedUrl, compressedFile, {
+            headers: {
+              "Content-Type": compressedFile.type,
+            },
+          });
+
+          console.log(
+            `Successfully uploaded ${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`
+          );
+
+          const response = await axiosInstance.post("/api/v1/upload", {
+            id: user.id,
+            filename: `${file?.name}-cover-${user.first_name}-${user.last_name}-${user.last_name}-${file?.lastModified}`,
+            type: "cover",
+          });
+
+          savePhotoResponse(file, response.data);
+        } catch (fileError) {
+          console.error(`Error processing ${file.name}:`, fileError);
+        }
+      }
+
+      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
+      setSuccessMessage("Photo/s successfully uploaded");
+      setIsSnackbarOpen(true);
+      setErrorMessage("");
+    } catch (error: any) {
+      setIsCoverPhotosButtonLoading({ save: false, cancel: false });
+      setSuccessMessage("");
+      setIsSnackbarOpen(true);
+      setErrorMessage(error.response?.data?.message || "An error occurred");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -57,6 +312,7 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
         sx={{
           position: "relative",
           width: "100%",
+          zIndex: 20,
         }}
       >
         <IconButton
@@ -70,74 +326,287 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
           <EditIcon fontSize="small" />
         </IconButton>
       </Box>
+      {user.covers.length > 0 && edittingSection !== sectionName && (
+        <Box sx={{ width: { xs: "100%", md: "490px" }, height: "200px" }}>
+          <Carousel
+            swipeable={true}
+            draggable={true}
+            responsive={responsive}
+            infinite={true}
+            autoPlay={true}
+            autoPlaySpeed={3000}
+            keyBoardControl={true}
+            customTransition="all .5"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            itemClass="carousel-item-padding-40-px"
+          >
+            {user.covers.map((cover, index) => (
+              <Box key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundSize: "cover",
+                    height: "200px",
+                    borderRadius: "4px",
+                    backgroundImage: `url(${cover})`,
+                  }}
+                />
+              </Box>
+            ))}
+          </Carousel>
+        </Box>
+      )}
       {edittingSection === sectionName ? (
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
             gap: "10px",
+            width: { xs: "90vw", sm: "calc(440px * 90%)" },
           }}
         >
-          <input
-            accept="image/*"
-            style={{ display: "none" }}
-            id="avatar-upload-button"
-            type="file"
-            onChange={handleAvatarImageChange}
-          />
-          <label htmlFor="avatar-upload-button">
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
-              <PhotoCamera />
-            </IconButton>
-          </label>
-          {avatarImage && (
-            <Avatar
-              src={avatarImage}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            <Box
               sx={{
-                border: "1px solid #F58A47",
-                borderRadius: "90px",
-                width: "90px",
-                height: "90px",
-                padding: "10px",
-                backgroundColor: "background.default",
-                color: "primary.main",
+                width: { xs: "90%", md: "440px" },
+                margin: "auto",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                height: "auto",
+                padding: "20px 0",
+                border: "1px dashed gray",
+                borderRadius: "16px",
+                background: "#fff",
+                textAlign: "center",
+                position: "relative",
+                overflow: "hidden",
+                cursor: "pointer",
+                "& input": {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  opacity: 0,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <input
+                type="file"
+                onChange={handleFileChange}
+                multiple
+                accept="image/png, image/jpg, image/jpeg"
+                disabled={previewImages?.length >= MAX_FILES}
+              />
+              {previewImages.length === 0 ? (
+                <Box
+                  sx={{
+                    width: "100px",
+                    height: "50px",
+                    borderRadius: 50,
+                    backgroundColor: "primary.light",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FileUpload
+                    fontSize="medium"
+                    sx={{ color: "primary.main" }}
+                  />
+                </Box>
+              ) : (
+                <ImageList
+                  sx={{ width: "100%", height: "100%" }}
+                  cols={3}
+                  rowHeight={80}
+                >
+                  {previewImages.map((item, index) => {
+                    return (
+                      <ImageListItem sx={{ height: "auto" }} key={index}>
+                        <Box>
+                          <img src={item} loading="lazy" width={60} />
+                          <Clear
+                            sx={{
+                              position: "absolute",
+                              top: "0",
+                              right: "14px",
+                              background: "#fff",
+                              borderRadius: "50%",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleDeleteFile(index)}
+                          />
+                        </Box>
+                      </ImageListItem>
+                    );
+                  })}
+                </ImageList>
+              )}
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  color: "primary.main",
+                }}
+              >
+                <span>
+                  {previewImages?.length === 0
+                    ? "Click here to upload media"
+                    : previewImages?.length === 6
+                    ? "You've reached the maximum number of uploads"
+                    : "Add more photos"}
+                </span>
+              </Typography>
+            </Box>
+          </Box>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            <input
+              accept="image/png, image/jpg, image/jpeg"
+              style={{ display: "none" }}
+              id="avatar-upload-button"
+              type="file"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFile(e.target.files as FileList);
+                const filesArray = Array.from(e.target.files as FileList);
+                setPreviewImage(URL.createObjectURL(filesArray[0]) as string);
               }}
             />
-          )}
-          {avatarImage && <button onClick={handleUpload}>Upload</button>}
-        </div>
-      ) : avatarImage ? (
-        <Avatar
-          sx={{
-            border: "1px solid #F58A47",
-            borderRadius: "90px",
-            width: "90px",
-            height: "90px",
-            padding: "10px",
-            backgroundColor: "background.default",
-            color: "primary.main",
-          }}
-        />
-      ) : (
-        <Avatar
-          sx={{
-            border: "1px solid #F58A47",
-            borderRadius: "90px",
-            width: "90px",
-            height: "90px",
-            padding: "10px",
-            backgroundColor: "background.default",
-            color: "primary.main",
-          }}
+            <label
+              htmlFor="avatar-upload-button"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Badge
+                sx={{ zIndex: 0 }}
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={
+                  user.is_identification_verified ? (
+                    <CheckCircle color="success" />
+                  ) : (
+                    <></>
+                  )
+                }
+              >
+                <Avatar
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  src={!isHovered ? previewImage : undefined}
+                  sx={{
+                    border: "1px solid #F58A47",
+                    borderRadius: "90px",
+                    width: "90px",
+                    height: "90px",
+                    backgroundColor: "background.default",
+                    color: "primary.main",
+                  }}
+                  alt={user.first_name}
+                >
+                  {isHovered ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CameraAlt />
+                      <Typography variant="subtitle1">
+                        Click to choose
+                      </Typography>
+                    </Box>
+                  ) : null}
+                </Avatar>
+              </Badge>
+
+              {/* <Button variant="contained" onClick={handleUpload}>
+                Upload Profile Photo
+              </Button> */}
+            </label>
+          </div>
+        </Box>
+      ) : user.id_photo ? (
+        <Badge
+          sx={{ zIndex: 0 }}
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            user.is_identification_verified ? (
+              <CheckCircle color="success" />
+            ) : (
+              <></>
+            )
+          }
         >
-          {user.first_name.charAt(0)}
-        </Avatar>
+          <Avatar
+            src={user.id_photo}
+            sx={{
+              border: "1px solid #F58A47",
+              borderRadius: "90px",
+              width: "90px",
+              height: "90px",
+              backgroundColor: "background.default",
+              color: "primary.main",
+            }}
+          />
+        </Badge>
+      ) : (
+        <Badge
+          sx={{ zIndex: 0 }}
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          badgeContent={
+            user.is_identification_verified ? (
+              <CheckCircle color="success" />
+            ) : (
+              <></>
+            )
+          }
+        >
+          <Avatar
+            sx={{
+              border: "1px solid #F58A47",
+              borderRadius: "90px",
+              width: "90px",
+              height: "90px",
+              padding: "10px",
+              backgroundColor: "background.default",
+              color: "primary.main",
+            }}
+          >
+            {user.first_name.charAt(0)}
+          </Avatar>
+        </Badge>
       )}
 
       <Typography
@@ -150,76 +619,105 @@ const ProfilePhotoCard: React.FC<ProfilePhotoCardProps> = ({
       >
         {user.first_name} {user.middle_name} {user.last_name}
       </Typography>
-
       <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-        <StarIcon
-          sx={{
-            color: "#F58A47",
-            width: "10px",
-          }}
+        <Rating
+          precision={0.5}
+          size="small"
+          name="read-only"
+          value={Number(user?.overall_rating)}
+          readOnly
         />
 
-        <StarIcon
-          sx={{
-            color: "#A1B5DE",
-            width: "10px",
-          }}
-        />
-
-        <Typography>(4 stars)</Typography>
+        <Typography>{`(${Number(user?.overall_rating).toFixed(
+          2
+        )} stars)`}</Typography>
       </Box>
-
-      {edittingSection !== sectionName ? (
-        <>
-          <Typography
-            sx={{
-              fontFamily: "Open Sans",
-              fontWeight: "400",
-              fontSize: "12px",
-              lineHeight: "1.6",
-              margin: "10px 0 20px",
-            }}
-          >
-            {description}
-          </Typography>
-          {errorMessages.description && (
-            <Typography color="error">{errorMessages.description}</Typography>
-          )}
-        </>
-      ) : (
-        <TextField
-          error={isEmptyObject(errorMessages, "description")}
-          multiline
-          minRows={1}
-          id="standard-start-adornment"
-          sx={{ m: 1, width: "100%" }}
-          variant="standard"
-          value={description}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleSetDescription(e.target.value)
-          }
-          helperText={errorMessages.description}
-        />
-      )}
-
+      {user.logged_in_as === "worker" &&
+        (edittingSection !== sectionName ? (
+          <>
+            <Typography
+              sx={{
+                fontFamily: "Open Sans",
+                fontWeight: "400",
+                fontSize: "12px",
+                lineHeight: "1.6",
+                margin: "10px 0 20px",
+              }}
+            >
+              {description}
+            </Typography>
+            {errorMessages?.description && (
+              <Typography color="error">
+                {errorMessages?.description}
+              </Typography>
+            )}
+          </>
+        ) : (
+          <TextField
+            placeholder="e.g. Enjoy a pristine home with my expert cleaning services, ensuring every corner sparkles with freshness!"
+            error={isEmptyObject(errorMessages, "description")}
+            multiline
+            minRows={1}
+            id="standard-start-adornment"
+            sx={{ m: 1, width: "100%" }}
+            variant="standard"
+            value={description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleSetDescription(e.target.value)
+            }
+            helperText={errorMessages?.description}
+          />
+        ))}
       {edittingSection === sectionName && (
         <ButtonGroup>
-          <Button
+          <LoadingButton
+            disabled={isButtonLoading.save || isCoverPhotosButtonLoading.save}
+            loading={
+              isButtonLoading.cancel || isCoverPhotosButtonLoading.cancel
+            }
+            loadingPosition="center"
             onClick={handleCancelEdittingSection}
             size="small"
             variant="contained"
           >
             Cancel
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
+            disabled={
+              isButtonLoading.cancel || isCoverPhotosButtonLoading.cancel
+            }
+            loading={isButtonLoading.save || isCoverPhotosButtonLoading.save}
+            loadingPosition="center"
             color="secondary"
             sx={{ color: "common.white" }}
             size="small"
             variant="contained"
-            onClick={handleSave}
+            onClick={() => {
+              const hasFiles = files.length > 0;
+              const hasAvatarImage = Boolean(avatarImage?.trim());
+
+              if (hasFiles && !hasAvatarImage) {
+                handleUploadCoverPhotos();
+              }
+
+              if (hasAvatarImage && !hasFiles) {
+                handleUpload();
+              }
+
+              if (hasFiles && hasAvatarImage) {
+                handleUploadCoverPhotos();
+                handleUpload();
+              }
+
+              if (hasFiles || hasAvatarImage) {
+                setInfoMessage("Uploading photo/s");
+              }
+
+              handleSave();
+            }}
           >
-            Save
-          </Button>
+            Save & Upload
+          </LoadingButton>
         </ButtonGroup>
       )}
     </Box>
